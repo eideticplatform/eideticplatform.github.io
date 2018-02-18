@@ -1,0 +1,27 @@
+body {
+    background-image: -webkit-linear-gradient(200deg,rgb(218, 57, 4),#801a3e,#410047);
+    background-image: -o-linear-gradient(200deg,rgb(218, 57, 4),#801a3e,#410047);
+    background-image: linear-gradient(200deg,rgb(218, 57, 4),#801a3e,#410047);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bd-masthead {
+	background-image: none;
+}
+
+#subscribe {
+	color: #ff7a50;
+    border-color: #ff7a50;
+	font-family: 'Nunito', sans-serif !important;
+}
+
+.lead {
+	font-family: 'Nunito', sans-serif !important;
+	font-weight: 800;
+	letter-spacing: 0.25rem;
+}
+
+body {
+	font-family: 'Nunito', sans-serif !important;
+}
