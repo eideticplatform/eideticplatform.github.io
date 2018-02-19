@@ -174,20 +174,21 @@ pageHome model =
         [ div
             [ style [ ( "margin", "0 auto 2rem" ) ] ]
             [ img
-                [ src "assets/imgs/Eidetic_FInalLogoSubmissionPNGImages_Feb142018-07.png"
+                [ src "assets/imgs/Logo.svg"
                 , alt "eidetic-logo"
                 , style
-                    [ ( "border", "1px solid white" )
-                    , ( "width", "120px" )
+                    [ ( "border", "0.3rem solid white" )
+                      --, ( "width", "40%" )
                     , ( "border-radius", "15%" )
                     ]
+                , id "logo"
                 ]
                 []
             ]
         , p [ class "lead" ]
             [ text "EIDETIC" ]
         , p [ class "version" ]
-            [ text "Savor your favorite moments"
+            [ text "Your Favorite Moments"
             ]
         , Button.button
             [ Button.outlinePrimary
@@ -195,6 +196,33 @@ pageHome model =
             , Button.attrs [ id "subscribe", onClick <| ModalMsg Modal.visibleState ]
             ]
             [ text "SUBSCRIBE" ]
+        , div
+            [ style [ ( "margin", "2rem 0 2rem auto" ) ] ]
+            [ img
+                [ src "assets/imgs/Step1.svg"
+                , alt "eidetic-logo"
+                , class "step"
+                ]
+                []
+            ]
+        , div
+            [ style [ ( "margin", "0 auto 2rem" ) ] ]
+            [ img
+                [ src "assets/imgs/Step2.svg"
+                , alt "eidetic-logo"
+                , class "step"
+                ]
+                []
+            ]
+        , div
+            [ style [ ( "margin", "0 auto 2rem" ) ] ]
+            [ img
+                [ src "assets/imgs/Step3.svg"
+                , alt "eidetic-logo"
+                , class "step"
+                ]
+                []
+            ]
         ]
     ]
 

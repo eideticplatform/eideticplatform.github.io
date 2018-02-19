@@ -17578,7 +17578,7 @@ var _user$project$Main$pageHome = function (model) {
 							_elm_lang$html$Html$img,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Eidetic_FInalLogoSubmissionPNGImages_Feb142018-07.png'),
+								_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Logo.svg'),
 								_1: {
 									ctor: '::',
 									_0: _elm_lang$html$Html_Attributes$alt('eidetic-logo'),
@@ -17587,18 +17587,18 @@ var _user$project$Main$pageHome = function (model) {
 										_0: _elm_lang$html$Html_Attributes$style(
 											{
 												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 'border', _1: '1px solid white'},
+												_0: {ctor: '_Tuple2', _0: 'border', _1: '0.3rem solid white'},
 												_1: {
 													ctor: '::',
-													_0: {ctor: '_Tuple2', _0: 'width', _1: '120px'},
-													_1: {
-														ctor: '::',
-														_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '15%'},
-														_1: {ctor: '[]'}
-													}
+													_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '15%'},
+													_1: {ctor: '[]'}
 												}
 											}),
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$id('logo'),
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							},
@@ -17630,7 +17630,7 @@ var _user$project$Main$pageHome = function (model) {
 							},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('Savor your favorite moments'),
+								_0: _elm_lang$html$Html$text('Your Favorite Moments'),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
@@ -17665,7 +17665,112 @@ var _user$project$Main$pageHome = function (model) {
 									_0: _elm_lang$html$Html$text('SUBSCRIBE'),
 									_1: {ctor: '[]'}
 								}),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$style(
+											{
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'margin', _1: '2rem 0 2rem auto'},
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$img,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Step1.svg'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$alt('eidetic-logo'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('step'),
+														_1: {ctor: '[]'}
+													}
+												}
+											},
+											{ctor: '[]'}),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$style(
+												{
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'margin', _1: '0 auto 2rem'},
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$img,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Step2.svg'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$alt('eidetic-logo'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('step'),
+															_1: {ctor: '[]'}
+														}
+													}
+												},
+												{ctor: '[]'}),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$style(
+													{
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'margin', _1: '0 auto 2rem'},
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$img,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Step3.svg'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$alt('eidetic-logo'),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('step'),
+																_1: {ctor: '[]'}
+															}
+														}
+													},
+													{ctor: '[]'}),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
 						}
 					}
 				}

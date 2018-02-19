@@ -1,7 +1,8 @@
 body {
-    background-image: -webkit-linear-gradient(200deg,rgb(218, 57, 4),#801a3e,#410047);
+/*    background-image: -webkit-linear-gradient(200deg,rgb(218, 57, 4),#801a3e,#410047);
     background-image: -o-linear-gradient(200deg,rgb(218, 57, 4),#801a3e,#410047);
-    background-image: linear-gradient(200deg,rgb(218, 57, 4),#801a3e,#410047);
+    background-image: linear-gradient(200deg,rgb(218, 57, 4),#801a3e,#410047);*/
+    background-image: url(../imgs/Background.svg);
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -11,9 +12,14 @@ body {
 }
 
 #subscribe {
-	color: #ff7a50;
-    border-color: #ff7a50;
+	color: #ff5a6a;
+    border-color: #ff5a6a;
 	font-family: 'Nunito', sans-serif !important;
+}
+
+#subscribe:hover {
+    background-color: #51317c; /* Green */
+    /*color: white;*/
 }
 
 .lead {
@@ -24,4 +30,19 @@ body {
 
 body {
 	font-family: 'Nunito', sans-serif !important;
+}
+
+
+.step {
+    width: 100%;
+}
+
+#logo {
+	width: 10rem;
+}
+
+@media (min-width: 576px){
+	.step {
+		width: 30rem;
+	}
 }
