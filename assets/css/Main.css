@@ -4,7 +4,8 @@ body {
     background-image: linear-gradient(200deg,rgb(218, 57, 4),#801a3e,#410047);*/
     background-image: url(../imgs/Background.svg);
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100% 100%;
+    height: 100%;
 }
 
 .bd-masthead {
@@ -12,8 +13,8 @@ body {
 }
 
 #subscribe {
-	color: #ff5a6a;
-    border-color: #ff5a6a;
+	color: rgba(255, 139, 171, 0.52);
+    border-color: rgba(255, 139, 139, 0.48);
 	font-family: 'Nunito', sans-serif !important;
 }
 
