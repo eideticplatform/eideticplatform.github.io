@@ -319,7 +319,7 @@ radioPaymentView attrs model =
         [ ButtonGroup.radioButton
             (model.radioPaymentMethod == Just CashOnDelivery)
             [ Button.primary, Button.onClick <| RadioPaymentMsg (Just CashOnDelivery) ]
-            [ text "Payment on delivery" ]
+            [ text "On delivery" ]
         , ButtonGroup.radioButton
             (model.radioPaymentMethod == Just CreditCard)
             [ Button.primary, Button.onClick <| RadioPaymentMsg (Just CreditCard) ]

@@ -47,3 +47,7 @@ body {
 		width: 30rem;
 	}
 }
+
+.btn-group, .btn-group-vertical {
+    display: inline-block;
+}
