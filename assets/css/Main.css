@@ -48,6 +48,6 @@ body {
 	}
 }
 
-.btn-group, .btn-group-vertical {
-    display: inline-block;
+.btn {
+	white-space: normal;
 }

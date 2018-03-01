@@ -319,15 +319,15 @@ radioPaymentView attrs model =
         [ ButtonGroup.radioButton
             (model.radioPaymentMethod == Just CashOnDelivery)
             [ Button.primary, Button.onClick <| RadioPaymentMsg (Just CashOnDelivery) ]
-            [ text "On delivery" ]
+            [ text "On Delivery" ]
         , ButtonGroup.radioButton
             (model.radioPaymentMethod == Just CreditCard)
             [ Button.primary, Button.onClick <| RadioPaymentMsg (Just CreditCard) ]
-            [ text "Credit card" ]
+            [ text "Credit Card" ]
         , ButtonGroup.radioButton
             (model.radioPaymentMethod == Just AppStore)
             [ Button.primary, Button.onClick <| RadioPaymentMsg (Just AppStore) ]
-            [ text "AppStore" ]
+            [ text "App Store" ]
         ]
 
 

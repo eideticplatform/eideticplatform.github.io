@@ -18021,7 +18021,7 @@ var _user$project$Main$radioPaymentView = F2(
 					},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Payment on delivery'),
+						_0: _elm_lang$html$Html$text('On Delivery'),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -18044,7 +18044,7 @@ var _user$project$Main$radioPaymentView = F2(
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('Credit card'),
+							_0: _elm_lang$html$Html$text('Credit Card'),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -18067,7 +18067,7 @@ var _user$project$Main$radioPaymentView = F2(
 							},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('AppStore'),
+								_0: _elm_lang$html$Html$text('App Store'),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
