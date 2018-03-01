@@ -18,7 +18,15 @@
     <!-- <svg class=".svgs" preserveAspectRatio="none";> -->
     <main></main>
     <script>
-      Elm.Main.fullscreen()
+      var app = Elm.Main.fullscreen();
+
+      app.ports.modalOpen.subscribe(_ => {
+        document.querySelector('body').classList.add('modal-open');
+      });
+
+      app.ports.modalClose.subscribe(_ => {
+        document.querySelector('body').classList.remove('modal-open');
+      });
     </script>
   </body>
 </html>

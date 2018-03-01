@@ -17436,6 +17436,17 @@ var _rundis$elm_bootstrap$Bootstrap_Navbar$dropdownHeader = function (children) 
 			children));
 };
 
+var _user$project$Ports$modalOpen = _elm_lang$core$Native_Platform.outgoingPort(
+	'modalOpen',
+	function (v) {
+		return null;
+	});
+var _user$project$Ports$modalClose = _elm_lang$core$Native_Platform.outgoingPort(
+	'modalClose',
+	function (v) {
+		return null;
+	});
+
 var _user$project$Main$pageContactUs = function (model) {
 	return {
 		ctor: '::',
@@ -17510,12 +17521,20 @@ var _user$project$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ModalMsg':
+				var _p2 = _p1._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{modalState: _p1._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
+						{modalState: _p2}),
+					_1: _elm_lang$core$Platform_Cmd$batch(
+						{
+							ctor: '::',
+							_0: _elm_lang$core$Native_Utils.eq(_p2, _rundis$elm_bootstrap$Bootstrap_Modal$hiddenState) ? _user$project$Ports$modalClose(
+								{ctor: '_Tuple0'}) : _user$project$Ports$modalOpen(
+								{ctor: '_Tuple0'}),
+							_1: {ctor: '[]'}
+						})
 				};
 			case 'RadioPhotosMsg':
 				return {
@@ -17783,8 +17802,8 @@ var _user$project$Main$mainContent = function (model) {
 		_rundis$elm_bootstrap$Bootstrap_Grid$container,
 		{ctor: '[]'},
 		function () {
-			var _p2 = model.page;
-			switch (_p2.ctor) {
+			var _p3 = model.page;
+			switch (_p3.ctor) {
 				case 'Home':
 					return _user$project$Main$pageHome(model);
 				case 'ContactUs':
@@ -17798,15 +17817,15 @@ var _user$project$Main$NavMsg = function (a) {
 	return {ctor: 'NavMsg', _0: a};
 };
 var _user$project$Main$init = function (location) {
-	var _p3 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
-	var navState = _p3._0;
-	var navCmd = _p3._1;
-	var _p4 = A2(
+	var _p4 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
+	var navState = _p4._0;
+	var navCmd = _p4._1;
+	var _p5 = A2(
 		_user$project$Main$urlUpdate,
 		location,
 		{navState: navState, page: _user$project$Main$Home, modalState: _rundis$elm_bootstrap$Bootstrap_Modal$hiddenState, radioPhotosPerMonth: _elm_lang$core$Maybe$Nothing, radioPaymentMethod: _elm_lang$core$Maybe$Nothing});
-	var model = _p4._0;
-	var urlCmd = _p4._1;
+	var model = _p5._0;
+	var urlCmd = _p5._1;
 	return {
 		ctor: '_Tuple2',
 		_0: model,

@@ -1,4 +1,4 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -24,6 +24,7 @@ import Bootstrap.Form.Radio as Radio
 import Bootstrap.Form.Textarea as Textarea
 import Bootstrap.Form.Fieldset as Fieldset
 import Markdown
+import Ports
 
 
 main : Program Never Model Msg
@@ -95,7 +96,12 @@ update msg model =
 
         ModalMsg state ->
             ( { model | modalState = state }
-            , Cmd.none
+            , Cmd.batch
+                [ if state == Modal.hiddenState then
+                    Ports.modalClose ()
+                  else
+                    Ports.modalOpen ()
+                ]
             )
 
         RadioPhotosMsg state ->
