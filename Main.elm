@@ -2,7 +2,7 @@ port module Main exposing (main)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 import Navigation exposing (Location)
 import UrlParser exposing ((</>))
 import Bootstrap.Navbar as Navbar
@@ -41,8 +41,10 @@ type alias Model =
     { page : Page
     , navState : Navbar.State
     , modalState : Modal.State
-    , radioPhotosPerMonth : Maybe RadioPhotosPerMonth
+    , radioPhotosPerMonth : RadioPhotosPerMonth
     , radioPaymentMethod : Maybe RadioPaymentMethod
+    , email : String
+    , reasonablePrice : String
     }
 
 
@@ -65,6 +67,8 @@ init location =
                 , modalState = Modal.hiddenState
                 , radioPhotosPerMonth = Nothing
                 , radioPaymentMethod = Nothing
+                , email = ""
+                , reasonablePrice = ""
                 }
     in
         ( model, Cmd.batch [ urlCmd, navCmd ] )
@@ -74,8 +78,9 @@ type Msg
     = UrlChange Location
     | NavMsg Navbar.State
     | ModalMsg Modal.State
-    | RadioPhotosMsg (Maybe RadioPhotosPerMonth)
+    | RadioPhotosMsg RadioPhotosPerMonth
     | RadioPaymentMsg (Maybe RadioPaymentMethod)
+    | ConfirmPressed
 
 
 subscriptions : Model -> Sub Msg
@@ -112,6 +117,11 @@ update msg model =
         RadioPaymentMsg state ->
             ( { model | radioPaymentMethod = state }
             , Cmd.none
+            )
+
+        ConfirmPressed ->
+            ( model
+            , Debug.log (toString model) (Cmd.none)
             )
 
 
@@ -233,58 +243,18 @@ pageHome model =
     ]
 
 
-markdown =
-    """
-
-# This is Markdown
-
-[Markdown](http://daringfireball.net/projects/markdown/) lets you
-write content in a really natural way.
-
-  * You can have lists, like this one
-  * Make things **bold** or *italic*
-  * Embed snippets of `code`
-  * Create [links](/)
-  * ...
-
-The [elm-markdown][] package parses all this content, allowing you
-to easily generate blocks of `Element` or `Html`.
-
-[elm-markdown]: http://package.elm-lang.org/packages/evancz/elm-markdown/latest
-
-"""
-
-
-
--- inear-gradient(200deg,rgb(218, 57, 4),#801a3e,#410047);
-
-
 pageContactUs : Model -> List (Html Msg)
 pageContactUs model =
     [ h2 [] [ text "Contact us" ]
     ]
 
 
-
---pageModules : Model -> List (Html Msg)
---pageModules model =
---    [ h1 [] [ text "Modules" ]
---    , Alert.warning [ text "Alert" ]
---    , Alert.info [ text "Badge" ]
---    , Alert.success [ text "Card" ]
---    ]
---pageNotFound : List (Html Msg)
---pageNotFound =
---    [ h1 [] [ text "Not found" ]
---    , text "Sorry couldn't find that page"
---    ]
+type alias RadioPhotosPerMonth =
+    Maybe Int
 
 
-type RadioPhotosPerMonth
-    = Ten
-    | Twenty
-    | Fourty
-    | Sixty
+photosPerMonthEnum =
+    [ 10, 20, 40, 60 ]
 
 
 type RadioPaymentMethod
@@ -293,42 +263,46 @@ type RadioPaymentMethod
     | AppStore
 
 
+paymentEnum =
+    [ CashOnDelivery, CreditCard, AppStore ]
+
+
+caption method =
+    case method of
+        CashOnDelivery ->
+            "On Delivery"
+
+        CreditCard ->
+            "Credit Card"
+
+        AppStore ->
+            "App Store"
+
+
 radioPhotosView attrs model =
     ButtonGroup.radioButtonGroup attrs
-        [ ButtonGroup.radioButton
-            (model.radioPhotosPerMonth == Just Ten)
-            [ Button.primary, Button.onClick <| RadioPhotosMsg (Just Ten) ]
-            [ text "10" ]
-        , ButtonGroup.radioButton
-            (model.radioPhotosPerMonth == Just Twenty)
-            [ Button.primary, Button.onClick <| RadioPhotosMsg (Just Twenty) ]
-            [ text "20" ]
-        , ButtonGroup.radioButton
-            (model.radioPhotosPerMonth == Just Fourty)
-            [ Button.primary, Button.onClick <| RadioPhotosMsg (Just Fourty) ]
-            [ text "40" ]
-        , ButtonGroup.radioButton
-            (model.radioPhotosPerMonth == Just Sixty)
-            [ Button.primary, Button.onClick <| RadioPhotosMsg (Just Sixty) ]
-            [ text "60" ]
-        ]
+        (List.map
+            (\n ->
+                ButtonGroup.radioButton
+                    (model.radioPhotosPerMonth == (Just n))
+                    [ Button.primary, Button.onClick <| RadioPhotosMsg (Just n) ]
+                    [ text (toString n) ]
+            )
+            photosPerMonthEnum
+        )
 
 
 radioPaymentView attrs model =
     ButtonGroup.radioButtonGroup attrs
-        [ ButtonGroup.radioButton
-            (model.radioPaymentMethod == Just CashOnDelivery)
-            [ Button.primary, Button.onClick <| RadioPaymentMsg (Just CashOnDelivery) ]
-            [ text "On Delivery" ]
-        , ButtonGroup.radioButton
-            (model.radioPaymentMethod == Just CreditCard)
-            [ Button.primary, Button.onClick <| RadioPaymentMsg (Just CreditCard) ]
-            [ text "Credit Card" ]
-        , ButtonGroup.radioButton
-            (model.radioPaymentMethod == Just AppStore)
-            [ Button.primary, Button.onClick <| RadioPaymentMsg (Just AppStore) ]
-            [ text "App Store" ]
-        ]
+        (List.map
+            (\method ->
+                ButtonGroup.radioButton
+                    (model.radioPaymentMethod == Just method)
+                    [ Button.primary, Button.onClick <| RadioPaymentMsg (Just method) ]
+                    [ text (caption method) ]
+            )
+            paymentEnum
+        )
 
 
 modal : Model -> Html Msg
@@ -340,29 +314,30 @@ modal model =
             [ Form.form []
                 [ Form.group []
                     [ Form.label [ for "email" ] [ text "Email address" ]
-                    , InputGroup.config (InputGroup.email [ Input.id "email" ])
+                    , InputGroup.config (InputGroup.email [ Input.id "email", Input.attrs [ value model.email ] ])
                         |> InputGroup.predecessors [ InputGroup.span [] [ text "@" ] ]
                         |> InputGroup.view
                     , Form.help [] [ text "Your email will never be shared with anyone else" ]
                     ]
                 , Form.group []
-                    [ Form.label [ for "question1" ] [ text "Preferred number of photos per month:" ]
+                    [ Form.label [ for "photos" ] [ text "Preferred number of photos per month:" ]
                     ]
                 , Form.group []
-                    [ radioPhotosView [] model
+                    [ radioPhotosView [ ButtonGroup.attrs [ id "photos" ] ] model
                     ]
                 , Form.group []
-                    [ Form.label [ for "question2" ] [ text "What do you think is a reasonable price?" ]
-                    , InputGroup.config (InputGroup.number [ Input.id "question2" ])
+                    [ Form.label [ for "price" ] [ text "What do you think is a reasonable price?" ]
+                    , InputGroup.config (InputGroup.number [ Input.id "price", Input.attrs [ value model.reasonablePrice ] ])
                         |> InputGroup.predecessors [ InputGroup.span [] [ text "$" ] ]
                         |> InputGroup.view
                     ]
                 , Form.group []
-                    [ Form.label [ for "question3" ] [ text "Preferred payment method:" ]
+                    [ Form.label [ for "payment" ] [ text "Preferred payment method:" ]
                     ]
-                , Form.group [] [ radioPaymentView [] model ]
+                , Form.group [] [ radioPaymentView [ ButtonGroup.attrs [ id "payment" ] ] model ]
                 , Button.button
                     [ Button.success
+                    , Button.attrs [ onClick ConfirmPressed ]
                     ]
                     [ text "CONFIRM" ]
                 ]

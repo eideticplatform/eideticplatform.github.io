@@ -22,11 +22,25 @@
 
       app.ports.modalOpen.subscribe(_ => {
         document.querySelector('body').classList.add('modal-open');
+        setTimeout(function(){
+          var modal = document.querySelector(".modal");
+          modal.style = "display:block; pointer-events:auto;";
+        }, 200);
       });
 
       app.ports.modalClose.subscribe(_ => {
         document.querySelector('body').classList.remove('modal-open');
       });
+
+      // function doOnOrientationChange() {
+      //   setTimeout(function(){
+      //     var modal = document.querySelector(".modal");
+      //     modal.style = "display:block; pointer-events:auto;";
+      //   }, 200);
+        
+      // }
+        
+      // window.addEventListener('orientationchange', doOnOrientationChange);
     </script>
   </body>
 </html>

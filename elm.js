@@ -17447,6 +17447,34 @@ var _user$project$Ports$modalClose = _elm_lang$core$Native_Platform.outgoingPort
 		return null;
 	});
 
+var _user$project$Main$caption = function (method) {
+	var _p0 = method;
+	switch (_p0.ctor) {
+		case 'CashOnDelivery':
+			return 'On Delivery';
+		case 'CreditCard':
+			return 'Credit Card';
+		default:
+			return 'App Store';
+	}
+};
+var _user$project$Main$photosPerMonthEnum = {
+	ctor: '::',
+	_0: 10,
+	_1: {
+		ctor: '::',
+		_0: 20,
+		_1: {
+			ctor: '::',
+			_0: 40,
+			_1: {
+				ctor: '::',
+				_0: 60,
+				_1: {ctor: '[]'}
+			}
+		}
+	}
+};
 var _user$project$Main$pageContactUs = function (model) {
 	return {
 		ctor: '::',
@@ -17461,10 +17489,9 @@ var _user$project$Main$pageContactUs = function (model) {
 		_1: {ctor: '[]'}
 	};
 };
-var _user$project$Main$markdown = '\n\n# This is Markdown\n\n[Markdown](http://daringfireball.net/projects/markdown/) lets you\nwrite content in a really natural way.\n\n  * You can have lists, like this one\n  * Make things **bold** or *italic*\n  * Embed snippets of `code`\n  * Create [links](/)\n  * ...\n\nThe [elm-markdown][] package parses all this content, allowing you\nto easily generate blocks of `Element` or `Html`.\n\n[elm-markdown]: http://package.elm-lang.org/packages/evancz/elm-markdown/latest\n\n';
-var _user$project$Main$Model = F5(
-	function (a, b, c, d, e) {
-		return {page: a, navState: b, modalState: c, radioPhotosPerMonth: d, radioPaymentMethod: e};
+var _user$project$Main$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {page: a, navState: b, modalState: c, radioPhotosPerMonth: d, radioPaymentMethod: e, email: f, reasonablePrice: g};
 	});
 var _user$project$Main$NotFound = {ctor: 'NotFound'};
 var _user$project$Main$ContactUs = {ctor: 'ContactUs'};
@@ -17487,8 +17514,8 @@ var _user$project$Main$decode = function (location) {
 };
 var _user$project$Main$urlUpdate = F2(
 	function (location, model) {
-		var _p0 = _user$project$Main$decode(location);
-		if (_p0.ctor === 'Nothing') {
+		var _p1 = _user$project$Main$decode(location);
+		if (_p1.ctor === 'Nothing') {
 			return {
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
@@ -17501,36 +17528,36 @@ var _user$project$Main$urlUpdate = F2(
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
 					model,
-					{page: _p0._0}),
+					{page: _p1._0}),
 				_1: _elm_lang$core$Platform_Cmd$none
 			};
 		}
 	});
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p1 = msg;
-		switch (_p1.ctor) {
+		var _p2 = msg;
+		switch (_p2.ctor) {
 			case 'UrlChange':
-				return A2(_user$project$Main$urlUpdate, _p1._0, model);
+				return A2(_user$project$Main$urlUpdate, _p2._0, model);
 			case 'NavMsg':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{navState: _p1._0}),
+						{navState: _p2._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ModalMsg':
-				var _p2 = _p1._0;
+				var _p3 = _p2._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{modalState: _p2}),
+						{modalState: _p3}),
 					_1: _elm_lang$core$Platform_Cmd$batch(
 						{
 							ctor: '::',
-							_0: _elm_lang$core$Native_Utils.eq(_p2, _rundis$elm_bootstrap$Bootstrap_Modal$hiddenState) ? _user$project$Ports$modalClose(
+							_0: _elm_lang$core$Native_Utils.eq(_p3, _rundis$elm_bootstrap$Bootstrap_Modal$hiddenState) ? _user$project$Ports$modalClose(
 								{ctor: '_Tuple0'}) : _user$project$Ports$modalOpen(
 								{ctor: '_Tuple0'}),
 							_1: {ctor: '[]'}
@@ -17541,25 +17568,68 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{radioPhotosPerMonth: _p1._0}),
+						{radioPhotosPerMonth: _p2._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'RadioPaymentMsg':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{radioPaymentMethod: _p2._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
 				return {
 					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{radioPaymentMethod: _p1._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
+					_0: model,
+					_1: A2(
+						_elm_lang$core$Debug$log,
+						_elm_lang$core$Basics$toString(model),
+						_elm_lang$core$Platform_Cmd$none)
 				};
 		}
 	});
+var _user$project$Main$ConfirmPressed = {ctor: 'ConfirmPressed'};
 var _user$project$Main$RadioPaymentMsg = function (a) {
 	return {ctor: 'RadioPaymentMsg', _0: a};
 };
 var _user$project$Main$RadioPhotosMsg = function (a) {
 	return {ctor: 'RadioPhotosMsg', _0: a};
 };
+var _user$project$Main$radioPhotosView = F2(
+	function (attrs, model) {
+		return A2(
+			_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButtonGroup,
+			attrs,
+			A2(
+				_elm_lang$core$List$map,
+				function (n) {
+					return A3(
+						_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButton,
+						_elm_lang$core$Native_Utils.eq(
+							model.radioPhotosPerMonth,
+							_elm_lang$core$Maybe$Just(n)),
+						{
+							ctor: '::',
+							_0: _rundis$elm_bootstrap$Bootstrap_Button$primary,
+							_1: {
+								ctor: '::',
+								_0: _rundis$elm_bootstrap$Bootstrap_Button$onClick(
+									_user$project$Main$RadioPhotosMsg(
+										_elm_lang$core$Maybe$Just(n))),
+								_1: {ctor: '[]'}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_elm_lang$core$Basics$toString(n)),
+							_1: {ctor: '[]'}
+						});
+				},
+				_user$project$Main$photosPerMonthEnum));
+	});
 var _user$project$Main$ModalMsg = function (a) {
 	return {ctor: 'ModalMsg', _0: a};
 };
@@ -17802,8 +17872,8 @@ var _user$project$Main$mainContent = function (model) {
 		_rundis$elm_bootstrap$Bootstrap_Grid$container,
 		{ctor: '[]'},
 		function () {
-			var _p3 = model.page;
-			switch (_p3.ctor) {
+			var _p4 = model.page;
+			switch (_p4.ctor) {
 				case 'Home':
 					return _user$project$Main$pageHome(model);
 				case 'ContactUs':
@@ -17817,15 +17887,15 @@ var _user$project$Main$NavMsg = function (a) {
 	return {ctor: 'NavMsg', _0: a};
 };
 var _user$project$Main$init = function (location) {
-	var _p4 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
-	var navState = _p4._0;
-	var navCmd = _p4._1;
-	var _p5 = A2(
+	var _p5 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
+	var navState = _p5._0;
+	var navCmd = _p5._1;
+	var _p6 = A2(
 		_user$project$Main$urlUpdate,
 		location,
-		{navState: navState, page: _user$project$Main$Home, modalState: _rundis$elm_bootstrap$Bootstrap_Modal$hiddenState, radioPhotosPerMonth: _elm_lang$core$Maybe$Nothing, radioPaymentMethod: _elm_lang$core$Maybe$Nothing});
-	var model = _p5._0;
-	var urlCmd = _p5._1;
+		{navState: navState, page: _user$project$Main$Home, modalState: _rundis$elm_bootstrap$Bootstrap_Modal$hiddenState, radioPhotosPerMonth: _elm_lang$core$Maybe$Nothing, radioPaymentMethod: _elm_lang$core$Maybe$Nothing, email: '', reasonablePrice: ''});
+	var model = _p6._0;
+	var urlCmd = _p6._1;
 	return {
 		ctor: '_Tuple2',
 		_0: model,
@@ -17886,151 +17956,35 @@ var _user$project$Main$menu = function (model) {
 var _user$project$Main$UrlChange = function (a) {
 	return {ctor: 'UrlChange', _0: a};
 };
-var _user$project$Main$Sixty = {ctor: 'Sixty'};
-var _user$project$Main$Fourty = {ctor: 'Fourty'};
-var _user$project$Main$Twenty = {ctor: 'Twenty'};
-var _user$project$Main$Ten = {ctor: 'Ten'};
-var _user$project$Main$radioPhotosView = F2(
-	function (attrs, model) {
-		return A2(
-			_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButtonGroup,
-			attrs,
-			{
-				ctor: '::',
-				_0: A3(
-					_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButton,
-					_elm_lang$core$Native_Utils.eq(
-						model.radioPhotosPerMonth,
-						_elm_lang$core$Maybe$Just(_user$project$Main$Ten)),
-					{
-						ctor: '::',
-						_0: _rundis$elm_bootstrap$Bootstrap_Button$primary,
-						_1: {
-							ctor: '::',
-							_0: _rundis$elm_bootstrap$Bootstrap_Button$onClick(
-								_user$project$Main$RadioPhotosMsg(
-									_elm_lang$core$Maybe$Just(_user$project$Main$Ten))),
-							_1: {ctor: '[]'}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('10'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A3(
-						_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButton,
-						_elm_lang$core$Native_Utils.eq(
-							model.radioPhotosPerMonth,
-							_elm_lang$core$Maybe$Just(_user$project$Main$Twenty)),
-						{
-							ctor: '::',
-							_0: _rundis$elm_bootstrap$Bootstrap_Button$primary,
-							_1: {
-								ctor: '::',
-								_0: _rundis$elm_bootstrap$Bootstrap_Button$onClick(
-									_user$project$Main$RadioPhotosMsg(
-										_elm_lang$core$Maybe$Just(_user$project$Main$Twenty))),
-								_1: {ctor: '[]'}
-							}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('20'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A3(
-							_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButton,
-							_elm_lang$core$Native_Utils.eq(
-								model.radioPhotosPerMonth,
-								_elm_lang$core$Maybe$Just(_user$project$Main$Fourty)),
-							{
-								ctor: '::',
-								_0: _rundis$elm_bootstrap$Bootstrap_Button$primary,
-								_1: {
-									ctor: '::',
-									_0: _rundis$elm_bootstrap$Bootstrap_Button$onClick(
-										_user$project$Main$RadioPhotosMsg(
-											_elm_lang$core$Maybe$Just(_user$project$Main$Fourty))),
-									_1: {ctor: '[]'}
-								}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('40'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A3(
-								_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButton,
-								_elm_lang$core$Native_Utils.eq(
-									model.radioPhotosPerMonth,
-									_elm_lang$core$Maybe$Just(_user$project$Main$Sixty)),
-								{
-									ctor: '::',
-									_0: _rundis$elm_bootstrap$Bootstrap_Button$primary,
-									_1: {
-										ctor: '::',
-										_0: _rundis$elm_bootstrap$Bootstrap_Button$onClick(
-											_user$project$Main$RadioPhotosMsg(
-												_elm_lang$core$Maybe$Just(_user$project$Main$Sixty))),
-										_1: {ctor: '[]'}
-									}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('60'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			});
-	});
 var _user$project$Main$AppStore = {ctor: 'AppStore'};
 var _user$project$Main$CreditCard = {ctor: 'CreditCard'};
 var _user$project$Main$CashOnDelivery = {ctor: 'CashOnDelivery'};
+var _user$project$Main$paymentEnum = {
+	ctor: '::',
+	_0: _user$project$Main$CashOnDelivery,
+	_1: {
+		ctor: '::',
+		_0: _user$project$Main$CreditCard,
+		_1: {
+			ctor: '::',
+			_0: _user$project$Main$AppStore,
+			_1: {ctor: '[]'}
+		}
+	}
+};
 var _user$project$Main$radioPaymentView = F2(
 	function (attrs, model) {
 		return A2(
 			_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButtonGroup,
 			attrs,
-			{
-				ctor: '::',
-				_0: A3(
-					_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButton,
-					_elm_lang$core$Native_Utils.eq(
-						model.radioPaymentMethod,
-						_elm_lang$core$Maybe$Just(_user$project$Main$CashOnDelivery)),
-					{
-						ctor: '::',
-						_0: _rundis$elm_bootstrap$Bootstrap_Button$primary,
-						_1: {
-							ctor: '::',
-							_0: _rundis$elm_bootstrap$Bootstrap_Button$onClick(
-								_user$project$Main$RadioPaymentMsg(
-									_elm_lang$core$Maybe$Just(_user$project$Main$CashOnDelivery))),
-							_1: {ctor: '[]'}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('On Delivery'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A3(
+			A2(
+				_elm_lang$core$List$map,
+				function (method) {
+					return A3(
 						_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButton,
 						_elm_lang$core$Native_Utils.eq(
 							model.radioPaymentMethod,
-							_elm_lang$core$Maybe$Just(_user$project$Main$CreditCard)),
+							_elm_lang$core$Maybe$Just(method)),
 						{
 							ctor: '::',
 							_0: _rundis$elm_bootstrap$Bootstrap_Button$primary,
@@ -18038,42 +17992,18 @@ var _user$project$Main$radioPaymentView = F2(
 								ctor: '::',
 								_0: _rundis$elm_bootstrap$Bootstrap_Button$onClick(
 									_user$project$Main$RadioPaymentMsg(
-										_elm_lang$core$Maybe$Just(_user$project$Main$CreditCard))),
+										_elm_lang$core$Maybe$Just(method))),
 								_1: {ctor: '[]'}
 							}
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('Credit Card'),
+							_0: _elm_lang$html$Html$text(
+								_user$project$Main$caption(method)),
 							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A3(
-							_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButton,
-							_elm_lang$core$Native_Utils.eq(
-								model.radioPaymentMethod,
-								_elm_lang$core$Maybe$Just(_user$project$Main$AppStore)),
-							{
-								ctor: '::',
-								_0: _rundis$elm_bootstrap$Bootstrap_Button$primary,
-								_1: {
-									ctor: '::',
-									_0: _rundis$elm_bootstrap$Bootstrap_Button$onClick(
-										_user$project$Main$RadioPaymentMsg(
-											_elm_lang$core$Maybe$Just(_user$project$Main$AppStore))),
-									_1: {ctor: '[]'}
-								}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('App Store'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}
-			});
+						});
+				},
+				_user$project$Main$paymentEnum));
 	});
 var _user$project$Main$modal = function (model) {
 	return A2(
@@ -18128,7 +18058,16 @@ var _user$project$Main$modal = function (model) {
 													{
 														ctor: '::',
 														_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$id('email'),
-														_1: {ctor: '[]'}
+														_1: {
+															ctor: '::',
+															_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs(
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$value(model.email),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {ctor: '[]'}
+														}
 													})))),
 									_1: {
 										ctor: '::',
@@ -18155,7 +18094,7 @@ var _user$project$Main$modal = function (model) {
 										_rundis$elm_bootstrap$Bootstrap_Form$label,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$for('question1'),
+											_0: _elm_lang$html$Html_Attributes$for('photos'),
 											_1: {ctor: '[]'}
 										},
 										{
@@ -18174,7 +18113,16 @@ var _user$project$Main$modal = function (model) {
 										ctor: '::',
 										_0: A2(
 											_user$project$Main$radioPhotosView,
-											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _rundis$elm_bootstrap$Bootstrap_ButtonGroup$attrs(
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$id('photos'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											},
 											model),
 										_1: {ctor: '[]'}
 									}),
@@ -18189,7 +18137,7 @@ var _user$project$Main$modal = function (model) {
 												_rundis$elm_bootstrap$Bootstrap_Form$label,
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$for('question2'),
+													_0: _elm_lang$html$Html_Attributes$for('price'),
 													_1: {ctor: '[]'}
 												},
 												{
@@ -18218,8 +18166,17 @@ var _user$project$Main$modal = function (model) {
 															_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$number(
 																{
 																	ctor: '::',
-																	_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$id('question2'),
-																	_1: {ctor: '[]'}
+																	_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$id('price'),
+																	_1: {
+																		ctor: '::',
+																		_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs(
+																			{
+																				ctor: '::',
+																				_0: _elm_lang$html$Html_Attributes$value(model.reasonablePrice),
+																				_1: {ctor: '[]'}
+																			}),
+																		_1: {ctor: '[]'}
+																	}
 																})))),
 												_1: {ctor: '[]'}
 											}
@@ -18235,7 +18192,7 @@ var _user$project$Main$modal = function (model) {
 													_rundis$elm_bootstrap$Bootstrap_Form$label,
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$for('question3'),
+														_0: _elm_lang$html$Html_Attributes$for('payment'),
 														_1: {ctor: '[]'}
 													},
 													{
@@ -18254,7 +18211,16 @@ var _user$project$Main$modal = function (model) {
 													ctor: '::',
 													_0: A2(
 														_user$project$Main$radioPaymentView,
-														{ctor: '[]'},
+														{
+															ctor: '::',
+															_0: _rundis$elm_bootstrap$Bootstrap_ButtonGroup$attrs(
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$id('payment'),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {ctor: '[]'}
+														},
 														model),
 													_1: {ctor: '[]'}
 												}),
@@ -18265,7 +18231,16 @@ var _user$project$Main$modal = function (model) {
 													{
 														ctor: '::',
 														_0: _rundis$elm_bootstrap$Bootstrap_Button$success,
-														_1: {ctor: '[]'}
+														_1: {
+															ctor: '::',
+															_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ConfirmPressed),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {ctor: '[]'}
+														}
 													},
 													{
 														ctor: '::',
