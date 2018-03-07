@@ -40,7 +40,7 @@ main =
 type alias Model =
     { page : Page
     , navState : Navbar.State
-    , modalState : Modal.State
+    , modalState : Modal.Visibility
     , radioPhotosPerMonth : RadioPhotosPerMonth
     , radioPaymentMethod : Maybe RadioPaymentMethod
     , email : String
@@ -64,7 +64,7 @@ init location =
             urlUpdate location
                 { navState = navState
                 , page = Home
-                , modalState = Modal.hiddenState
+                , modalState = Modal.hidden
                 , radioPhotosPerMonth = Nothing
                 , radioPaymentMethod = Nothing
                 , email = ""
@@ -77,7 +77,7 @@ init location =
 type Msg
     = UrlChange Location
     | NavMsg Navbar.State
-    | ModalMsg Modal.State
+    | ModalMsg Modal.Visibility
     | RadioPhotosMsg RadioPhotosPerMonth
     | RadioPaymentMsg (Maybe RadioPaymentMethod)
     | ConfirmPressed
@@ -86,6 +86,12 @@ type Msg
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Navbar.subscriptions model.navState NavMsg
+
+
+
+--subscriptions model =
+--    Sub.batch
+--        [ Modal.subscriptions model.modalState ModalMsg ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -102,7 +108,7 @@ update msg model =
         ModalMsg state ->
             ( { model | modalState = state }
             , Cmd.batch
-                [ if state == Modal.hiddenState then
+                [ if state == Modal.hidden then
                     Ports.modalClose ()
                   else
                     Ports.modalOpen ()
@@ -209,7 +215,7 @@ pageHome model =
         , Button.button
             [ Button.outlinePrimary
             , Button.small
-            , Button.attrs [ id "subscribe", onClick <| ModalMsg Modal.visibleState ]
+            , Button.attrs [ id "subscribe", onClick <| ModalMsg Modal.shown ]
             ]
             [ text "SUBSCRIBE" ]
         , div
@@ -307,7 +313,7 @@ radioPaymentView attrs model =
 
 modal : Model -> Html Msg
 modal model =
-    Modal.config ModalMsg
+    Modal.config (ModalMsg Modal.hiddenAnimated)
         |> Modal.large
         |> Modal.h4 [] [ text "Subscribe" ]
         |> Modal.body []
