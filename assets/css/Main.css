@@ -31,8 +31,12 @@ body {
 
 body {
 	font-family: 'Nunito', sans-serif !important;
+	color: white;
 }
 
+.text-muted {
+    color: rgba(255, 255, 255, 0.47)!important;
+}
 
 .step {
     width: 100%;
@@ -50,6 +54,7 @@ body {
 
 .btn {
 	white-space: normal;
+	border: 2px solid transparent;
 }
 
 .close {
@@ -58,4 +63,42 @@ body {
 	font-family: unset;
 	text-shadow: none;
 	font-weight: bold;
+}
+
+.form-control {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.34);
+    border: 1px solid rgba(84, 19, 116, 0.47);
+}
+
+.input-group-text {
+    color: #541374;
+    background-color: rgba(255, 255, 255, 0.66);
+    border: 1px solid rgba(84, 19, 116, 0.92);
+}
+
+.btn-primary {
+    color: rgba(0, 0, 0, 0.68);
+    background-color: rgba(255, 255, 255, 0.75);
+    border-color: rgba(255, 255, 255,0);
+}
+
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.44);
+    border-color: rgba(255,255,255,0);
+}
+
+.btn-group .btn+.btn, .btn-group .btn+.btn-group, .btn-group .btn-group+.btn, .btn-group .btn-group+.btn-group, .btn-group-vertical .btn+.btn, .btn-group-vertical .btn+.btn-group, .btn-group-vertical .btn-group+.btn, .btn-group-vertical .btn-group+.btn-group {
+     margin-left: 0px; 
+}
+
+.btn:hover {
+    background-color: white;
+    border-color: white;
+    color: black;
+}
+
+.container {
+	padding: 1.2rem;
 }

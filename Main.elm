@@ -40,7 +40,7 @@ main =
 type alias Model =
     { page : Page
     , navState : Navbar.State
-    , modalState : Modal.Visibility
+    , modalVisibility : Modal.Visibility
     , radioPhotosPerMonth : RadioPhotosPerMonth
     , radioPaymentMethod : Maybe RadioPaymentMethod
     , email : String
@@ -51,6 +51,7 @@ type alias Model =
 type Page
     = Home
     | ContactUs
+    | SubscribePage
     | NotFound
 
 
@@ -64,7 +65,7 @@ init location =
             urlUpdate location
                 { navState = navState
                 , page = Home
-                , modalState = Modal.hidden
+                , modalVisibility = Modal.hidden
                 , radioPhotosPerMonth = Nothing
                 , radioPaymentMethod = Nothing
                 , email = ""
@@ -77,7 +78,10 @@ init location =
 type Msg
     = UrlChange Location
     | NavMsg Navbar.State
-    | ModalMsg Modal.Visibility
+    | ChangePage Page
+    | CloseModal
+    | ShowModal
+    | AnimateModal Modal.Visibility
     | RadioPhotosMsg RadioPhotosPerMonth
     | RadioPaymentMsg (Maybe RadioPaymentMethod)
     | ConfirmPressed
@@ -91,7 +95,7 @@ subscriptions model =
 
 --subscriptions model =
 --    Sub.batch
---        [ Modal.subscriptions model.modalState ModalMsg ]
+--        [ Modal.subscriptions model.modalVisibility AnimateModal ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -105,15 +109,20 @@ update msg model =
             , Cmd.none
             )
 
-        ModalMsg state ->
-            ( { model | modalState = state }
-            , Cmd.batch
-                [ if state == Modal.hidden then
-                    Ports.modalClose ()
-                  else
-                    Ports.modalOpen ()
-                ]
+        ChangePage state ->
+            ( { model | page = state }
+            , Cmd.none
             )
+
+        CloseModal ->
+            ( { model | modalVisibility = Modal.hidden }, Cmd.batch [ Ports.modalClose () ] )
+
+        ShowModal ->
+            ( { model | modalVisibility = Modal.shown }, Cmd.batch [ Ports.modalOpen () ] )
+
+        -- Add handling of the animation related messages
+        AnimateModal visibility ->
+            ( { model | modalVisibility = visibility }, Cmd.none )
 
         RadioPhotosMsg state ->
             ( { model | radioPhotosPerMonth = state }
@@ -151,6 +160,7 @@ routeParser =
     UrlParser.oneOf
         [ UrlParser.map Home UrlParser.top
         , UrlParser.map ContactUs (UrlParser.s "contact-us")
+        , UrlParser.map SubscribePage (UrlParser.s "subscribe")
         ]
 
 
@@ -171,6 +181,7 @@ menu model =
         |> Navbar.brand [ href "#" ] [ text "Eidetic" ]
         |> Navbar.items
             [ Navbar.itemLink [ href "#contact-us" ] [ text "Contact us" ]
+            , Navbar.itemLink [ href "#subscribe" ] [ text "Subscribe" ]
             ]
         |> Navbar.view model.navState
 
@@ -184,6 +195,9 @@ mainContent model =
 
             ContactUs ->
                 pageContactUs model
+
+            SubscribePage ->
+                pageSubscribe model
 
             NotFound ->
                 pageHome model
@@ -210,12 +224,12 @@ pageHome model =
         , p [ class "lead" ]
             [ text "EIDETIC" ]
         , p [ class "version" ]
-            [ text "Your Favorite Moments"
+            [ text "Your Favorite Moments At Your Doorstep"
             ]
         , Button.button
             [ Button.outlinePrimary
             , Button.small
-            , Button.attrs [ id "subscribe", onClick <| ModalMsg Modal.shown ]
+            , Button.attrs [ id "subscribe", onClick <| ChangePage SubscribePage ]
             ]
             [ text "SUBSCRIBE" ]
         , div
@@ -252,6 +266,45 @@ pageHome model =
 pageContactUs : Model -> List (Html Msg)
 pageContactUs model =
     [ h2 [] [ text "Contact us" ]
+    ]
+
+
+pageSubscribe : Model -> List (Html Msg)
+pageSubscribe model =
+    [ main_
+        [ id "content", style [ ( "padding", "25" ) ] ]
+        [ h2 [] [ text "Subscribe" ]
+        , Form.form []
+            [ Form.group []
+                [ Form.label [ for "email" ] [ text "Email address" ]
+                , InputGroup.config (InputGroup.email [ Input.id "email", Input.attrs [ value model.email ] ])
+                    |> InputGroup.predecessors [ InputGroup.span [] [ text "@" ] ]
+                    |> InputGroup.view
+                , Form.help [] [ text "Your email will never be shared with anyone else" ]
+                ]
+            , Form.group []
+                [ Form.label [ for "photos" ] [ text "Preferred number of photos per month:" ]
+                ]
+            , Form.group []
+                [ radioPhotosView [ ButtonGroup.attrs [ id "photos" ] ] model
+                ]
+            , Form.group []
+                [ Form.label [ for "price" ] [ text "What do you think is a reasonable price?" ]
+                , InputGroup.config (InputGroup.number [ Input.id "price", Input.attrs [ value model.reasonablePrice ] ])
+                    |> InputGroup.predecessors [ InputGroup.span [] [ text "$" ] ]
+                    |> InputGroup.view
+                ]
+            , Form.group []
+                [ Form.label [ for "payment" ] [ text "Preferred payment method:" ]
+                ]
+            , Form.group [] [ radioPaymentView [ ButtonGroup.attrs [ id "payment" ] ] model ]
+            , Button.button
+                [ Button.success
+                , Button.attrs [ onClick ConfirmPressed ]
+                ]
+                [ text "CONFIRM" ]
+            ]
+        ]
     ]
 
 
@@ -313,7 +366,8 @@ radioPaymentView attrs model =
 
 modal : Model -> Html Msg
 modal model =
-    Modal.config (ModalMsg Modal.hiddenAnimated)
+    Modal.config CloseModal
+        |> Modal.withAnimation AnimateModal
         |> Modal.large
         |> Modal.h4 [] [ text "Subscribe" ]
         |> Modal.body []
@@ -348,4 +402,4 @@ modal model =
                     [ text "CONFIRM" ]
                 ]
             ]
-        |> Modal.view model.modalState
+        |> Modal.view model.modalVisibility
