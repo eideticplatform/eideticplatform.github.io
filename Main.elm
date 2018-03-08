@@ -11,7 +11,6 @@ import Bootstrap.Grid.Col as Col
 import Bootstrap.Card as Card
 import Bootstrap.Button as Button
 import Bootstrap.ListGroup as Listgroup
-import Bootstrap.Modal as Modal
 import Bootstrap.CDN as CDN
 import Bootstrap.Alert as Alert
 import Bootstrap.Form as Form
@@ -23,8 +22,6 @@ import Bootstrap.Form.Checkbox as Checkbox
 import Bootstrap.Form.Radio as Radio
 import Bootstrap.Form.Textarea as Textarea
 import Bootstrap.Form.Fieldset as Fieldset
-import Markdown
-import Ports
 
 
 main : Program Never Model Msg
@@ -40,7 +37,6 @@ main =
 type alias Model =
     { page : Page
     , navState : Navbar.State
-    , modalVisibility : Modal.Visibility
     , radioPhotosPerMonth : RadioPhotosPerMonth
     , radioPaymentMethod : Maybe RadioPaymentMethod
     , email : String
@@ -65,7 +61,6 @@ init location =
             urlUpdate location
                 { navState = navState
                 , page = Home
-                , modalVisibility = Modal.hidden
                 , radioPhotosPerMonth = Nothing
                 , radioPaymentMethod = Nothing
                 , email = ""
@@ -80,9 +75,6 @@ type Msg
     = UrlChange Location
     | NavMsg Navbar.State
     | ChangePage Page
-    | CloseModal
-    | ShowModal
-    | AnimateModal Modal.Visibility
     | RadioPhotosMsg RadioPhotosPerMonth
     | RadioPaymentMsg (Maybe RadioPaymentMethod)
     | ConfirmPressed
@@ -115,16 +107,6 @@ update msg model =
             ( { model | page = state }
             , Cmd.none
             )
-
-        CloseModal ->
-            ( { model | modalVisibility = Modal.hidden }, Cmd.batch [ Ports.modalClose () ] )
-
-        ShowModal ->
-            ( { model | modalVisibility = Modal.shown }, Cmd.batch [ Ports.modalOpen () ] )
-
-        -- Add handling of the animation related messages
-        AnimateModal visibility ->
-            ( { model | modalVisibility = visibility }, Cmd.none )
 
         RadioPhotosMsg state ->
             ( { model | radioPhotosPerMonth = state }
@@ -174,7 +156,6 @@ view : Model -> Html Msg
 view model =
     div []
         [ mainContent model
-        , modal model
         ]
 
 
@@ -365,44 +346,3 @@ radioPaymentView attrs model =
             )
             paymentEnum
         )
-
-
-modal : Model -> Html Msg
-modal model =
-    Modal.config CloseModal
-        |> Modal.withAnimation AnimateModal
-        |> Modal.large
-        |> Modal.h4 [] [ text "Subscribe" ]
-        |> Modal.body []
-            [ Form.form []
-                [ Form.group []
-                    [ Form.label [ for "email" ] [ text "Email address" ]
-                    , InputGroup.config (InputGroup.email [ Input.id "email", Input.attrs [ value model.email ] ])
-                        |> InputGroup.predecessors [ InputGroup.span [] [ text "@" ] ]
-                        |> InputGroup.view
-                    , Form.help [] [ text "Your email will never be shared with anyone else" ]
-                    ]
-                , Form.group []
-                    [ Form.label [ for "photos" ] [ text "Preferred number of photos per month:" ]
-                    ]
-                , Form.group []
-                    [ radioPhotosView [ ButtonGroup.attrs [ id "photos" ] ] model
-                    ]
-                , Form.group []
-                    [ Form.label [ for "price" ] [ text "What do you think is a reasonable price?" ]
-                    , InputGroup.config (InputGroup.number [ Input.id "price", Input.attrs [ value model.reasonablePrice ] ])
-                        |> InputGroup.predecessors [ InputGroup.span [] [ text "$" ] ]
-                        |> InputGroup.view
-                    ]
-                , Form.group []
-                    [ Form.label [ for "payment" ] [ text "Preferred payment method:" ]
-                    ]
-                , Form.group [] [ radioPaymentView [ ButtonGroup.attrs [ id "payment" ] ] model ]
-                , Button.button
-                    [ Button.success
-                    , Button.attrs [ onClick ConfirmPressed ]
-                    ]
-                    [ text "CONFIRM" ]
-                ]
-            ]
-        |> Modal.view model.modalVisibility
