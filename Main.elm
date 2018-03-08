@@ -2,7 +2,7 @@ port module Main exposing (main)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onInput)
+import Html.Events exposing (onClick, onInput, onSubmit)
 import Navigation exposing (Location)
 import UrlParser exposing ((</>))
 import Bootstrap.Navbar as Navbar
@@ -79,6 +79,8 @@ type Msg
     | RadioPaymentMsg (Maybe RadioPaymentMethod)
     | ConfirmPressed
     | SubscribePressed
+    | ChangeEmail String
+    | ChangePrice String
 
 
 subscriptions : Model -> Sub Msg
@@ -126,6 +128,16 @@ update msg model =
         ConfirmPressed ->
             ( { model | subscribing = False }
             , Debug.log (toString model) (Cmd.none)
+            )
+
+        ChangeEmail state ->
+            ( { model | email = state }
+            , Cmd.none
+            )
+
+        ChangePrice state ->
+            ( { model | reasonablePrice = state }
+            , Cmd.none
             )
 
 
@@ -207,8 +219,8 @@ pageHome model =
             ]
         , p [ class "lead" ]
             [ text "EIDETIC" ]
-        , p [ class "version" ]
-            [ text "Your Favorite Moments At Your Doorstep"
+        , p [ class "version", style [ ( "margin-bottom", "2rem" ) ] ]
+            [ text "Your Favorite Memories At Your Doorstep"
             ]
         , if model.subscribing then
             pageSubscribe model
@@ -260,32 +272,32 @@ pageSubscribe : Model -> Html Msg
 pageSubscribe model =
     main_
         [ id "subscribe_content", style [ ( "padding", "1.2rem" ) ] ]
-        [ h2 [ style [ ( "text-align", "center" ) ] ] [ text "Subscribe" ]
+        [ h2 [ style [ ( "text-align", "center" ) ] ] [ text "SUBSCRIBE" ]
         , Form.form []
             [ Form.group []
                 [ Form.label [ for "email" ] [ text "Email address" ]
-                , InputGroup.config (InputGroup.email [ Input.id "email", Input.attrs [ value model.email ] ])
+                , InputGroup.config (InputGroup.email [ Input.placeholder "Email address", Input.id "email", Input.attrs [ autofocus True, required True, onInput ChangeEmail ] ])
                     |> InputGroup.predecessors [ InputGroup.span [] [ text "@" ] ]
                     |> InputGroup.view
                 , Form.help [] [ text "Your email will never be shared with anyone else" ]
                 ]
             , Form.group []
-                [ Form.label [ for "photos" ] [ text "Preferred number of photos per month:" ]
+                [ Form.label [ for "photos" ] [ text "Preferred number of photos per month" ]
                 , radioPhotosView [ ButtonGroup.attrs [ id "photos" ] ] model
                 ]
             , Form.group []
                 [ Form.label [ for "price" ] [ text "What do you think is a reasonable price?" ]
-                , InputGroup.config (InputGroup.number [ Input.id "price", Input.attrs [ value model.reasonablePrice ] ])
+                , InputGroup.config (InputGroup.number [ Input.id "price", Input.attrs [ onInput ChangePrice, Html.Attributes.max "20" ] ])
                     |> InputGroup.predecessors [ InputGroup.span [] [ text "$" ] ]
                     |> InputGroup.view
                 ]
             , Form.group []
-                [ Form.label [ for "payment" ] [ text "Preferred payment method:" ]
+                [ Form.label [ for "payment" ] [ text "Preferred payment method" ]
                 , radioPaymentView [ ButtonGroup.attrs [ id "payment" ] ] model
                 ]
             , Button.button
                 [ Button.success
-                , Button.attrs [ onClick ConfirmPressed, id "confirm" ]
+                , Button.attrs [ onSubmit ConfirmPressed, id "confirm", style [ ( "margin-top", "1rem" ) ] ]
                 ]
                 [ text "CONFIRM" ]
             ]

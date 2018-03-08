@@ -10,6 +10,7 @@ body {
 }
 html {
    min-height: 100%; 
+   font-family: 'Nunito', sans-serif !important;
 } 
 
 .bd-masthead {
@@ -48,24 +49,28 @@ html {
 
 
 #subscribe {
-	color: rgba(255, 172, 194, 0.85);;
+	color: rgba(255, 172, 194, 0.85);
     border-color: rgba(255, 172, 194, 0.58);
 	padding: 1rem 2rem;
 	font-family: 'Nunito', sans-serif !important;
 	font-size: 1.25rem;
     font-weight: 500;
+    border-radius: 0.4rem;
 }
 
 #subscribe:hover {
-    background-color: #51317c;
+    box-shadow: 0 2px 100px rgba(0,0,0,0.30);
+    background-color: rgba(81, 49, 124, 0.36);
 }
 
 #subscribe_content {
-	background-color: #51317c;
+	/*background-color: #51317c;*/
+	background-color: rgba(81, 49, 124, 0.36);
 	border-width: 2px;
 	border-radius: .7rem;
 	border: solid rgba(255, 172, 194, 0.58);
 	text-align: left;
+	box-shadow: 0 2px 100px rgba(0,0,0,0.30);
 }
 
 .lead {
@@ -125,7 +130,7 @@ body {
 }
 
 .btn-primary {
-    color: rgba(0, 0, 0, 0.68);
+    color: rgb(106, 72, 100);
     background-color: rgba(255, 255, 255, 0.75);
     border-color: rgba(255, 255, 255,0);
 }
@@ -140,7 +145,7 @@ body {
      margin-left: 0px; 
 }
 
-.btn:hover {
+.btn-group .btn:hover {
     background-color: white;
     border-color: rgba(255,255,255,0);
     color: black;
@@ -163,6 +168,11 @@ label {
 
 }
 
+.input-group-text {
+	display: inline;
+	width: 3rem;
+	margin-right: -1px;
+}
 
 @media (min-width: 992)
 {
@@ -179,4 +189,8 @@ label {
 	    max-width: 40rem;
 	}
 
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
 }

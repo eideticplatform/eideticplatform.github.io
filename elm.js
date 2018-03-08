@@ -18012,7 +18012,7 @@ var _user$project$Main$update = F2(
 						{subscribing: true}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'ConfirmPressed':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -18023,8 +18023,30 @@ var _user$project$Main$update = F2(
 						_elm_lang$core$Basics$toString(model),
 						_elm_lang$core$Platform_Cmd$none)
 				};
+			case 'ChangeEmail':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{email: _p2._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{reasonablePrice: _p2._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
+var _user$project$Main$ChangePrice = function (a) {
+	return {ctor: 'ChangePrice', _0: a};
+};
+var _user$project$Main$ChangeEmail = function (a) {
+	return {ctor: 'ChangeEmail', _0: a};
+};
 var _user$project$Main$SubscribePressed = {ctor: 'SubscribePressed'};
 var _user$project$Main$ConfirmPressed = {ctor: 'ConfirmPressed'};
 var _user$project$Main$RadioPaymentMsg = function (a) {
@@ -18239,7 +18261,7 @@ var _user$project$Main$pageSubscribe = function (model) {
 				},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text('Subscribe'),
+					_0: _elm_lang$html$Html$text('SUBSCRIBE'),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
@@ -18287,16 +18309,28 @@ var _user$project$Main$pageSubscribe = function (model) {
 												_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$email(
 													{
 														ctor: '::',
-														_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$id('email'),
+														_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$placeholder('Email address'),
 														_1: {
 															ctor: '::',
-															_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs(
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Attributes$value(model.email),
-																	_1: {ctor: '[]'}
-																}),
-															_1: {ctor: '[]'}
+															_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$id('email'),
+															_1: {
+																ctor: '::',
+																_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs(
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$autofocus(true),
+																		_1: {
+																			ctor: '::',
+																			_0: _elm_lang$html$Html_Attributes$required(true),
+																			_1: {
+																				ctor: '::',
+																				_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangeEmail),
+																				_1: {ctor: '[]'}
+																			}
+																		}
+																	}),
+																_1: {ctor: '[]'}
+															}
 														}
 													})))),
 									_1: {
@@ -18329,7 +18363,7 @@ var _user$project$Main$pageSubscribe = function (model) {
 										},
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html$text('Preferred number of photos per month:'),
+											_0: _elm_lang$html$Html$text('Preferred number of photos per month'),
 											_1: {ctor: '[]'}
 										}),
 									_1: {
@@ -18396,8 +18430,12 @@ var _user$project$Main$pageSubscribe = function (model) {
 																	_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs(
 																		{
 																			ctor: '::',
-																			_0: _elm_lang$html$Html_Attributes$value(model.reasonablePrice),
-																			_1: {ctor: '[]'}
+																			_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangePrice),
+																			_1: {
+																				ctor: '::',
+																				_0: _elm_lang$html$Html_Attributes$max('20'),
+																				_1: {ctor: '[]'}
+																			}
 																		}),
 																	_1: {ctor: '[]'}
 																}
@@ -18421,7 +18459,7 @@ var _user$project$Main$pageSubscribe = function (model) {
 												},
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html$text('Preferred payment method:'),
+													_0: _elm_lang$html$Html$text('Preferred payment method'),
 													_1: {ctor: '[]'}
 												}),
 											_1: {
@@ -18454,11 +18492,20 @@ var _user$project$Main$pageSubscribe = function (model) {
 													_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
 														{
 															ctor: '::',
-															_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ConfirmPressed),
+															_0: _elm_lang$html$Html_Events$onSubmit(_user$project$Main$ConfirmPressed),
 															_1: {
 																ctor: '::',
 																_0: _elm_lang$html$Html_Attributes$id('confirm'),
-																_1: {ctor: '[]'}
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$style(
+																		{
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '1rem'},
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {ctor: '[]'}
+																}
 															}
 														}),
 													_1: {ctor: '[]'}
@@ -18561,11 +18608,20 @@ var _user$project$Main$pageHome = function (model) {
 							{
 								ctor: '::',
 								_0: _elm_lang$html$Html_Attributes$class('version'),
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$style(
+										{
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '2rem'},
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
 							},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('Your Favorite Moments At Your Doorstep'),
+								_0: _elm_lang$html$Html$text('Your Favorite Memories At Your Doorstep'),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
