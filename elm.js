@@ -18663,7 +18663,7 @@ var _user$project$Main$caption = function (method) {
 		case 'CreditCard':
 			return 'Credit Card';
 		default:
-			return 'App Store';
+			return 'App Store    ';
 	}
 };
 var _user$project$Main$photosPerMonthEnum = {
@@ -18697,12 +18697,11 @@ var _user$project$Main$pageContactUs = function (model) {
 		_1: {ctor: '[]'}
 	};
 };
-var _user$project$Main$Model = F7(
-	function (a, b, c, d, e, f, g) {
-		return {page: a, navState: b, modalVisibility: c, radioPhotosPerMonth: d, radioPaymentMethod: e, email: f, reasonablePrice: g};
+var _user$project$Main$Model = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {page: a, navState: b, modalVisibility: c, radioPhotosPerMonth: d, radioPaymentMethod: e, email: f, reasonablePrice: g, subscribing: h};
 	});
 var _user$project$Main$NotFound = {ctor: 'NotFound'};
-var _user$project$Main$SubscribePage = {ctor: 'SubscribePage'};
 var _user$project$Main$ContactUs = {ctor: 'ContactUs'};
 var _user$project$Main$Home = {ctor: 'Home'};
 var _user$project$Main$routeParser = _evancz$url_parser$UrlParser$oneOf(
@@ -18715,14 +18714,7 @@ var _user$project$Main$routeParser = _evancz$url_parser$UrlParser$oneOf(
 				_evancz$url_parser$UrlParser$map,
 				_user$project$Main$ContactUs,
 				_evancz$url_parser$UrlParser$s('contact-us')),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_evancz$url_parser$UrlParser$map,
-					_user$project$Main$SubscribePage,
-					_evancz$url_parser$UrlParser$s('subscribe')),
-				_1: {ctor: '[]'}
-			}
+			_1: {ctor: '[]'}
 		}
 	});
 var _user$project$Main$decode = function (location) {
@@ -18823,10 +18815,20 @@ var _user$project$Main$update = F2(
 						{radioPaymentMethod: _p2._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			case 'SubscribePressed':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{subscribing: true}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			default:
 				return {
 					ctor: '_Tuple2',
-					_0: model,
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{subscribing: false}),
 					_1: A2(
 						_elm_lang$core$Debug$log,
 						_elm_lang$core$Basics$toString(model),
@@ -18834,6 +18836,7 @@ var _user$project$Main$update = F2(
 				};
 		}
 	});
+var _user$project$Main$SubscribePressed = {ctor: 'SubscribePressed'};
 var _user$project$Main$ConfirmPressed = {ctor: 'ConfirmPressed'};
 var _user$project$Main$RadioPaymentMsg = function (a) {
 	return {ctor: 'RadioPaymentMsg', _0: a};
@@ -18882,240 +18885,6 @@ var _user$project$Main$CloseModal = {ctor: 'CloseModal'};
 var _user$project$Main$ChangePage = function (a) {
 	return {ctor: 'ChangePage', _0: a};
 };
-var _user$project$Main$pageHome = function (model) {
-	return {
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$main_,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('bd-masthead'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$id('content'),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$style(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'margin', _1: '0 auto 2rem'},
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$img,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Logo.svg'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$alt('eidetic-logo'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$style(
-											{
-												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 'border', _1: '0.3rem solid white'},
-												_1: {
-													ctor: '::',
-													_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '15%'},
-													_1: {ctor: '[]'}
-												}
-											}),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$id('logo'),
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							},
-							{ctor: '[]'}),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$p,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('lead'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('EIDETIC'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$p,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('version'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('Your Favorite Moments At Your Doorstep'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_rundis$elm_bootstrap$Bootstrap_Button$button,
-								{
-									ctor: '::',
-									_0: _rundis$elm_bootstrap$Bootstrap_Button$outlinePrimary,
-									_1: {
-										ctor: '::',
-										_0: _rundis$elm_bootstrap$Bootstrap_Button$small,
-										_1: {
-											ctor: '::',
-											_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$id('subscribe'),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onClick(
-															_user$project$Main$ChangePage(_user$project$Main$SubscribePage)),
-														_1: {ctor: '[]'}
-													}
-												}),
-											_1: {ctor: '[]'}
-										}
-									}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('SUBSCRIBE'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$style(
-											{
-												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 'margin', _1: '2rem 0 2rem auto'},
-												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$img,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Step1.svg'),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$alt('eidetic-logo'),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('step'),
-														_1: {ctor: '[]'}
-													}
-												}
-											},
-											{ctor: '[]'}),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$div,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$style(
-												{
-													ctor: '::',
-													_0: {ctor: '_Tuple2', _0: 'margin', _1: '0 auto 2rem'},
-													_1: {ctor: '[]'}
-												}),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$img,
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Step2.svg'),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$alt('eidetic-logo'),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$class('step'),
-															_1: {ctor: '[]'}
-														}
-													}
-												},
-												{ctor: '[]'}),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$div,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$style(
-													{
-														ctor: '::',
-														_0: {ctor: '_Tuple2', _0: 'margin', _1: '0 auto 2rem'},
-														_1: {ctor: '[]'}
-													}),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$img,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Step3.svg'),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$alt('eidetic-logo'),
-															_1: {
-																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$class('step'),
-																_1: {ctor: '[]'}
-															}
-														}
-													},
-													{ctor: '[]'}),
-												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
-									}
-								}
-							}
-						}
-					}
-				}
-			}),
-		_1: {ctor: '[]'}
-	};
-};
 var _user$project$Main$NavMsg = function (a) {
 	return {ctor: 'NavMsg', _0: a};
 };
@@ -19126,7 +18895,7 @@ var _user$project$Main$init = function (location) {
 	var _p4 = A2(
 		_user$project$Main$urlUpdate,
 		location,
-		{navState: navState, page: _user$project$Main$Home, modalVisibility: _rundis$elm_bootstrap$Bootstrap_Modal$hidden, radioPhotosPerMonth: _elm_lang$core$Maybe$Nothing, radioPaymentMethod: _elm_lang$core$Maybe$Nothing, email: '', reasonablePrice: ''});
+		{navState: navState, page: _user$project$Main$Home, modalVisibility: _rundis$elm_bootstrap$Bootstrap_Modal$hidden, radioPhotosPerMonth: _elm_lang$core$Maybe$Nothing, radioPaymentMethod: _elm_lang$core$Maybe$Nothing, email: '', reasonablePrice: '', subscribing: false});
 	var model = _p4._0;
 	var urlCmd = _p4._1;
 	return {
@@ -19254,40 +19023,113 @@ var _user$project$Main$radioPaymentView = F2(
 				_user$project$Main$paymentEnum));
 	});
 var _user$project$Main$pageSubscribe = function (model) {
-	return {
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$main_,
-			{
+	return A2(
+		_elm_lang$html$Html$main_,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$id('subscribe_content'),
+			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$id('content'),
-				_1: {
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'padding', _1: '1.2rem'},
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h2,
+				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$style(
 						{
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'padding', _1: '25'},
+							_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
 							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}
-				}
-			},
-			{
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Subscribe'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$h2,
+					_rundis$elm_bootstrap$Bootstrap_Form$form,
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Subscribe'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_rundis$elm_bootstrap$Bootstrap_Form$form,
-						{ctor: '[]'},
-						{
+						_0: A2(
+							_rundis$elm_bootstrap$Bootstrap_Form$group,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: A2(
+									_rundis$elm_bootstrap$Bootstrap_Form$label,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$for('email'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Email address'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$view(
+										A2(
+											_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$predecessors,
+											{
+												ctor: '::',
+												_0: A2(
+													_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$span,
+													{ctor: '[]'},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('@'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											},
+											_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$config(
+												_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$email(
+													{
+														ctor: '::',
+														_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$id('email'),
+														_1: {
+															ctor: '::',
+															_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs(
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$value(model.email),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {ctor: '[]'}
+														}
+													})))),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_rundis$elm_bootstrap$Bootstrap_Form$help,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Your email will never be shared with anyone else'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}),
+						_1: {
 							ctor: '::',
 							_0: A2(
 								_rundis$elm_bootstrap$Bootstrap_Form$group,
@@ -19298,59 +19140,30 @@ var _user$project$Main$pageSubscribe = function (model) {
 										_rundis$elm_bootstrap$Bootstrap_Form$label,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$for('email'),
+											_0: _elm_lang$html$Html_Attributes$for('photos'),
 											_1: {ctor: '[]'}
 										},
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html$text('Email address'),
+											_0: _elm_lang$html$Html$text('Preferred number of photos per month:'),
 											_1: {ctor: '[]'}
 										}),
 									_1: {
 										ctor: '::',
-										_0: _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$view(
-											A2(
-												_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$predecessors,
-												{
-													ctor: '::',
-													_0: A2(
-														_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$span,
-														{ctor: '[]'},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text('@'),
-															_1: {ctor: '[]'}
-														}),
-													_1: {ctor: '[]'}
-												},
-												_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$config(
-													_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$email(
-														{
-															ctor: '::',
-															_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$id('email'),
-															_1: {
-																ctor: '::',
-																_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs(
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$value(model.email),
-																		_1: {ctor: '[]'}
-																	}),
-																_1: {ctor: '[]'}
-															}
-														})))),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_rundis$elm_bootstrap$Bootstrap_Form$help,
-												{ctor: '[]'},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('Your email will never be shared with anyone else'),
-													_1: {ctor: '[]'}
-												}),
-											_1: {ctor: '[]'}
-										}
+										_0: A2(
+											_user$project$Main$radioPhotosView,
+											{
+												ctor: '::',
+												_0: _rundis$elm_bootstrap$Bootstrap_ButtonGroup$attrs(
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$id('photos'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											},
+											model),
+										_1: {ctor: '[]'}
 									}
 								}),
 							_1: {
@@ -19364,15 +19177,49 @@ var _user$project$Main$pageSubscribe = function (model) {
 											_rundis$elm_bootstrap$Bootstrap_Form$label,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$for('photos'),
+												_0: _elm_lang$html$Html_Attributes$for('price'),
 												_1: {ctor: '[]'}
 											},
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html$text('Preferred number of photos per month:'),
+												_0: _elm_lang$html$Html$text('What do you think is a reasonable price?'),
 												_1: {ctor: '[]'}
 											}),
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$view(
+												A2(
+													_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$predecessors,
+													{
+														ctor: '::',
+														_0: A2(
+															_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$span,
+															{ctor: '[]'},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('$'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													},
+													_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$config(
+														_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$number(
+															{
+																ctor: '::',
+																_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$id('price'),
+																_1: {
+																	ctor: '::',
+																	_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs(
+																		{
+																			ctor: '::',
+																			_0: _elm_lang$html$Html_Attributes$value(model.reasonablePrice),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {ctor: '[]'}
+																}
+															})))),
+											_1: {ctor: '[]'}
+										}
 									}),
 								_1: {
 									ctor: '::',
@@ -19382,150 +19229,300 @@ var _user$project$Main$pageSubscribe = function (model) {
 										{
 											ctor: '::',
 											_0: A2(
-												_user$project$Main$radioPhotosView,
+												_rundis$elm_bootstrap$Bootstrap_Form$label,
 												{
 													ctor: '::',
-													_0: _rundis$elm_bootstrap$Bootstrap_ButtonGroup$attrs(
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$id('photos'),
-															_1: {ctor: '[]'}
-														}),
+													_0: _elm_lang$html$Html_Attributes$for('payment'),
 													_1: {ctor: '[]'}
 												},
-												model),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_rundis$elm_bootstrap$Bootstrap_Form$group,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: A2(
-													_rundis$elm_bootstrap$Bootstrap_Form$label,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$for('price'),
-														_1: {ctor: '[]'}
-													},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('What do you think is a reasonable price?'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {
-													ctor: '::',
-													_0: _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$view(
-														A2(
-															_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$predecessors,
-															{
-																ctor: '::',
-																_0: A2(
-																	_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$span,
-																	{ctor: '[]'},
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html$text('$'),
-																		_1: {ctor: '[]'}
-																	}),
-																_1: {ctor: '[]'}
-															},
-															_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$config(
-																_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$number(
-																	{
-																		ctor: '::',
-																		_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$id('price'),
-																		_1: {
-																			ctor: '::',
-																			_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs(
-																				{
-																					ctor: '::',
-																					_0: _elm_lang$html$Html_Attributes$value(model.reasonablePrice),
-																					_1: {ctor: '[]'}
-																				}),
-																			_1: {ctor: '[]'}
-																		}
-																	})))),
-													_1: {ctor: '[]'}
-												}
-											}),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_rundis$elm_bootstrap$Bootstrap_Form$group,
-												{ctor: '[]'},
 												{
 													ctor: '::',
-													_0: A2(
-														_rundis$elm_bootstrap$Bootstrap_Form$label,
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$for('payment'),
-															_1: {ctor: '[]'}
-														},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text('Preferred payment method:'),
-															_1: {ctor: '[]'}
-														}),
+													_0: _elm_lang$html$Html$text('Preferred payment method:'),
 													_1: {ctor: '[]'}
 												}),
 											_1: {
 												ctor: '::',
 												_0: A2(
-													_rundis$elm_bootstrap$Bootstrap_Form$group,
-													{ctor: '[]'},
+													_user$project$Main$radioPaymentView,
 													{
 														ctor: '::',
-														_0: A2(
-															_user$project$Main$radioPaymentView,
+														_0: _rundis$elm_bootstrap$Bootstrap_ButtonGroup$attrs(
 															{
 																ctor: '::',
-																_0: _rundis$elm_bootstrap$Bootstrap_ButtonGroup$attrs(
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$id('payment'),
-																		_1: {ctor: '[]'}
-																	}),
+																_0: _elm_lang$html$Html_Attributes$id('payment'),
 																_1: {ctor: '[]'}
-															},
-															model),
+															}),
 														_1: {ctor: '[]'}
-													}),
+													},
+													model),
+												_1: {ctor: '[]'}
+											}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_rundis$elm_bootstrap$Bootstrap_Button$button,
+											{
+												ctor: '::',
+												_0: _rundis$elm_bootstrap$Bootstrap_Button$success,
 												_1: {
 													ctor: '::',
-													_0: A2(
-														_rundis$elm_bootstrap$Bootstrap_Button$button,
+													_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
 														{
 															ctor: '::',
-															_0: _rundis$elm_bootstrap$Bootstrap_Button$success,
+															_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ConfirmPressed),
 															_1: {
 																ctor: '::',
-																_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ConfirmPressed),
-																		_1: {ctor: '[]'}
-																	}),
+																_0: _elm_lang$html$Html_Attributes$id('confirm'),
 																_1: {ctor: '[]'}
 															}
-														},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text('CONFIRM'),
-															_1: {ctor: '[]'}
 														}),
 													_1: {ctor: '[]'}
 												}
-											}
-										}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('CONFIRM'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
 									}
 								}
 							}
-						}),
+						}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$pageHome = function (model) {
+	return {
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$main_,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('bd-masthead'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$id('content'),
 					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'margin', _1: '0 auto 2rem'},
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$img,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Logo.svg'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$alt('eidetic-logo'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$style(
+											{
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'border', _1: '0.3rem solid white'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '15%'},
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$id('logo'),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$p,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('lead'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('EIDETIC'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$p,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('version'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Your Favorite Moments At Your Doorstep'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: model.subscribing ? _user$project$Main$pageSubscribe(model) : A2(
+								_rundis$elm_bootstrap$Bootstrap_Button$button,
+								{
+									ctor: '::',
+									_0: _rundis$elm_bootstrap$Bootstrap_Button$outlinePrimary,
+									_1: {
+										ctor: '::',
+										_0: _rundis$elm_bootstrap$Bootstrap_Button$small,
+										_1: {
+											ctor: '::',
+											_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$id('subscribe'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SubscribePressed),
+														_1: {ctor: '[]'}
+													}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('SUBSCRIBE'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$style(
+											{
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'margin', _1: '2rem 0 2rem auto'},
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$img,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Step1.svg'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$alt('eidetic-logo'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('step'),
+														_1: {ctor: '[]'}
+													}
+												}
+											},
+											{ctor: '[]'}),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$style(
+												{
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'margin', _1: '0 auto 2rem'},
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$img,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Step2.svg'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$alt('eidetic-logo'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('step'),
+															_1: {ctor: '[]'}
+														}
+													}
+												},
+												{ctor: '[]'}),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$style(
+													{
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'margin', _1: '0 auto 2rem'},
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$img,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$src('assets/imgs/Step3.svg'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$alt('eidetic-logo'),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('step'),
+																_1: {ctor: '[]'}
+															}
+														}
+													},
+													{ctor: '[]'}),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
 				}
 			}),
 		_1: {ctor: '[]'}
@@ -19542,8 +19539,6 @@ var _user$project$Main$mainContent = function (model) {
 					return _user$project$Main$pageHome(model);
 				case 'ContactUs':
 					return _user$project$Main$pageContactUs(model);
-				case 'SubscribePage':
-					return _user$project$Main$pageSubscribe(model);
 				default:
 					return _user$project$Main$pageHome(model);
 			}

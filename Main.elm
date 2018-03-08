@@ -45,13 +45,13 @@ type alias Model =
     , radioPaymentMethod : Maybe RadioPaymentMethod
     , email : String
     , reasonablePrice : String
+    , subscribing : Bool
     }
 
 
 type Page
     = Home
     | ContactUs
-    | SubscribePage
     | NotFound
 
 
@@ -70,6 +70,7 @@ init location =
                 , radioPaymentMethod = Nothing
                 , email = ""
                 , reasonablePrice = ""
+                , subscribing = False
                 }
     in
         ( model, Cmd.batch [ urlCmd, navCmd ] )
@@ -85,6 +86,7 @@ type Msg
     | RadioPhotosMsg RadioPhotosPerMonth
     | RadioPaymentMsg (Maybe RadioPaymentMethod)
     | ConfirmPressed
+    | SubscribePressed
 
 
 subscriptions : Model -> Sub Msg
@@ -134,8 +136,13 @@ update msg model =
             , Cmd.none
             )
 
+        SubscribePressed ->
+            ( { model | subscribing = True }
+            , Cmd.none
+            )
+
         ConfirmPressed ->
-            ( model
+            ( { model | subscribing = False }
             , Debug.log (toString model) (Cmd.none)
             )
 
@@ -160,7 +167,6 @@ routeParser =
     UrlParser.oneOf
         [ UrlParser.map Home UrlParser.top
         , UrlParser.map ContactUs (UrlParser.s "contact-us")
-        , UrlParser.map SubscribePage (UrlParser.s "subscribe")
         ]
 
 
@@ -196,9 +202,6 @@ mainContent model =
             ContactUs ->
                 pageContactUs model
 
-            SubscribePage ->
-                pageSubscribe model
-
             NotFound ->
                 pageHome model
 
@@ -226,12 +229,15 @@ pageHome model =
         , p [ class "version" ]
             [ text "Your Favorite Moments At Your Doorstep"
             ]
-        , Button.button
-            [ Button.outlinePrimary
-            , Button.small
-            , Button.attrs [ id "subscribe", onClick <| ChangePage SubscribePage ]
-            ]
-            [ text "SUBSCRIBE" ]
+        , if model.subscribing then
+            pageSubscribe model
+          else
+            Button.button
+                [ Button.outlinePrimary
+                , Button.small
+                , Button.attrs [ id "subscribe", onClick <| SubscribePressed ]
+                ]
+                [ text "SUBSCRIBE" ]
         , div
             [ style [ ( "margin", "2rem 0 2rem auto" ) ] ]
             [ img
@@ -269,11 +275,11 @@ pageContactUs model =
     ]
 
 
-pageSubscribe : Model -> List (Html Msg)
+pageSubscribe : Model -> Html Msg
 pageSubscribe model =
-    [ main_
-        [ id "content", style [ ( "padding", "25" ) ] ]
-        [ h2 [] [ text "Subscribe" ]
+    main_
+        [ id "subscribe_content", style [ ( "padding", "1.2rem" ) ] ]
+        [ h2 [ style [ ( "text-align", "center" ) ] ] [ text "Subscribe" ]
         , Form.form []
             [ Form.group []
                 [ Form.label [ for "email" ] [ text "Email address" ]
@@ -284,9 +290,7 @@ pageSubscribe model =
                 ]
             , Form.group []
                 [ Form.label [ for "photos" ] [ text "Preferred number of photos per month:" ]
-                ]
-            , Form.group []
-                [ radioPhotosView [ ButtonGroup.attrs [ id "photos" ] ] model
+                , radioPhotosView [ ButtonGroup.attrs [ id "photos" ] ] model
                 ]
             , Form.group []
                 [ Form.label [ for "price" ] [ text "What do you think is a reasonable price?" ]
@@ -296,16 +300,15 @@ pageSubscribe model =
                 ]
             , Form.group []
                 [ Form.label [ for "payment" ] [ text "Preferred payment method:" ]
+                , radioPaymentView [ ButtonGroup.attrs [ id "payment" ] ] model
                 ]
-            , Form.group [] [ radioPaymentView [ ButtonGroup.attrs [ id "payment" ] ] model ]
             , Button.button
                 [ Button.success
-                , Button.attrs [ onClick ConfirmPressed ]
+                , Button.attrs [ onClick ConfirmPressed, id "confirm" ]
                 ]
                 [ text "CONFIRM" ]
             ]
         ]
-    ]
 
 
 type alias RadioPhotosPerMonth =
