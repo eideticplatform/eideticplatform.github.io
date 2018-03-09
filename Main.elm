@@ -276,7 +276,7 @@ pageSubscribe model =
         , Form.form []
             [ Form.group []
                 [ Form.label [ for "email" ] [ text "Email address" ]
-                , InputGroup.config (InputGroup.email [ Input.placeholder "Email address", Input.id "email", Input.attrs [ autofocus True, required True, onInput ChangeEmail ] ])
+                , InputGroup.config (InputGroup.email [ Input.id "email", Input.attrs [ autofocus True, required True, onInput ChangeEmail ] ])
                     |> InputGroup.predecessors [ InputGroup.span [] [ text "@" ] ]
                     |> InputGroup.view
                 , Form.help [] [ text "Your email will never be shared with anyone else" ]
@@ -287,7 +287,7 @@ pageSubscribe model =
                 ]
             , Form.group []
                 [ Form.label [ for "price" ] [ text "What do you think is a reasonable price?" ]
-                , InputGroup.config (InputGroup.number [ Input.id "price", Input.attrs [ onInput ChangePrice, Html.Attributes.max "20" ] ])
+                , InputGroup.config (InputGroup.number [ Input.id "price", Input.attrs [ required True, onInput ChangePrice, Html.Attributes.max "20" ] ])
                     |> InputGroup.predecessors [ InputGroup.span [] [ text "$" ] ]
                     |> InputGroup.view
                 ]
@@ -297,7 +297,7 @@ pageSubscribe model =
                 ]
             , Button.button
                 [ Button.success
-                , Button.attrs [ onSubmit ConfirmPressed, id "confirm", style [ ( "margin-top", "1rem" ) ] ]
+                , Button.attrs [ type_ "submit", onSubmit ConfirmPressed, id "confirm", style [ ( "margin-top", "1rem" ) ] ]
                 ]
                 [ text "CONFIRM" ]
             ]
@@ -338,9 +338,10 @@ radioPhotosView attrs model =
     ButtonGroup.radioButtonGroup attrs
         (List.map
             (\n ->
-                ButtonGroup.radioButton
+                ButtonGroup.myRadio
                     (model.radioPhotosPerMonth == (Just n))
                     [ Button.primary, Button.onClick <| RadioPhotosMsg (Just n) ]
+                    [ name "photos", required True ]
                     [ text (toString n) ]
             )
             photosPerMonthEnum
@@ -351,9 +352,10 @@ radioPaymentView attrs model =
     ButtonGroup.radioButtonGroup attrs
         (List.map
             (\method ->
-                ButtonGroup.radioButton
+                ButtonGroup.myRadio
                     (model.radioPaymentMethod == Just method)
                     [ Button.primary, Button.onClick <| RadioPaymentMsg (Just method) ]
+                    [ name "payment", required True ]
                     [ text (caption method) ]
             )
             paymentEnum

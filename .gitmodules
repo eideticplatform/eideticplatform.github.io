@@ -1,0 +1,3 @@
+[submodule "elm-bootstrap"]
+	path = elm-bootstrap
+	url = https://github.com/rundis/elm-bootstrap.git
