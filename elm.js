@@ -18499,7 +18499,11 @@ var _user$project$Main$pageSubscribe = function (model) {
 																				_1: {
 																					ctor: '::',
 																					_0: _elm_lang$html$Html_Attributes$max('20'),
-																					_1: {ctor: '[]'}
+																					_1: {
+																						ctor: '::',
+																						_0: _elm_lang$html$Html_Attributes$min('3'),
+																						_1: {ctor: '[]'}
+																					}
 																				}
 																			}
 																		}),
@@ -18549,44 +18553,55 @@ var _user$project$Main$pageSubscribe = function (model) {
 									_1: {
 										ctor: '::',
 										_0: A2(
-											_user$project$Bootstrap_Button$button,
+											_user$project$Bootstrap_Form$label,
+											{ctor: '[]'},
 											{
 												ctor: '::',
-												_0: _user$project$Bootstrap_Button$success,
-												_1: {
-													ctor: '::',
-													_0: _user$project$Bootstrap_Button$attrs(
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$type_('submit'),
-															_1: {
-																ctor: '::',
-																_0: _elm_lang$html$Html_Events$onSubmit(_user$project$Main$ConfirmPressed),
-																_1: {
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Attributes$id('confirm'),
-																	_1: {
-																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$style(
-																			{
-																				ctor: '::',
-																				_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '1rem'},
-																				_1: {ctor: '[]'}
-																			}),
-																		_1: {ctor: '[]'}
-																	}
-																}
-															}
-														}),
-													_1: {ctor: '[]'}
-												}
-											},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('CONFIRM'),
+												_0: _elm_lang$html$Html$text('* By subscribing before launch, we will send you a free month package with eidetic and service updates.'),
 												_1: {ctor: '[]'}
 											}),
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_user$project$Bootstrap_Button$button,
+												{
+													ctor: '::',
+													_0: _user$project$Bootstrap_Button$success,
+													_1: {
+														ctor: '::',
+														_0: _user$project$Bootstrap_Button$attrs(
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$type_('submit'),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Events$onSubmit(_user$project$Main$ConfirmPressed),
+																	_1: {
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$id('confirm'),
+																		_1: {
+																			ctor: '::',
+																			_0: _elm_lang$html$Html_Attributes$style(
+																				{
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '1rem'},
+																					_1: {ctor: '[]'}
+																				}),
+																			_1: {ctor: '[]'}
+																		}
+																	}
+																}
+															}),
+														_1: {ctor: '[]'}
+													}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('CONFIRM'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}

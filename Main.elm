@@ -287,7 +287,7 @@ pageSubscribe model =
                 ]
             , Form.group []
                 [ Form.label [ for "price" ] [ text "What do you think is a reasonable price?" ]
-                , InputGroup.config (InputGroup.number [ Input.id "price", Input.attrs [ required True, onInput ChangePrice, Html.Attributes.max "20" ] ])
+                , InputGroup.config (InputGroup.number [ Input.id "price", Input.attrs [ required True, onInput ChangePrice, Html.Attributes.max "20", Html.Attributes.min "3" ] ])
                     |> InputGroup.predecessors [ InputGroup.span [] [ text "$" ] ]
                     |> InputGroup.view
                 ]
@@ -295,6 +295,7 @@ pageSubscribe model =
                 [ Form.label [ for "payment" ] [ text "Preferred payment method" ]
                 , radioPaymentView [ ButtonGroup.attrs [ id "payment" ] ] model
                 ]
+            , Form.label [] [ text "* By subscribing before launch, we will send you a free month package with eidetic and service updates." ]
             , Button.button
                 [ Button.success
                 , Button.attrs [ type_ "submit", onSubmit ConfirmPressed, id "confirm", style [ ( "margin-top", "1rem" ) ] ]
