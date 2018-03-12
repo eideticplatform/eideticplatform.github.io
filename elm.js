@@ -18527,6 +18527,56 @@ var _user$project$Main$photosPerMonthEnum = {
 		}
 	}
 };
+var _user$project$Main$pageThanks = function (model) {
+	return A2(
+		_elm_lang$html$Html$main_,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$id('subscribe_content'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'padding', _1: '1.2rem'},
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h2,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Thanks!'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$h4,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Thank you for filling the survey and subscribing to eidetic! We will send you an email confirming your free month at launch.'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _user$project$Main$invalidFeedback = function (field) {
 	return A2(
 		_elm_lang$core$Maybe$withDefault,
@@ -18673,9 +18723,9 @@ var _user$project$Main$formData = function (model) {
 				}
 			}));
 };
-var _user$project$Main$Model = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {page: a, navState: b, radioPhotosPerMonth: c, radioPaymentMethod: d, email: e, reasonablePrice: f, subscribing: g, confirmClicked: h};
+var _user$project$Main$Model = F9(
+	function (a, b, c, d, e, f, g, h, i) {
+		return {page: a, navState: b, radioPhotosPerMonth: c, radioPaymentMethod: d, email: e, reasonablePrice: f, subscribing: g, subscribed: h, confirmClicked: i};
 	});
 var _user$project$Main$NotFound = {ctor: 'NotFound'};
 var _user$project$Main$ContactUs = {ctor: 'ContactUs'};
@@ -18775,14 +18825,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: valid ? _elm_lang$core$Native_Utils.update(
 						validated,
-						{
-							radioPhotosPerMonth: _kirchner$form_validation$Validate$empty,
-							radioPaymentMethod: _kirchner$form_validation$Validate$empty,
-							email: _kirchner$form_validation$Validate$unchecked(''),
-							reasonablePrice: _kirchner$form_validation$Validate$unchecked(''),
-							subscribing: false,
-							confirmClicked: false
-						}) : _elm_lang$core$Native_Utils.update(
+						{subscribing: false, subscribed: true}) : _elm_lang$core$Native_Utils.update(
 						validated,
 						{confirmClicked: true}),
 					_1: function () {
@@ -19172,6 +19215,7 @@ var _user$project$Main$init = function (location) {
 			email: _kirchner$form_validation$Validate$unchecked(''),
 			reasonablePrice: _kirchner$form_validation$Validate$unchecked(''),
 			subscribing: false,
+			subscribed: false,
 			confirmClicked: false
 		});
 	var model = _p12._0;
@@ -19614,7 +19658,7 @@ var _user$project$Main$pageHome = function (model) {
 							}),
 						_1: {
 							ctor: '::',
-							_0: model.subscribing ? _user$project$Main$pageSubscribe(model) : A2(
+							_0: model.subscribing ? _user$project$Main$pageSubscribe(model) : (model.subscribed ? _user$project$Main$pageThanks(model) : A2(
 								_rundis$elm_bootstrap$Bootstrap_Button$button,
 								{
 									ctor: '::',
@@ -19642,7 +19686,7 @@ var _user$project$Main$pageHome = function (model) {
 									ctor: '::',
 									_0: _elm_lang$html$Html$text('SUBSCRIBE'),
 									_1: {ctor: '[]'}
-								}),
+								})),
 							_1: {
 								ctor: '::',
 								_0: A2(

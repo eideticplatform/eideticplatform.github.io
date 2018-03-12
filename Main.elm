@@ -49,6 +49,7 @@ type alias Model =
     , email : Validatable String String
     , reasonablePrice : Validatable String String
     , subscribing : Bool
+    , subscribed : Bool
     , confirmClicked : Bool
     }
 
@@ -119,6 +120,7 @@ init location =
                 , email = Validate.unchecked ""
                 , reasonablePrice = Validate.unchecked ""
                 , subscribing = False
+                , subscribed = False
                 , confirmClicked = False
                 }
     in
@@ -196,12 +198,8 @@ update msg model =
             in
                 ( if valid then
                     { validated
-                        | radioPhotosPerMonth = empty
-                        , radioPaymentMethod = empty
-                        , email = Validate.unchecked ""
-                        , reasonablePrice = Validate.unchecked ""
-                        , subscribing = False
-                        , confirmClicked = False
+                        | subscribing = False
+                        , subscribed = True
                     }
                   else
                     { validated | confirmClicked = True }
@@ -355,6 +353,8 @@ pageHome model =
             ]
         , if model.subscribing then
             pageSubscribe model
+          else if model.subscribed then
+            pageThanks model
           else
             Button.button
                 [ Button.outlinePrimary
@@ -520,6 +520,15 @@ pageSubscribe model =
                         ]
                         [ text "CONFIRM" ]
                    ]
+        ]
+
+
+pageThanks : Model -> Html Msg
+pageThanks model =
+    main_
+        [ id "subscribe_content", style [ ( "padding", "1.2rem" ) ] ]
+        [ h2 [ style [ ( "text-align", "center" ) ] ] [ text "Thanks!" ]
+        , h4 [] [ text "Thank you for filling the survey and subscribing to eidetic! We will send you an email confirming your free month at launch." ]
         ]
 
 
