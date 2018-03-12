@@ -140,7 +140,7 @@ update msg model =
 
         ConfirmPressed ->
             ( { model | subscribing = False }
-            , sendData ((formData model))
+            , Ports.sendData (formDatafication (formData model))
             )
 
         ChangeEmail state ->
