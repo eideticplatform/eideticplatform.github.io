@@ -194,3 +194,15 @@ label {
 .form-group {
     margin-bottom: 1.5rem;
 }
+
+.form-control.is-invalid {
+	border: 1px solid rgba(84, 19, 116, 0.92);
+}
+
+.is-invalid {
+	background-color: rgba(230, 70, 64, 0.54);
+}
+
+.invalid-feedback {
+	display: block;
+}

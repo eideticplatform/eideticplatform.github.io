@@ -17928,6 +17928,12 @@ var _user$project$Bootstrap_Navbar$dropdownHeader = function (children) {
 			children));
 };
 
+var _user$project$Ports$sendData = _elm_lang$core$Native_Platform.outgoingPort(
+	'sendData',
+	function (v) {
+		return v;
+	});
+
 var _user$project$Main$caption = function (method) {
 	var _p0 = method;
 	switch (_p0.ctor) {
@@ -17970,6 +17976,61 @@ var _user$project$Main$pageContactUs = function (model) {
 		_1: {ctor: '[]'}
 	};
 };
+var _user$project$Main$formDatafication = function (formData) {
+	return A2(
+		_elm_lang$core$String$join,
+		'&',
+		A2(
+			_elm_lang$core$List$map,
+			function (_p1) {
+				var _p2 = _p1;
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$http$Http$encodeUri(_p2._0),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'=',
+						_elm_lang$http$Http$encodeUri(_p2._1)));
+			},
+			formData));
+};
+var _user$project$Main$formDataBody = function (formData) {
+	return A2(
+		_elm_lang$http$Http$stringBody,
+		'Content-Type\', \'application/x-www-form-urlencoded',
+		_user$project$Main$formDatafication(formData));
+};
+var _user$project$Main$formData = function (model) {
+	return {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'email', _1: model.email},
+		_1: {
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'photos',
+				_1: _elm_lang$core$Basics$toString(
+					A2(_elm_lang$core$Maybe$withDefault, 0, model.radioPhotosPerMonth))
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'payment',
+					_1: A2(
+						_elm_lang$core$Maybe$withDefault,
+						'',
+						A2(_elm_lang$core$Maybe$map, _user$project$Main$caption, model.radioPaymentMethod))
+				},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'price', _1: model.reasonablePrice},
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	};
+};
 var _user$project$Main$Model = F7(
 	function (a, b, c, d, e, f, g) {
 		return {page: a, navState: b, radioPhotosPerMonth: c, radioPaymentMethod: d, email: e, reasonablePrice: f, subscribing: g};
@@ -17995,8 +18056,8 @@ var _user$project$Main$decode = function (location) {
 };
 var _user$project$Main$urlUpdate = F2(
 	function (location, model) {
-		var _p1 = _user$project$Main$decode(location);
-		if (_p1.ctor === 'Nothing') {
+		var _p3 = _user$project$Main$decode(location);
+		if (_p3.ctor === 'Nothing') {
 			return {
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
@@ -18009,23 +18070,40 @@ var _user$project$Main$urlUpdate = F2(
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
 					model,
-					{page: _p1._0}),
+					{page: _p3._0}),
 				_1: _elm_lang$core$Platform_Cmd$none
 			};
 		}
 	});
+var _user$project$Main$Response = function (a) {
+	return {ctor: 'Response', _0: a};
+};
+var _user$project$Main$sendData = function (data) {
+	var scriptUrl = 'https://script.google.com/macros/s/AKfycbxQQN9hZcsWQiHQdfmIIGuWDcrqFiFwK8PAxoEv8I5WO4O7ESCV/exec';
+	var req = _elm_lang$http$Http$request(
+		{
+			method: 'POST',
+			headers: {ctor: '[]'},
+			url: scriptUrl,
+			body: _user$project$Main$formDataBody(data),
+			expect: _elm_lang$http$Http$expectJson(_elm_lang$core$Json_Decode$string),
+			timeout: _elm_lang$core$Maybe$Nothing,
+			withCredentials: false
+		});
+	return A2(_elm_lang$http$Http$send, _user$project$Main$Response, req);
+};
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
+		var _p4 = msg;
+		switch (_p4.ctor) {
 			case 'UrlChange':
-				return A2(_user$project$Main$urlUpdate, _p2._0, model);
+				return A2(_user$project$Main$urlUpdate, _p4._0, model);
 			case 'NavMsg':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{navState: _p2._0}),
+						{navState: _p4._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ChangePage':
@@ -18033,7 +18111,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{page: _p2._0}),
+						{page: _p4._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'RadioPhotosMsg':
@@ -18041,7 +18119,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{radioPhotosPerMonth: _p2._0}),
+						{radioPhotosPerMonth: _p4._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'RadioPaymentMsg':
@@ -18049,7 +18127,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{radioPaymentMethod: _p2._0}),
+						{radioPaymentMethod: _p4._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SubscribePressed':
@@ -18066,27 +18144,27 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{subscribing: false}),
-					_1: A2(
-						_elm_lang$core$Debug$log,
-						_elm_lang$core$Basics$toString(model),
-						_elm_lang$core$Platform_Cmd$none)
+					_1: _user$project$Main$sendData(
+						_user$project$Main$formData(model))
 				};
 			case 'ChangeEmail':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{email: _p2._0}),
+						{email: _p4._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'ChangePrice':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{reasonablePrice: _p2._0}),
+						{reasonablePrice: _p4._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			default:
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
 var _user$project$Main$ChangePrice = function (a) {
@@ -18152,15 +18230,15 @@ var _user$project$Main$NavMsg = function (a) {
 	return {ctor: 'NavMsg', _0: a};
 };
 var _user$project$Main$init = function (location) {
-	var _p3 = _user$project$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
-	var navState = _p3._0;
-	var navCmd = _p3._1;
-	var _p4 = A2(
+	var _p5 = _user$project$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
+	var navState = _p5._0;
+	var navCmd = _p5._1;
+	var _p6 = A2(
 		_user$project$Main$urlUpdate,
 		location,
 		{navState: navState, page: _user$project$Main$Home, radioPhotosPerMonth: _elm_lang$core$Maybe$Nothing, radioPaymentMethod: _elm_lang$core$Maybe$Nothing, email: '', reasonablePrice: '', subscribing: false});
-	var model = _p4._0;
-	var urlCmd = _p4._1;
+	var model = _p6._0;
+	var urlCmd = _p6._1;
 	return {
 		ctor: '_Tuple2',
 		_0: model,
@@ -18334,7 +18412,11 @@ var _user$project$Main$pageSubscribe = function (model) {
 				ctor: '::',
 				_0: A2(
 					_user$project$Bootstrap_Form$form,
-					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$name('submit-to-google-sheet'),
+						_1: {ctor: '[]'}
+					},
 					{
 						ctor: '::',
 						_0: A2(
@@ -18375,37 +18457,56 @@ var _user$project$Main$pageSubscribe = function (model) {
 												_user$project$Bootstrap_Form_InputGroup$email(
 													{
 														ctor: '::',
-														_0: _user$project$Bootstrap_Form_Input$id('email'),
+														_0: _user$project$Bootstrap_Form_Input$danger,
 														_1: {
 															ctor: '::',
-															_0: _user$project$Bootstrap_Form_Input$attrs(
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Attributes$autofocus(true),
-																	_1: {
+															_0: _user$project$Bootstrap_Form_Input$id('email'),
+															_1: {
+																ctor: '::',
+																_0: _user$project$Bootstrap_Form_Input$attrs(
+																	{
 																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$required(true),
+																		_0: _elm_lang$html$Html_Attributes$name('email'),
 																		_1: {
 																			ctor: '::',
-																			_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangeEmail),
-																			_1: {ctor: '[]'}
+																			_0: _elm_lang$html$Html_Attributes$autofocus(true),
+																			_1: {
+																				ctor: '::',
+																				_0: _elm_lang$html$Html_Attributes$required(true),
+																				_1: {
+																					ctor: '::',
+																					_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangeEmail),
+																					_1: {ctor: '[]'}
+																				}
+																			}
 																		}
-																	}
-																}),
-															_1: {ctor: '[]'}
+																	}),
+																_1: {ctor: '[]'}
+															}
 														}
 													})))),
 									_1: {
 										ctor: '::',
 										_0: A2(
-											_user$project$Bootstrap_Form$help,
+											_user$project$Bootstrap_Form$invalidFeedback,
 											{ctor: '[]'},
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html$text('Your email will never be shared with anyone else'),
+												_0: _elm_lang$html$Html$text('Something not quite right.'),
 												_1: {ctor: '[]'}
 											}),
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_user$project$Bootstrap_Form$help,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Your email will never be shared with anyone else'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}),
@@ -18443,7 +18544,18 @@ var _user$project$Main$pageSubscribe = function (model) {
 												_1: {ctor: '[]'}
 											},
 											model),
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_user$project$Bootstrap_Form$invalidFeedback,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Something not quite right.'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
 									}
 								}),
 							_1: {
@@ -18492,17 +18604,21 @@ var _user$project$Main$pageSubscribe = function (model) {
 																	_0: _user$project$Bootstrap_Form_Input$attrs(
 																		{
 																			ctor: '::',
-																			_0: _elm_lang$html$Html_Attributes$required(true),
+																			_0: _elm_lang$html$Html_Attributes$name('price'),
 																			_1: {
 																				ctor: '::',
-																				_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangePrice),
+																				_0: _elm_lang$html$Html_Attributes$required(true),
 																				_1: {
 																					ctor: '::',
-																					_0: _elm_lang$html$Html_Attributes$max('20'),
+																					_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangePrice),
 																					_1: {
 																						ctor: '::',
-																						_0: _elm_lang$html$Html_Attributes$min('3'),
-																						_1: {ctor: '[]'}
+																						_0: _elm_lang$html$Html_Attributes$max('20'),
+																						_1: {
+																							ctor: '::',
+																							_0: _elm_lang$html$Html_Attributes$min('3'),
+																							_1: {ctor: '[]'}
+																						}
 																					}
 																				}
 																			}
@@ -18572,10 +18688,10 @@ var _user$project$Main$pageSubscribe = function (model) {
 														_0: _user$project$Bootstrap_Button$attrs(
 															{
 																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$type_('submit'),
+																_0: _elm_lang$html$Html_Attributes$type_('button'),
 																_1: {
 																	ctor: '::',
-																	_0: _elm_lang$html$Html_Events$onSubmit(_user$project$Main$ConfirmPressed),
+																	_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ConfirmPressed),
 																	_1: {
 																		ctor: '::',
 																		_0: _elm_lang$html$Html_Attributes$id('confirm'),
@@ -18858,8 +18974,8 @@ var _user$project$Main$mainContent = function (model) {
 		_user$project$Bootstrap_Grid$container,
 		{ctor: '[]'},
 		function () {
-			var _p5 = model.page;
-			switch (_p5.ctor) {
+			var _p7 = model.page;
+			switch (_p7.ctor) {
 				case 'Home':
 					return _user$project$Main$pageHome(model);
 				case 'ContactUs':

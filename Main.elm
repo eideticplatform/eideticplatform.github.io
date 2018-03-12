@@ -2,7 +2,7 @@ port module Main exposing (main)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onInput, onSubmit)
+import Html.Events exposing (onClick, onInput, onSubmit, on)
 import Navigation exposing (Location)
 import UrlParser exposing ((</>))
 import Bootstrap.Navbar as Navbar
@@ -22,6 +22,9 @@ import Bootstrap.Form.Checkbox as Checkbox
 import Bootstrap.Form.Radio as Radio
 import Bootstrap.Form.Textarea as Textarea
 import Bootstrap.Form.Fieldset as Fieldset
+import Ports
+import Json.Decode
+import Http
 
 
 main : Program Never Model Msg
@@ -43,6 +46,15 @@ type alias Model =
     , reasonablePrice : String
     , subscribing : Bool
     }
+
+
+formData : Model -> List ( String, String )
+formData model =
+    [ ( "email", model.email )
+    , ( "photos", toString <| Maybe.withDefault 0 model.radioPhotosPerMonth )
+    , ( "payment", Maybe.withDefault "" <| Maybe.map caption model.radioPaymentMethod )
+    , ( "price", model.reasonablePrice )
+    ]
 
 
 type Page
@@ -81,6 +93,7 @@ type Msg
     | SubscribePressed
     | ChangeEmail String
     | ChangePrice String
+    | Response (Result Http.Error String)
 
 
 subscriptions : Model -> Sub Msg
@@ -127,7 +140,7 @@ update msg model =
 
         ConfirmPressed ->
             ( { model | subscribing = False }
-            , Debug.log (toString model) (Cmd.none)
+            , sendData ((formData model))
             )
 
         ChangeEmail state ->
@@ -139,6 +152,41 @@ update msg model =
             ( { model | reasonablePrice = state }
             , Cmd.none
             )
+
+        Response _ ->
+            ( model, Cmd.none )
+
+
+formDatafication : List ( String, String ) -> String
+formDatafication formData =
+    formData
+        |> List.map (\( key, value ) -> (Http.encodeUri key) ++ "=" ++ (Http.encodeUri value))
+        |> String.join "&"
+
+
+formDataBody : List ( String, String ) -> Http.Body
+formDataBody formData =
+    formDatafication formData
+        |> Http.stringBody "Content-Type', 'application/x-www-form-urlencoded"
+
+
+sendData data =
+    let
+        scriptUrl =
+            "https://script.google.com/macros/s/AKfycbxQQN9hZcsWQiHQdfmIIGuWDcrqFiFwK8PAxoEv8I5WO4O7ESCV/exec"
+
+        req =
+            Http.request
+                { method = "POST"
+                , headers = []
+                , url = scriptUrl
+                , body = formDataBody data
+                , expect = Http.expectJson Json.Decode.string
+                , timeout = Nothing
+                , withCredentials = False
+                }
+    in
+        Http.send Response req
 
 
 urlUpdate : Navigation.Location -> Model -> ( Model, Cmd Msg )
@@ -273,21 +321,29 @@ pageSubscribe model =
     main_
         [ id "subscribe_content", style [ ( "padding", "1.2rem" ) ] ]
         [ h2 [ style [ ( "text-align", "center" ) ] ] [ text "SUBSCRIBE" ]
-        , Form.form []
+        , Form.form [ name "submit-to-google-sheet" ]
             [ Form.group []
                 [ Form.label [ for "email" ] [ text "Email address" ]
-                , InputGroup.config (InputGroup.email [ Input.id "email", Input.attrs [ autofocus True, required True, onInput ChangeEmail ] ])
+                , InputGroup.config
+                    (InputGroup.email
+                        [ Input.danger
+                        , Input.id "email"
+                        , Input.attrs [ name "email", autofocus True, required True, onInput ChangeEmail ]
+                        ]
+                    )
                     |> InputGroup.predecessors [ InputGroup.span [] [ text "@" ] ]
                     |> InputGroup.view
+                , Form.invalidFeedback [] [ text "Something not quite right." ]
                 , Form.help [] [ text "Your email will never be shared with anyone else" ]
                 ]
             , Form.group []
                 [ Form.label [ for "photos" ] [ text "Preferred number of photos per month" ]
                 , radioPhotosView [ ButtonGroup.attrs [ id "photos" ] ] model
+                , Form.invalidFeedback [] [ text "Something not quite right." ]
                 ]
             , Form.group []
                 [ Form.label [ for "price" ] [ text "What do you think is a reasonable price?" ]
-                , InputGroup.config (InputGroup.number [ Input.id "price", Input.attrs [ required True, onInput ChangePrice, Html.Attributes.max "20", Html.Attributes.min "3" ] ])
+                , InputGroup.config (InputGroup.number [ Input.id "price", Input.attrs [ name "price", required True, onInput ChangePrice, Html.Attributes.max "20", Html.Attributes.min "3" ] ])
                     |> InputGroup.predecessors [ InputGroup.span [] [ text "$" ] ]
                     |> InputGroup.view
                 ]
@@ -298,7 +354,7 @@ pageSubscribe model =
             , Form.label [] [ text "* By subscribing before launch, we will send you a free month package with eidetic and service updates." ]
             , Button.button
                 [ Button.success
-                , Button.attrs [ type_ "submit", onSubmit ConfirmPressed, id "confirm", style [ ( "margin-top", "1rem" ) ] ]
+                , Button.attrs [ type_ "button", onClick ConfirmPressed, id "confirm", style [ ( "margin-top", "1rem" ) ] ]
                 ]
                 [ text "CONFIRM" ]
             ]

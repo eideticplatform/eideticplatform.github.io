@@ -10,7 +10,6 @@
 
       gtag('config', 'UA-115434514-1');
     </script>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -26,6 +25,26 @@
     <main></main>
     <script>
       var app = Elm.Main.fullscreen();
+
+
+      function sendData(data) {
+        var XHR = new XMLHttpRequest();
+        // Set up our request
+        XHR.open('POST', 'https://script.google.com/macros/s/AKfycbxQQN9hZcsWQiHQdfmIIGuWDcrqFiFwK8PAxoEv8I5WO4O7ESCV/exec');
+
+        // Add the required HTTP header for form data POST requests
+        XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        // Finally, send our data.
+        XHR.send(data);
+      }
+
+      app.ports.sendData.subscribe(d => {
+        const scriptURL =
+        'https://script.google.com/macros/s/AKfycbxQQN9hZcsWQiHQdfmIIGuWDcrqFiFwK8PAxoEv8I5WO4O7ESCV/exec'
+
+        sendData(d)
+      });
     </script>
   </body>
 </html>
