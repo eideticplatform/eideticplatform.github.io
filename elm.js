@@ -18075,6 +18075,23 @@ var _user$project$Main$urlUpdate = F2(
 			};
 		}
 	});
+var _user$project$Main$Response = function (a) {
+	return {ctor: 'Response', _0: a};
+};
+var _user$project$Main$sendData = function (data) {
+	var scriptUrl = 'https://script.google.com/macros/s/AKfycbxQQN9hZcsWQiHQdfmIIGuWDcrqFiFwK8PAxoEv8I5WO4O7ESCV/exec';
+	var req = _elm_lang$http$Http$request(
+		{
+			method: 'POST',
+			headers: {ctor: '[]'},
+			url: scriptUrl,
+			body: _user$project$Main$formDataBody(data),
+			expect: _elm_lang$http$Http$expectJson(_elm_lang$core$Json_Decode$string),
+			timeout: _elm_lang$core$Maybe$Nothing,
+			withCredentials: false
+		});
+	return A2(_elm_lang$http$Http$send, _user$project$Main$Response, req);
+};
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p4 = msg;
@@ -18127,9 +18144,8 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{subscribing: false}),
-					_1: _user$project$Ports$sendData(
-						_user$project$Main$formDatafication(
-							_user$project$Main$formData(model)))
+					_1: _user$project$Main$sendData(
+						_user$project$Main$formData(model))
 				};
 			case 'ChangeEmail':
 				return {
@@ -18151,23 +18167,6 @@ var _user$project$Main$update = F2(
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
-var _user$project$Main$Response = function (a) {
-	return {ctor: 'Response', _0: a};
-};
-var _user$project$Main$sendData = function (data) {
-	var scriptUrl = 'https://script.google.com/macros/s/AKfycbxQQN9hZcsWQiHQdfmIIGuWDcrqFiFwK8PAxoEv8I5WO4O7ESCV/exec';
-	var req = _elm_lang$http$Http$request(
-		{
-			method: 'POST',
-			headers: {ctor: '[]'},
-			url: scriptUrl,
-			body: _user$project$Main$formDataBody(data),
-			expect: _elm_lang$http$Http$expectJson(_elm_lang$core$Json_Decode$string),
-			timeout: _elm_lang$core$Maybe$Nothing,
-			withCredentials: false
-		});
-	return A2(_elm_lang$http$Http$send, _user$project$Main$Response, req);
-};
 var _user$project$Main$ChangePrice = function (a) {
 	return {ctor: 'ChangePrice', _0: a};
 };
