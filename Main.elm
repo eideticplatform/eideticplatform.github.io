@@ -116,8 +116,8 @@ init location =
                 , page = Home
                 , radioPhotosPerMonth = empty
                 , radioPaymentMethod = empty
-                , email = empty
-                , reasonablePrice = empty
+                , email = Validate.unchecked ""
+                , reasonablePrice = Validate.unchecked ""
                 , subscribing = False
                 , confirmClicked = False
                 }
@@ -198,8 +198,8 @@ update msg model =
                     { validated
                         | radioPhotosPerMonth = empty
                         , radioPaymentMethod = empty
-                        , email = empty
-                        , reasonablePrice = empty
+                        , email = Validate.unchecked ""
+                        , reasonablePrice = Validate.unchecked ""
                         , subscribing = False
                         , confirmClicked = False
                     }
@@ -498,10 +498,10 @@ pageSubscribe model =
                    , Button.button
                         [ Button.success
                         , Button.attrs
-                            [ onClick ConfirmPressed
-                            , id "confirm"
-                            , type_ "button"
-                            , style
+                            ([ onClick ConfirmPressed
+                             , id "confirm"
+                             , type_ "button"
+                             , style
                                 ([ ( "margin-top", "1rem" ) ]
                                     ++ if isNothing (formData (validateModel model)) then
                                         [ ( "background-color", alertColor )
@@ -511,7 +511,12 @@ pageSubscribe model =
                                        else
                                         []
                                 )
-                            ]
+                             ]
+                                ++ if validateModel model |> formData |> isNothing then
+                                    [ class "btn-danger" ]
+                                   else
+                                    []
+                            )
                         ]
                         [ text "CONFIRM" ]
                    ]

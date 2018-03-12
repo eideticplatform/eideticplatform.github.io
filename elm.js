@@ -18775,7 +18775,14 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: valid ? _elm_lang$core$Native_Utils.update(
 						validated,
-						{radioPhotosPerMonth: _kirchner$form_validation$Validate$empty, radioPaymentMethod: _kirchner$form_validation$Validate$empty, email: _kirchner$form_validation$Validate$empty, reasonablePrice: _kirchner$form_validation$Validate$empty, subscribing: false, confirmClicked: false}) : _elm_lang$core$Native_Utils.update(
+						{
+							radioPhotosPerMonth: _kirchner$form_validation$Validate$empty,
+							radioPaymentMethod: _kirchner$form_validation$Validate$empty,
+							email: _kirchner$form_validation$Validate$unchecked(''),
+							reasonablePrice: _kirchner$form_validation$Validate$unchecked(''),
+							subscribing: false,
+							confirmClicked: false
+						}) : _elm_lang$core$Native_Utils.update(
 						validated,
 						{confirmClicked: true}),
 					_1: function () {
@@ -19157,7 +19164,16 @@ var _user$project$Main$init = function (location) {
 	var _p12 = A2(
 		_user$project$Main$urlUpdate,
 		location,
-		{navState: navState, page: _user$project$Main$Home, radioPhotosPerMonth: _kirchner$form_validation$Validate$empty, radioPaymentMethod: _kirchner$form_validation$Validate$empty, email: _kirchner$form_validation$Validate$empty, reasonablePrice: _kirchner$form_validation$Validate$empty, subscribing: false, confirmClicked: false});
+		{
+			navState: navState,
+			page: _user$project$Main$Home,
+			radioPhotosPerMonth: _kirchner$form_validation$Validate$empty,
+			radioPaymentMethod: _kirchner$form_validation$Validate$empty,
+			email: _kirchner$form_validation$Validate$unchecked(''),
+			reasonablePrice: _kirchner$form_validation$Validate$unchecked(''),
+			subscribing: false,
+			confirmClicked: false
+		});
 	var model = _p12._0;
 	var urlCmd = _p12._1;
 	return {
@@ -19435,45 +19451,54 @@ var _user$project$Main$pageSubscribe = function (model) {
 										_1: {
 											ctor: '::',
 											_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ConfirmPressed),
-													_1: {
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													{
 														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$id('confirm'),
+														_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ConfirmPressed),
 														_1: {
 															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$type_('button'),
+															_0: _elm_lang$html$Html_Attributes$id('confirm'),
 															_1: {
 																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$style(
-																	A2(
-																		_elm_lang$core$Basics_ops['++'],
-																		{
-																			ctor: '::',
-																			_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '1rem'},
-																			_1: {ctor: '[]'}
-																		},
-																		_user$project$Convenience$isNothing(
-																			_user$project$Main$formData(
-																				_user$project$Main$validateModel(model))) ? {
-																			ctor: '::',
-																			_0: {ctor: '_Tuple2', _0: 'background-color', _1: _user$project$Main$alertColor},
-																			_1: {
+																_0: _elm_lang$html$Html_Attributes$type_('button'),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$style(
+																		A2(
+																			_elm_lang$core$Basics_ops['++'],
+																			{
 																				ctor: '::',
-																				_0: {ctor: '_Tuple2', _0: 'border-color', _1: 'rgba(237, 74, 60, 0.74)'},
+																				_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '1rem'},
+																				_1: {ctor: '[]'}
+																			},
+																			_user$project$Convenience$isNothing(
+																				_user$project$Main$formData(
+																					_user$project$Main$validateModel(model))) ? {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: 'background-color', _1: _user$project$Main$alertColor},
 																				_1: {
 																					ctor: '::',
-																					_0: {ctor: '_Tuple2', _0: 'color', _1: _user$project$Main$alertForeGround},
-																					_1: {ctor: '[]'}
+																					_0: {ctor: '_Tuple2', _0: 'border-color', _1: 'rgba(237, 74, 60, 0.74)'},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: 'color', _1: _user$project$Main$alertForeGround},
+																						_1: {ctor: '[]'}
+																					}
 																				}
-																			}
-																		} : {ctor: '[]'})),
-																_1: {ctor: '[]'}
+																			} : {ctor: '[]'})),
+																	_1: {ctor: '[]'}
+																}
 															}
 														}
-													}
-												}),
+													},
+													_user$project$Convenience$isNothing(
+														_user$project$Main$formData(
+															_user$project$Main$validateModel(model))) ? {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('btn-danger'),
+														_1: {ctor: '[]'}
+													} : {ctor: '[]'})),
 											_1: {ctor: '[]'}
 										}
 									},
