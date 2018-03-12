@@ -2,7 +2,7 @@ port module Main exposing (main)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onInput, onSubmit, on)
+import Html.Events exposing (onClick, onInput, onSubmit, on, onBlur)
 import Navigation exposing (Location)
 import UrlParser exposing ((</>))
 import Bootstrap.Navbar as Navbar
@@ -22,9 +22,13 @@ import Bootstrap.Form.Checkbox as Checkbox
 import Bootstrap.Form.Radio as Radio
 import Bootstrap.Form.Textarea as Textarea
 import Bootstrap.Form.Fieldset as Fieldset
-import Ports
 import Json.Decode
 import Http
+import Validate exposing (..)
+import Ports
+import Convenience exposing (..)
+import Set
+import Regex
 
 
 main : Program Never Model Msg
@@ -40,21 +44,58 @@ main =
 type alias Model =
     { page : Page
     , navState : Navbar.State
-    , radioPhotosPerMonth : RadioPhotosPerMonth
-    , radioPaymentMethod : Maybe RadioPaymentMethod
-    , email : String
-    , reasonablePrice : String
+    , radioPhotosPerMonth : Validatable RadioPhotosPerMonth String
+    , radioPaymentMethod : Validatable RadioPaymentMethod String
+    , email : Validatable String String
+    , reasonablePrice : Validatable String String
     , subscribing : Bool
+    , confirmClicked : Bool
     }
 
 
-formData : Model -> List ( String, String )
+formData : Model -> Maybe (List ( String, String ))
 formData model =
-    [ ( "email", model.email )
-    , ( "photos", toString <| Maybe.withDefault 0 model.radioPhotosPerMonth )
-    , ( "payment", Maybe.withDefault "" <| Maybe.map caption model.radioPaymentMethod )
-    , ( "price", model.reasonablePrice )
-    ]
+    traverse validValue
+        [ model.email
+        , model.radioPhotosPerMonth |> Validate.map toString
+        , model.radioPaymentMethod |> Validate.map caption
+        , model.reasonablePrice
+        ]
+        |> Maybe.map
+            (List.map2 (,) [ "email", "photos", "payment", "price" ])
+
+
+validateModel : Model -> Model
+validateModel model =
+    { model
+        | reasonablePrice =
+            model.reasonablePrice
+                |> isNotEmpty "Price must not be empty"
+                |> satisfies
+                    (\s ->
+                        case String.toInt s of
+                            Ok _ ->
+                                True
+
+                            Err _ ->
+                                False
+                    )
+                    "This is not a valid price"
+                |> satisfies
+                    (\n ->
+                        case String.toInt n of
+                            Ok n ->
+                                n > 3 && n < 40
+
+                            Err _ ->
+                                False
+                    )
+                    "Price must be between 3 and 40"
+        , email =
+            model.email
+                |> isNotEmpty "Email must not be empty"
+                |> isEmail "This is not a valid email address"
+    }
 
 
 type Page
@@ -73,11 +114,12 @@ init location =
             urlUpdate location
                 { navState = navState
                 , page = Home
-                , radioPhotosPerMonth = Nothing
-                , radioPaymentMethod = Nothing
-                , email = ""
-                , reasonablePrice = ""
+                , radioPhotosPerMonth = empty
+                , radioPaymentMethod = empty
+                , email = empty
+                , reasonablePrice = empty
                 , subscribing = False
+                , confirmClicked = False
                 }
     in
         ( model, Cmd.batch [ urlCmd, navCmd ] )
@@ -88,11 +130,14 @@ type Msg
     | NavMsg Navbar.State
     | ChangePage Page
     | RadioPhotosMsg RadioPhotosPerMonth
-    | RadioPaymentMsg (Maybe RadioPaymentMethod)
+    | RadioPaymentMsg RadioPaymentMethod
     | ConfirmPressed
     | SubscribePressed
     | ChangeEmail String
     | ChangePrice String
+    | EmailDeFocused
+    | PriceDeFocused
+    | ValidateModel
     | Response (Result Http.Error String)
 
 
@@ -124,12 +169,12 @@ update msg model =
             )
 
         RadioPhotosMsg state ->
-            ( { model | radioPhotosPerMonth = state }
+            ( { model | radioPhotosPerMonth = Validate.valid state }
             , Cmd.none
             )
 
         RadioPaymentMsg state ->
-            ( { model | radioPaymentMethod = state }
+            ( { model | radioPaymentMethod = Validate.valid state }
             , Cmd.none
             )
 
@@ -139,22 +184,60 @@ update msg model =
             )
 
         ConfirmPressed ->
-            ( { model | subscribing = False }
-            , sendData ((formData model))
-            )
+            let
+                validated =
+                    validateModel model
+
+                validatedFormData =
+                    formData validated
+
+                valid =
+                    validatedFormData /= Nothing
+            in
+                ( if valid then
+                    { validated
+                        | radioPhotosPerMonth = empty
+                        , radioPaymentMethod = empty
+                        , email = empty
+                        , reasonablePrice = empty
+                        , subscribing = False
+                        , confirmClicked = False
+                    }
+                  else
+                    { validated | confirmClicked = True }
+                , case validatedFormData of
+                    Just d ->
+                        Ports.sendData (formDatafication d)
+
+                    Nothing ->
+                        Cmd.none
+                )
 
         ChangeEmail state ->
-            ( { model | email = state }
+            ( { model | email = Validate.unchecked state }
             , Cmd.none
             )
 
         ChangePrice state ->
-            ( { model | reasonablePrice = state }
+            ( { model | reasonablePrice = Validate.unchecked state }
             , Cmd.none
             )
 
         Response _ ->
             ( model, Cmd.none )
+
+        EmailDeFocused ->
+            ( { model | email = (validateModel model).email }
+            , Cmd.none
+            )
+
+        PriceDeFocused ->
+            ( { model | reasonablePrice = (validateModel model).reasonablePrice }
+            , Cmd.none
+            )
+
+        ValidateModel ->
+            ( validateModel model, Cmd.none )
 
 
 formDatafication : List ( String, String ) -> String
@@ -316,53 +399,127 @@ pageContactUs model =
     ]
 
 
+invalidFeedback field =
+    Maybe.withDefault []
+        (Maybe.map
+            (\invalidBecause ->
+                [ Form.invalidFeedback [] [ text (Set.toList invalidBecause |> List.head |> Maybe.withDefault "") ] ]
+            )
+            (Validate.errors field)
+        )
+
+
+emailView : Model -> List (Html Msg)
+emailView model =
+    [ Form.label [ for "email" ] [ text "Email address" ]
+    , InputGroup.config
+        (InputGroup.email
+            ((case Validate.errors model.email of
+                Just _ ->
+                    [ Input.danger ]
+
+                Nothing ->
+                    []
+             )
+                ++ [ Input.id "email"
+                   , Input.attrs [ autofocus True, onInput ChangeEmail, onBlur EmailDeFocused ]
+                   ]
+            )
+        )
+        |> InputGroup.predecessors [ InputGroup.span [] [ text "@" ] ]
+        |> InputGroup.view
+    ]
+        ++ invalidFeedback model.email
+        ++ [ Form.help [] [ text "Your email will never be shared with anyone else" ] ]
+
+
+photosView : Model -> List (Html Msg)
+photosView model =
+    let
+        invalid =
+            model.confirmClicked && model.radioPhotosPerMonth == empty
+    in
+        [ Form.label [ for "photos" ] [ text "Preferred number of photos per month" ]
+        , radioPhotosView [ ButtonGroup.attrs [ id "photos" ] ] model invalid
+        ]
+            ++ (if invalid then
+                    [ Form.invalidFeedback [] [ text "Please select one of the options" ] ]
+                else
+                    []
+               )
+
+
+priceView : Model -> List (Html Msg)
+priceView model =
+    [ Form.label [ for "price" ] [ text "What do you think is a reasonable price?" ]
+    , InputGroup.config
+        (InputGroup.number
+            ((case Validate.errors model.reasonablePrice of
+                Just _ ->
+                    [ Input.danger ]
+
+                Nothing ->
+                    []
+             )
+                ++ [ Input.id "price", Input.attrs [ onBlur PriceDeFocused, onInput ChangePrice, Html.Attributes.max "40", Html.Attributes.min "4" ] ]
+            )
+        )
+        |> InputGroup.predecessors [ InputGroup.span [] [ text "$" ] ]
+        |> InputGroup.view
+    ]
+        ++ invalidFeedback model.reasonablePrice
+
+
+paymentView : Model -> List (Html Msg)
+paymentView model =
+    let
+        invalid =
+            model.confirmClicked && model.radioPaymentMethod == empty
+    in
+        [ Form.label [ for "payment" ] [ text "Preferred payment method" ]
+        , radioPaymentView [ ButtonGroup.attrs [ id "payment" ] ] model invalid
+        ]
+            ++ (if invalid then
+                    [ Form.invalidFeedback [] [ text "Please select one of the options" ] ]
+                else
+                    []
+               )
+
+
 pageSubscribe : Model -> Html Msg
 pageSubscribe model =
     main_
         [ id "subscribe_content", style [ ( "padding", "1.2rem" ) ] ]
         [ h2 [ style [ ( "text-align", "center" ) ] ] [ text "SUBSCRIBE" ]
-        , Form.form [ name "submit-to-google-sheet" ]
-            [ Form.group []
-                [ Form.label [ for "email" ] [ text "Email address" ]
-                , InputGroup.config
-                    (InputGroup.email
-                        [ Input.danger
-                        , Input.id "email"
-                        , Input.attrs [ name "email", autofocus True, required True, onInput ChangeEmail ]
+        , Form.form [] <|
+            List.map (Form.group [])
+                [ emailView model, photosView model, priceView model, paymentView model ]
+                ++ [ Form.label [] [ text "* By subscribing before launch, we will send you a free month package with eidetic and service updates." ]
+                   , Button.button
+                        [ Button.success
+                        , Button.attrs
+                            [ onClick ConfirmPressed
+                            , id "confirm"
+                            , type_ "button"
+                            , style
+                                ([ ( "margin-top", "1rem" ) ]
+                                    ++ if isNothing (formData (validateModel model)) then
+                                        [ ( "background-color", alertColor )
+                                        , ( "border-color", "rgba(237, 74, 60, 0.74)" )
+                                        , ( "color", alertForeGround )
+                                        ]
+                                       else
+                                        []
+                                )
+                            ]
                         ]
-                    )
-                    |> InputGroup.predecessors [ InputGroup.span [] [ text "@" ] ]
-                    |> InputGroup.view
-                , Form.invalidFeedback [] [ text "Something not quite right." ]
-                , Form.help [] [ text "Your email will never be shared with anyone else" ]
-                ]
-            , Form.group []
-                [ Form.label [ for "photos" ] [ text "Preferred number of photos per month" ]
-                , radioPhotosView [ ButtonGroup.attrs [ id "photos" ] ] model
-                , Form.invalidFeedback [] [ text "Something not quite right." ]
-                ]
-            , Form.group []
-                [ Form.label [ for "price" ] [ text "What do you think is a reasonable price?" ]
-                , InputGroup.config (InputGroup.number [ Input.id "price", Input.attrs [ name "price", required True, onInput ChangePrice, Html.Attributes.max "20", Html.Attributes.min "3" ] ])
-                    |> InputGroup.predecessors [ InputGroup.span [] [ text "$" ] ]
-                    |> InputGroup.view
-                ]
-            , Form.group []
-                [ Form.label [ for "payment" ] [ text "Preferred payment method" ]
-                , radioPaymentView [ ButtonGroup.attrs [ id "payment" ] ] model
-                ]
-            , Form.label [] [ text "* By subscribing before launch, we will send you a free month package with eidetic and service updates." ]
-            , Button.button
-                [ Button.success
-                , Button.attrs [ type_ "button", onClick ConfirmPressed, id "confirm", style [ ( "margin-top", "1rem" ) ] ]
-                ]
-                [ text "CONFIRM" ]
-            ]
+                        [ text "CONFIRM" ]
+                   ]
         ]
 
 
 type alias RadioPhotosPerMonth =
-    Maybe Int
+    Int
 
 
 photosPerMonthEnum =
@@ -391,28 +548,52 @@ caption method =
             "App Store"
 
 
-radioPhotosView attrs model =
+alertColor =
+    "rgba(230, 70, 64, 0.54)"
+
+
+alertForeGround =
+    "rgba(255, 255, 255, 0.63)"
+
+
+radioPhotosView : List (ButtonGroup.Option Msg) -> Model -> Bool -> Html Msg
+radioPhotosView attrs model invalid =
     ButtonGroup.radioButtonGroup attrs
         (List.map
             (\n ->
-                ButtonGroup.myRadio
-                    (model.radioPhotosPerMonth == (Just n))
-                    [ Button.primary, Button.onClick <| RadioPhotosMsg (Just n) ]
-                    [ name "photos", required True ]
+                ButtonGroup.radioButton
+                    (Validate.validValue model.radioPhotosPerMonth == Just n)
+                    [ Button.primary
+                    , Button.onClick <| RadioPhotosMsg n
+                    , Button.attrs
+                        (if invalid then
+                            [ style [ ( "background-color", alertColor ), ( "color", alertForeGround ) ] ]
+                         else
+                            []
+                        )
+                    ]
                     [ text (toString n) ]
             )
             photosPerMonthEnum
         )
 
 
-radioPaymentView attrs model =
+radioPaymentView : List (ButtonGroup.Option Msg) -> Model -> Bool -> Html Msg
+radioPaymentView attrs model invalid =
     ButtonGroup.radioButtonGroup attrs
         (List.map
             (\method ->
-                ButtonGroup.myRadio
-                    (model.radioPaymentMethod == Just method)
-                    [ Button.primary, Button.onClick <| RadioPaymentMsg (Just method) ]
-                    [ name "payment", required True ]
+                ButtonGroup.radioButton
+                    (Validate.validValue model.radioPaymentMethod == Just method)
+                    [ Button.primary
+                    , Button.onClick <| RadioPaymentMsg method
+                    , Button.attrs
+                        (if invalid then
+                            [ style [ ( "background-color", alertColor ), ( "color", alertForeGround ) ] ]
+                         else
+                            []
+                        )
+                    ]
                     [ text (caption method) ]
             )
             paymentEnum

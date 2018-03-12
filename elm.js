@@ -6633,6 +6633,274 @@ var _elm_lang$core$Color$Linear = F3(
 	});
 var _elm_lang$core$Color$linear = _elm_lang$core$Color$Linear;
 
+//import Maybe, Native.List //
+
+var _elm_lang$core$Native_Regex = function() {
+
+function escape(str)
+{
+	return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+function caseInsensitive(re)
+{
+	return new RegExp(re.source, 'gi');
+}
+function regex(raw)
+{
+	return new RegExp(raw, 'g');
+}
+
+function contains(re, string)
+{
+	return string.match(re) !== null;
+}
+
+function find(n, re, str)
+{
+	n = n.ctor === 'All' ? Infinity : n._0;
+	var out = [];
+	var number = 0;
+	var string = str;
+	var lastIndex = re.lastIndex;
+	var prevLastIndex = -1;
+	var result;
+	while (number++ < n && (result = re.exec(string)))
+	{
+		if (prevLastIndex === re.lastIndex) break;
+		var i = result.length - 1;
+		var subs = new Array(i);
+		while (i > 0)
+		{
+			var submatch = result[i];
+			subs[--i] = submatch === undefined
+				? _elm_lang$core$Maybe$Nothing
+				: _elm_lang$core$Maybe$Just(submatch);
+		}
+		out.push({
+			match: result[0],
+			submatches: _elm_lang$core$Native_List.fromArray(subs),
+			index: result.index,
+			number: number
+		});
+		prevLastIndex = re.lastIndex;
+	}
+	re.lastIndex = lastIndex;
+	return _elm_lang$core$Native_List.fromArray(out);
+}
+
+function replace(n, re, replacer, string)
+{
+	n = n.ctor === 'All' ? Infinity : n._0;
+	var count = 0;
+	function jsReplacer(match)
+	{
+		if (count++ >= n)
+		{
+			return match;
+		}
+		var i = arguments.length - 3;
+		var submatches = new Array(i);
+		while (i > 0)
+		{
+			var submatch = arguments[i];
+			submatches[--i] = submatch === undefined
+				? _elm_lang$core$Maybe$Nothing
+				: _elm_lang$core$Maybe$Just(submatch);
+		}
+		return replacer({
+			match: match,
+			submatches: _elm_lang$core$Native_List.fromArray(submatches),
+			index: arguments[arguments.length - 2],
+			number: count
+		});
+	}
+	return string.replace(re, jsReplacer);
+}
+
+function split(n, re, str)
+{
+	n = n.ctor === 'All' ? Infinity : n._0;
+	if (n === Infinity)
+	{
+		return _elm_lang$core$Native_List.fromArray(str.split(re));
+	}
+	var string = str;
+	var result;
+	var out = [];
+	var start = re.lastIndex;
+	var restoreLastIndex = re.lastIndex;
+	while (n--)
+	{
+		if (!(result = re.exec(string))) break;
+		out.push(string.slice(start, result.index));
+		start = re.lastIndex;
+	}
+	out.push(string.slice(start));
+	re.lastIndex = restoreLastIndex;
+	return _elm_lang$core$Native_List.fromArray(out);
+}
+
+return {
+	regex: regex,
+	caseInsensitive: caseInsensitive,
+	escape: escape,
+
+	contains: F2(contains),
+	find: F3(find),
+	replace: F4(replace),
+	split: F3(split)
+};
+
+}();
+
+var _elm_lang$core$Regex$split = _elm_lang$core$Native_Regex.split;
+var _elm_lang$core$Regex$replace = _elm_lang$core$Native_Regex.replace;
+var _elm_lang$core$Regex$find = _elm_lang$core$Native_Regex.find;
+var _elm_lang$core$Regex$contains = _elm_lang$core$Native_Regex.contains;
+var _elm_lang$core$Regex$caseInsensitive = _elm_lang$core$Native_Regex.caseInsensitive;
+var _elm_lang$core$Regex$regex = _elm_lang$core$Native_Regex.regex;
+var _elm_lang$core$Regex$escape = _elm_lang$core$Native_Regex.escape;
+var _elm_lang$core$Regex$Match = F4(
+	function (a, b, c, d) {
+		return {match: a, submatches: b, index: c, number: d};
+	});
+var _elm_lang$core$Regex$Regex = {ctor: 'Regex'};
+var _elm_lang$core$Regex$AtMost = function (a) {
+	return {ctor: 'AtMost', _0: a};
+};
+var _elm_lang$core$Regex$All = {ctor: 'All'};
+
+var _elm_lang$core$Set$foldr = F3(
+	function (f, b, _p0) {
+		var _p1 = _p0;
+		return A3(
+			_elm_lang$core$Dict$foldr,
+			F3(
+				function (k, _p2, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p1._0);
+	});
+var _elm_lang$core$Set$foldl = F3(
+	function (f, b, _p3) {
+		var _p4 = _p3;
+		return A3(
+			_elm_lang$core$Dict$foldl,
+			F3(
+				function (k, _p5, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p4._0);
+	});
+var _elm_lang$core$Set$toList = function (_p6) {
+	var _p7 = _p6;
+	return _elm_lang$core$Dict$keys(_p7._0);
+};
+var _elm_lang$core$Set$size = function (_p8) {
+	var _p9 = _p8;
+	return _elm_lang$core$Dict$size(_p9._0);
+};
+var _elm_lang$core$Set$member = F2(
+	function (k, _p10) {
+		var _p11 = _p10;
+		return A2(_elm_lang$core$Dict$member, k, _p11._0);
+	});
+var _elm_lang$core$Set$isEmpty = function (_p12) {
+	var _p13 = _p12;
+	return _elm_lang$core$Dict$isEmpty(_p13._0);
+};
+var _elm_lang$core$Set$Set_elm_builtin = function (a) {
+	return {ctor: 'Set_elm_builtin', _0: a};
+};
+var _elm_lang$core$Set$empty = _elm_lang$core$Set$Set_elm_builtin(_elm_lang$core$Dict$empty);
+var _elm_lang$core$Set$singleton = function (k) {
+	return _elm_lang$core$Set$Set_elm_builtin(
+		A2(
+			_elm_lang$core$Dict$singleton,
+			k,
+			{ctor: '_Tuple0'}));
+};
+var _elm_lang$core$Set$insert = F2(
+	function (k, _p14) {
+		var _p15 = _p14;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A3(
+				_elm_lang$core$Dict$insert,
+				k,
+				{ctor: '_Tuple0'},
+				_p15._0));
+	});
+var _elm_lang$core$Set$fromList = function (xs) {
+	return A3(_elm_lang$core$List$foldl, _elm_lang$core$Set$insert, _elm_lang$core$Set$empty, xs);
+};
+var _elm_lang$core$Set$map = F2(
+	function (f, s) {
+		return _elm_lang$core$Set$fromList(
+			A2(
+				_elm_lang$core$List$map,
+				f,
+				_elm_lang$core$Set$toList(s)));
+	});
+var _elm_lang$core$Set$remove = F2(
+	function (k, _p16) {
+		var _p17 = _p16;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$remove, k, _p17._0));
+	});
+var _elm_lang$core$Set$union = F2(
+	function (_p19, _p18) {
+		var _p20 = _p19;
+		var _p21 = _p18;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$union, _p20._0, _p21._0));
+	});
+var _elm_lang$core$Set$intersect = F2(
+	function (_p23, _p22) {
+		var _p24 = _p23;
+		var _p25 = _p22;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$intersect, _p24._0, _p25._0));
+	});
+var _elm_lang$core$Set$diff = F2(
+	function (_p27, _p26) {
+		var _p28 = _p27;
+		var _p29 = _p26;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$diff, _p28._0, _p29._0));
+	});
+var _elm_lang$core$Set$filter = F2(
+	function (p, _p30) {
+		var _p31 = _p30;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(
+				_elm_lang$core$Dict$filter,
+				F2(
+					function (k, _p32) {
+						return p(k);
+					}),
+				_p31._0));
+	});
+var _elm_lang$core$Set$partition = F2(
+	function (p, _p33) {
+		var _p34 = _p33;
+		var _p35 = A2(
+			_elm_lang$core$Dict$partition,
+			F2(
+				function (k, _p36) {
+					return p(k);
+				}),
+			_p34._0);
+		var p1 = _p35._0;
+		var p2 = _p35._1;
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Set$Set_elm_builtin(p1),
+			_1: _elm_lang$core$Set$Set_elm_builtin(p2)
+		};
+	});
+
 var _elm_lang$dom$Native_Dom = function() {
 
 var fakeNode = {
@@ -10645,386 +10913,319 @@ var _evancz$url_parser$UrlParser$intParam = function (name) {
 	return A2(_evancz$url_parser$UrlParser$customParam, name, _evancz$url_parser$UrlParser$intParamHelp);
 };
 
-var _user$project$Bootstrap_Internal_Role$toClass = F2(
-	function (prefix, role) {
-		return _elm_lang$html$Html_Attributes$class(
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				prefix,
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'-',
-					function () {
-						var _p0 = role;
-						switch (_p0.ctor) {
-							case 'Primary':
-								return 'primary';
-							case 'Secondary':
-								return 'secondary';
-							case 'Success':
-								return 'success';
-							case 'Info':
-								return 'info';
-							case 'Warning':
-								return 'warning';
-							case 'Danger':
-								return 'danger';
-							case 'Light':
-								return 'light';
-							default:
-								return 'dark';
-						}
-					}())));
-	});
-var _user$project$Bootstrap_Internal_Role$Dark = {ctor: 'Dark'};
-var _user$project$Bootstrap_Internal_Role$Light = {ctor: 'Light'};
-var _user$project$Bootstrap_Internal_Role$Danger = {ctor: 'Danger'};
-var _user$project$Bootstrap_Internal_Role$Warning = {ctor: 'Warning'};
-var _user$project$Bootstrap_Internal_Role$Info = {ctor: 'Info'};
-var _user$project$Bootstrap_Internal_Role$Success = {ctor: 'Success'};
-var _user$project$Bootstrap_Internal_Role$Secondary = {ctor: 'Secondary'};
-var _user$project$Bootstrap_Internal_Role$Primary = {ctor: 'Primary'};
-
-var _user$project$Bootstrap_Alert$headingPrivate = F3(
-	function (elemFn, attributes, children) {
-		return A2(
-			elemFn,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('alert-header'),
-				_1: attributes
-			},
-			children);
-	});
-var _user$project$Bootstrap_Alert$h6 = F2(
-	function (attributes, children) {
-		return A3(_user$project$Bootstrap_Alert$headingPrivate, _elm_lang$html$Html$h6, attributes, children);
-	});
-var _user$project$Bootstrap_Alert$h5 = F2(
-	function (attributes, children) {
-		return A3(_user$project$Bootstrap_Alert$headingPrivate, _elm_lang$html$Html$h5, attributes, children);
-	});
-var _user$project$Bootstrap_Alert$h4 = F2(
-	function (attributes, children) {
-		return A3(_user$project$Bootstrap_Alert$headingPrivate, _elm_lang$html$Html$h4, attributes, children);
-	});
-var _user$project$Bootstrap_Alert$h3 = F2(
-	function (attributes, children) {
-		return A3(_user$project$Bootstrap_Alert$headingPrivate, _elm_lang$html$Html$h3, attributes, children);
-	});
-var _user$project$Bootstrap_Alert$h2 = F2(
-	function (attributes, children) {
-		return A3(_user$project$Bootstrap_Alert$headingPrivate, _elm_lang$html$Html$h2, attributes, children);
-	});
-var _user$project$Bootstrap_Alert$h1 = F2(
-	function (attributes, children) {
-		return A3(_user$project$Bootstrap_Alert$headingPrivate, _elm_lang$html$Html$h1, attributes, children);
-	});
-var _user$project$Bootstrap_Alert$link = F2(
-	function (attributes, children) {
-		return A2(
-			_elm_lang$html$Html$a,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('alert-link'),
-				_1: attributes
-			},
-			children);
-	});
-var _user$project$Bootstrap_Alert$isDismissable = function (configRec) {
-	var _p0 = configRec.dismissable;
-	if (_p0.ctor === 'Just') {
-		return true;
-	} else {
-		return false;
+var _kirchner$form_validation$Validate$rawValue = function (value) {
+	var _p0 = value;
+	switch (_p0.ctor) {
+		case 'Empty':
+			return _elm_lang$core$Maybe$Nothing;
+		case 'Unchecked':
+			return _elm_lang$core$Maybe$Just(_p0._0);
+		case 'Valid':
+			return _elm_lang$core$Maybe$Just(_p0._0);
+		default:
+			return _p0._0;
 	}
 };
-var _user$project$Bootstrap_Alert$injectButton = F2(
-	function (btn, children) {
-		var _p1 = children;
-		if (_p1.ctor === '::') {
-			return {
-				ctor: '::',
-				_0: _p1._0,
-				_1: {ctor: '::', _0: btn, _1: _p1._1}
-			};
+var _kirchner$form_validation$Validate$errors = function (value) {
+	var _p1 = value;
+	switch (_p1.ctor) {
+		case 'Empty':
+			return _elm_lang$core$Maybe$Nothing;
+		case 'Unchecked':
+			return _elm_lang$core$Maybe$Nothing;
+		case 'Valid':
+			return _elm_lang$core$Maybe$Nothing;
+		default:
+			return _elm_lang$core$Maybe$Just(_p1._1);
+	}
+};
+var _kirchner$form_validation$Validate$validValue = function (value) {
+	var _p2 = value;
+	switch (_p2.ctor) {
+		case 'Empty':
+			return _elm_lang$core$Maybe$Nothing;
+		case 'Unchecked':
+			return _elm_lang$core$Maybe$Nothing;
+		case 'Valid':
+			return _elm_lang$core$Maybe$Just(_p2._0);
+		default:
+			return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _kirchner$form_validation$Validate$Invalid = F2(
+	function (a, b) {
+		return {ctor: 'Invalid', _0: a, _1: b};
+	});
+var _kirchner$form_validation$Validate$Valid = function (a) {
+	return {ctor: 'Valid', _0: a};
+};
+var _kirchner$form_validation$Validate$valid = function (a) {
+	return _kirchner$form_validation$Validate$Valid(a);
+};
+var _kirchner$form_validation$Validate$try = F3(
+	function (cast, error, value) {
+		var _p3 = cast(value);
+		if (_p3.ctor === 'Err') {
+			return A2(
+				_kirchner$form_validation$Validate$Invalid,
+				_elm_lang$core$Maybe$Nothing,
+				_elm_lang$core$Set$singleton(
+					error(_p3._0)));
 		} else {
-			return {
-				ctor: '::',
-				_0: btn,
-				_1: {ctor: '[]'}
-			};
+			return _kirchner$form_validation$Validate$Valid(_p3._0);
 		}
 	});
-var _user$project$Bootstrap_Alert$ConfigRec = F6(
-	function (a, b, c, d, e, f) {
-		return {visibility: a, dismissable: b, attributes: c, children: d, role: e, withAnimation: f};
-	});
-var _user$project$Bootstrap_Alert$Config = function (a) {
-	return {ctor: 'Config', _0: a};
-};
-var _user$project$Bootstrap_Alert$role = F2(
-	function (role, _p2) {
-		var _p3 = _p2;
-		return _user$project$Bootstrap_Alert$Config(
-			_elm_lang$core$Native_Utils.update(
-				_p3._0,
-				{role: role}));
-	});
-var _user$project$Bootstrap_Alert$primary = function (config) {
-	return A2(_user$project$Bootstrap_Alert$role, _user$project$Bootstrap_Internal_Role$Primary, config);
-};
-var _user$project$Bootstrap_Alert$secondary = function (config) {
-	return A2(_user$project$Bootstrap_Alert$role, _user$project$Bootstrap_Internal_Role$Secondary, config);
-};
-var _user$project$Bootstrap_Alert$success = function (config) {
-	return A2(_user$project$Bootstrap_Alert$role, _user$project$Bootstrap_Internal_Role$Success, config);
-};
-var _user$project$Bootstrap_Alert$info = function (config) {
-	return A2(_user$project$Bootstrap_Alert$role, _user$project$Bootstrap_Internal_Role$Info, config);
-};
-var _user$project$Bootstrap_Alert$warning = function (config) {
-	return A2(_user$project$Bootstrap_Alert$role, _user$project$Bootstrap_Internal_Role$Warning, config);
-};
-var _user$project$Bootstrap_Alert$danger = function (config) {
-	return A2(_user$project$Bootstrap_Alert$role, _user$project$Bootstrap_Internal_Role$Danger, config);
-};
-var _user$project$Bootstrap_Alert$dark = function (config) {
-	return A2(_user$project$Bootstrap_Alert$role, _user$project$Bootstrap_Internal_Role$Dark, config);
-};
-var _user$project$Bootstrap_Alert$light = function (config) {
-	return A2(_user$project$Bootstrap_Alert$role, _user$project$Bootstrap_Internal_Role$Light, config);
-};
-var _user$project$Bootstrap_Alert$attrs = F2(
-	function (attributes, _p4) {
-		var _p5 = _p4;
-		return _user$project$Bootstrap_Alert$Config(
-			_elm_lang$core$Native_Utils.update(
-				_p5._0,
-				{attributes: attributes}));
-	});
-var _user$project$Bootstrap_Alert$dismissable = F2(
-	function (dismissMsg, _p6) {
-		var _p7 = _p6;
-		return _user$project$Bootstrap_Alert$Config(
-			_elm_lang$core$Native_Utils.update(
-				_p7._0,
-				{
-					dismissable: _elm_lang$core$Maybe$Just(dismissMsg)
-				}));
-	});
-var _user$project$Bootstrap_Alert$dismissableWithAnimation = F2(
-	function (dismissMsg, _p8) {
-		var _p9 = _p8;
-		return _user$project$Bootstrap_Alert$Config(
-			_elm_lang$core$Native_Utils.update(
-				_p9._0,
-				{
-					dismissable: _elm_lang$core$Maybe$Just(dismissMsg),
-					withAnimation: true
-				}));
-	});
-var _user$project$Bootstrap_Alert$children = F2(
-	function (children, _p10) {
-		var _p11 = _p10;
-		return _user$project$Bootstrap_Alert$Config(
-			_elm_lang$core$Native_Utils.update(
-				_p11._0,
-				{children: children}));
-	});
-var _user$project$Bootstrap_Alert$Closed = {ctor: 'Closed'};
-var _user$project$Bootstrap_Alert$closed = _user$project$Bootstrap_Alert$Closed;
-var _user$project$Bootstrap_Alert$FadeClose = {ctor: 'FadeClose'};
-var _user$project$Bootstrap_Alert$subscriptions = F2(
-	function (visibility, animateMsg) {
-		var _p12 = visibility;
-		if (_p12.ctor === 'StartClose') {
-			return _elm_lang$animation_frame$AnimationFrame$times(
-				function (_p13) {
-					return animateMsg(_user$project$Bootstrap_Alert$FadeClose);
-				});
-		} else {
-			return _elm_lang$core$Platform_Sub$none;
-		}
-	});
-var _user$project$Bootstrap_Alert$StartClose = {ctor: 'StartClose'};
-var _user$project$Bootstrap_Alert$clickHandler = F2(
-	function (visibility, configRec) {
-		var handleClick = F2(
-			function (viz, toMsg) {
-				return _elm_lang$html$Html_Events$onClick(
-					toMsg(viz));
-			});
-		var _p14 = configRec.dismissable;
-		if (_p14.ctor === 'Just') {
-			var _p15 = _p14._0;
-			return {
-				ctor: '::',
-				_0: configRec.withAnimation ? A2(handleClick, _user$project$Bootstrap_Alert$StartClose, _p15) : A2(handleClick, _user$project$Bootstrap_Alert$Closed, _p15),
-				_1: {ctor: '[]'}
-			};
-		} else {
-			return {ctor: '[]'};
-		}
-	});
-var _user$project$Bootstrap_Alert$maybeAddDismissButton = F3(
-	function (visibilty, configRec, children) {
-		return _user$project$Bootstrap_Alert$isDismissable(configRec) ? A2(
-			_user$project$Bootstrap_Alert$injectButton,
-			A2(
-				_elm_lang$html$Html$button,
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$type_('button'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('close'),
-							_1: {
-								ctor: '::',
-								_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-label', 'close'),
-								_1: {ctor: '[]'}
-							}
-						}
-					},
-					A2(_user$project$Bootstrap_Alert$clickHandler, visibilty, configRec)),
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$span,
-						{
-							ctor: '::',
-							_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-hidden', 'true'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('×'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}),
-			children) : children;
-	});
-var _user$project$Bootstrap_Alert$Shown = {ctor: 'Shown'};
-var _user$project$Bootstrap_Alert$shown = _user$project$Bootstrap_Alert$Shown;
-var _user$project$Bootstrap_Alert$config = _user$project$Bootstrap_Alert$Config(
-	{
-		visibility: _user$project$Bootstrap_Alert$Shown,
-		dismissable: _elm_lang$core$Maybe$Nothing,
-		attributes: {ctor: '[]'},
-		children: {ctor: '[]'},
-		role: _user$project$Bootstrap_Internal_Role$Secondary,
-		withAnimation: false
-	});
-var _user$project$Bootstrap_Alert$viewAttributes = F2(
-	function (visibility, configRec) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			{
-				ctor: '::',
-				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'alert'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$classList(
-						{
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'alert', _1: true},
-							_1: {
-								ctor: '::',
-								_0: {
-									ctor: '_Tuple2',
-									_0: 'alert-dismissible',
-									_1: _user$project$Bootstrap_Alert$isDismissable(configRec)
-								},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'fade', _1: configRec.withAnimation},
-									_1: {
-										ctor: '::',
-										_0: {
-											ctor: '_Tuple2',
-											_0: 'show',
-											_1: _elm_lang$core$Native_Utils.eq(visibility, _user$project$Bootstrap_Alert$Shown)
-										},
-										_1: {ctor: '[]'}
-									}
-								}
-							}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(_user$project$Bootstrap_Internal_Role$toClass, 'alert', configRec.role),
-						_1: {ctor: '[]'}
-					}
-				}
+var _kirchner$form_validation$Validate$isInt = F2(
+	function (error, input) {
+		return A3(
+			_kirchner$form_validation$Validate$try,
+			_elm_lang$core$String$toInt,
+			function (_p4) {
+				return error;
 			},
-			_elm_lang$core$Native_Utils.eq(visibility, _user$project$Bootstrap_Alert$Closed) ? {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$style(
-					{
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'display', _1: 'none'},
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			} : A2(
-				_elm_lang$core$Basics_ops['++'],
-				{ctor: '[]'},
-				function () {
-					if (configRec.withAnimation) {
-						var _p16 = configRec.dismissable;
-						if (_p16.ctor === 'Just') {
-							return {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html_Events$on,
-									'transitionend',
-									_elm_lang$core$Json_Decode$succeed(
-										_p16._0(_user$project$Bootstrap_Alert$Closed))),
-								_1: {ctor: '[]'}
-							};
-						} else {
-							return {ctor: '[]'};
-						}
+			input);
+	});
+var _kirchner$form_validation$Validate$isFloat = F2(
+	function (error, input) {
+		return A3(
+			_kirchner$form_validation$Validate$try,
+			_elm_lang$core$String$toFloat,
+			function (_p5) {
+				return error;
+			},
+			input);
+	});
+var _kirchner$form_validation$Validate$Unchecked = function (a) {
+	return {ctor: 'Unchecked', _0: a};
+};
+var _kirchner$form_validation$Validate$unchecked = function (a) {
+	return _kirchner$form_validation$Validate$Unchecked(a);
+};
+var _kirchner$form_validation$Validate$Empty = {ctor: 'Empty'};
+var _kirchner$form_validation$Validate$empty = _kirchner$form_validation$Validate$Empty;
+var _kirchner$form_validation$Validate$uncheck = function (value) {
+	var _p6 = value;
+	switch (_p6.ctor) {
+		case 'Empty':
+			return _kirchner$form_validation$Validate$Empty;
+		case 'Unchecked':
+			return value;
+		case 'Valid':
+			return _kirchner$form_validation$Validate$Unchecked(_p6._0);
+		default:
+			var _p7 = _p6._0;
+			if (_p7.ctor === 'Just') {
+				return _kirchner$form_validation$Validate$Unchecked(_p7._0);
+			} else {
+				return _kirchner$form_validation$Validate$Empty;
+			}
+	}
+};
+var _kirchner$form_validation$Validate$with = F3(
+	function (reference, validator, value) {
+		var _p8 = reference;
+		switch (_p8.ctor) {
+			case 'Empty':
+				return _kirchner$form_validation$Validate$uncheck(value);
+			case 'Unchecked':
+				return _kirchner$form_validation$Validate$uncheck(value);
+			case 'Valid':
+				return A2(validator, _p8._0, value);
+			default:
+				return _kirchner$form_validation$Validate$uncheck(value);
+		}
+	});
+var _kirchner$form_validation$Validate$satisfies = F3(
+	function (condition, error, value) {
+		var _p9 = value;
+		switch (_p9.ctor) {
+			case 'Empty':
+				return _kirchner$form_validation$Validate$Empty;
+			case 'Unchecked':
+				var _p10 = _p9._0;
+				return condition(_p10) ? _kirchner$form_validation$Validate$Valid(_p10) : A2(
+					_kirchner$form_validation$Validate$Invalid,
+					_elm_lang$core$Maybe$Just(_p10),
+					_elm_lang$core$Set$singleton(error));
+			case 'Valid':
+				var _p11 = _p9._0;
+				return condition(_p11) ? value : A2(
+					_kirchner$form_validation$Validate$Invalid,
+					_elm_lang$core$Maybe$Just(_p11),
+					_elm_lang$core$Set$singleton(error));
+			default:
+				var _p13 = _p9._0;
+				var _p12 = _p13;
+				if (_p12.ctor === 'Just') {
+					return condition(_p12._0) ? value : A2(
+						_kirchner$form_validation$Validate$Invalid,
+						_p13,
+						A2(_elm_lang$core$Set$insert, error, _p9._1));
+				} else {
+					return value;
+				}
+		}
+	});
+var _kirchner$form_validation$Validate$isNotEmpty = F2(
+	function (error, value) {
+		return A3(
+			_kirchner$form_validation$Validate$satisfies,
+			function (_p14) {
+				return !_elm_lang$core$String$isEmpty(_p14);
+			},
+			error,
+			value);
+	});
+var _kirchner$form_validation$Validate$atLeast = F3(
+	function (minimalLength, error, value) {
+		return A3(
+			_kirchner$form_validation$Validate$satisfies,
+			function (string) {
+				return _elm_lang$core$Native_Utils.cmp(
+					minimalLength,
+					_elm_lang$core$String$length(string)) < 1;
+			},
+			error,
+			value);
+	});
+var _kirchner$form_validation$Validate$consistsOfLetters = F2(
+	function (error, value) {
+		var onlyLetters = function (string) {
+			return A2(
+				_elm_lang$core$List$all,
+				_elm_lang$core$Char$isLower,
+				_elm_lang$core$String$toList(
+					_elm_lang$core$String$toLower(string)));
+		};
+		return A3(_kirchner$form_validation$Validate$satisfies, onlyLetters, error, value);
+	});
+var _kirchner$form_validation$Validate$isEmail = F2(
+	function (error, value) {
+		var emailRegex = _elm_lang$core$Regex$caseInsensitive(
+			_elm_lang$core$Regex$regex('^[a-zA-Z0-9.!#$%&\'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$'));
+		var validEmail = function (string) {
+			return A2(_elm_lang$core$Regex$contains, emailRegex, string);
+		};
+		return A3(_kirchner$form_validation$Validate$satisfies, validEmail, error, value);
+	});
+var _kirchner$form_validation$Validate$equals = F3(
+	function (reference, error, value) {
+		return A3(
+			_kirchner$form_validation$Validate$satisfies,
+			F2(
+				function (x, y) {
+					return _elm_lang$core$Native_Utils.eq(x, y);
+				})(reference),
+			error,
+			value);
+	});
+var _kirchner$form_validation$Validate$addErrors = F2(
+	function (validationErrors, value) {
+		if (_elm_lang$core$Set$isEmpty(validationErrors)) {
+			return value;
+		} else {
+			var _p15 = value;
+			switch (_p15.ctor) {
+				case 'Empty':
+					return _kirchner$form_validation$Validate$Empty;
+				case 'Unchecked':
+					return A2(
+						_kirchner$form_validation$Validate$Invalid,
+						_elm_lang$core$Maybe$Just(_p15._0),
+						validationErrors);
+				case 'Valid':
+					return A2(
+						_kirchner$form_validation$Validate$Invalid,
+						_elm_lang$core$Maybe$Just(_p15._0),
+						validationErrors);
+				default:
+					return A2(
+						_kirchner$form_validation$Validate$Invalid,
+						_p15._0,
+						A2(_elm_lang$core$Set$union, validationErrors, _p15._1));
+			}
+		}
+	});
+var _kirchner$form_validation$Validate$map = F2(
+	function (f, value) {
+		var _p16 = value;
+		switch (_p16.ctor) {
+			case 'Empty':
+				return _kirchner$form_validation$Validate$Empty;
+			case 'Unchecked':
+				return _kirchner$form_validation$Validate$Unchecked(
+					f(_p16._0));
+			case 'Valid':
+				return _kirchner$form_validation$Validate$Valid(
+					f(_p16._0));
+			default:
+				return A2(
+					_kirchner$form_validation$Validate$Invalid,
+					A2(_elm_lang$core$Maybe$map, f, _p16._0),
+					_p16._1);
+		}
+	});
+var _kirchner$form_validation$Validate$maybe = F2(
+	function (validator, maybeValue) {
+		var _p17 = maybeValue;
+		_v11_3:
+		do {
+			switch (_p17.ctor) {
+				case 'Unchecked':
+					if (_p17._0.ctor === 'Just') {
+						return A2(
+							_kirchner$form_validation$Validate$map,
+							_elm_lang$core$Maybe$Just,
+							validator(
+								_kirchner$form_validation$Validate$Unchecked(_p17._0._0)));
 					} else {
-						return {ctor: '[]'};
+						break _v11_3;
 					}
-				}()));
+				case 'Valid':
+					if (_p17._0.ctor === 'Just') {
+						return A2(
+							_kirchner$form_validation$Validate$map,
+							_elm_lang$core$Maybe$Just,
+							validator(
+								_kirchner$form_validation$Validate$Valid(_p17._0._0)));
+					} else {
+						break _v11_3;
+					}
+				case 'Invalid':
+					if (_p17._0.ctor === 'Just') {
+						return A2(
+							_kirchner$form_validation$Validate$map,
+							_elm_lang$core$Maybe$Just,
+							validator(
+								A2(_kirchner$form_validation$Validate$Invalid, _p17._0._0, _p17._1)));
+					} else {
+						break _v11_3;
+					}
+				default:
+					break _v11_3;
+			}
+		} while(false);
+		return maybeValue;
 	});
-var _user$project$Bootstrap_Alert$view = F2(
-	function (visibility, _p17) {
-		var _p18 = _p17;
-		var _p19 = _p18._0;
-		return A2(
-			_elm_lang$html$Html$div,
-			A2(_user$project$Bootstrap_Alert$viewAttributes, visibility, _p19),
-			A3(_user$project$Bootstrap_Alert$maybeAddDismissButton, visibility, _p19, _p19.children));
+var _kirchner$form_validation$Validate$mapErrors = F2(
+	function (f, value) {
+		var _p18 = value;
+		switch (_p18.ctor) {
+			case 'Empty':
+				return _kirchner$form_validation$Validate$Empty;
+			case 'Unchecked':
+				return _kirchner$form_validation$Validate$Unchecked(_p18._0);
+			case 'Valid':
+				return _kirchner$form_validation$Validate$Valid(_p18._0);
+			default:
+				return A2(
+					_kirchner$form_validation$Validate$Invalid,
+					_p18._0,
+					A2(_elm_lang$core$Set$map, f, _p18._1));
+		}
 	});
-var _user$project$Bootstrap_Alert$simple = F3(
-	function (role_, attributes, children_) {
-		return A2(
-			_user$project$Bootstrap_Alert$view,
-			_user$project$Bootstrap_Alert$Shown,
-			A2(
-				_user$project$Bootstrap_Alert$children,
-				children_,
-				A2(
-					_user$project$Bootstrap_Alert$attrs,
-					attributes,
-					A2(_user$project$Bootstrap_Alert$role, role_, _user$project$Bootstrap_Alert$config))));
-	});
-var _user$project$Bootstrap_Alert$simplePrimary = _user$project$Bootstrap_Alert$simple(_user$project$Bootstrap_Internal_Role$Primary);
-var _user$project$Bootstrap_Alert$simpleSecondary = _user$project$Bootstrap_Alert$simple(_user$project$Bootstrap_Internal_Role$Secondary);
-var _user$project$Bootstrap_Alert$simpleSuccess = _user$project$Bootstrap_Alert$simple(_user$project$Bootstrap_Internal_Role$Success);
-var _user$project$Bootstrap_Alert$simpleInfo = _user$project$Bootstrap_Alert$simple(_user$project$Bootstrap_Internal_Role$Info);
-var _user$project$Bootstrap_Alert$simpleWarning = _user$project$Bootstrap_Alert$simple(_user$project$Bootstrap_Internal_Role$Warning);
-var _user$project$Bootstrap_Alert$simpleDanger = _user$project$Bootstrap_Alert$simple(_user$project$Bootstrap_Internal_Role$Danger);
-var _user$project$Bootstrap_Alert$simpleDark = _user$project$Bootstrap_Alert$simple(_user$project$Bootstrap_Internal_Role$Dark);
-var _user$project$Bootstrap_Alert$simpleLight = _user$project$Bootstrap_Alert$simple(_user$project$Bootstrap_Internal_Role$Light);
 
-var _user$project$Bootstrap_Grid_Internal$horizontalAlignOption = function (align) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$horizontalAlignOption = function (align) {
 	var _p0 = align;
 	switch (_p0.ctor) {
 		case 'Left':
@@ -11039,7 +11240,7 @@ var _user$project$Bootstrap_Grid_Internal$horizontalAlignOption = function (alig
 			return 'between';
 	}
 };
-var _user$project$Bootstrap_Grid_Internal$verticalAlignOption = function (align) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$verticalAlignOption = function (align) {
 	var _p1 = align;
 	switch (_p1.ctor) {
 		case 'Top':
@@ -11050,7 +11251,7 @@ var _user$project$Bootstrap_Grid_Internal$verticalAlignOption = function (align)
 			return 'end';
 	}
 };
-var _user$project$Bootstrap_Grid_Internal$moveCountOption = function (size) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$moveCountOption = function (size) {
 	var _p2 = size;
 	switch (_p2.ctor) {
 		case 'Move0':
@@ -11081,7 +11282,7 @@ var _user$project$Bootstrap_Grid_Internal$moveCountOption = function (size) {
 			return '12';
 	}
 };
-var _user$project$Bootstrap_Grid_Internal$offsetCountOption = function (size) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$offsetCountOption = function (size) {
 	var _p3 = size;
 	switch (_p3.ctor) {
 		case 'Offset0':
@@ -11110,7 +11311,7 @@ var _user$project$Bootstrap_Grid_Internal$offsetCountOption = function (size) {
 			return '11';
 	}
 };
-var _user$project$Bootstrap_Grid_Internal$columnCountOption = function (size) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$columnCountOption = function (size) {
 	var _p4 = size;
 	switch (_p4.ctor) {
 		case 'Col':
@@ -11143,7 +11344,7 @@ var _user$project$Bootstrap_Grid_Internal$columnCountOption = function (size) {
 			return _elm_lang$core$Maybe$Just('auto');
 	}
 };
-var _user$project$Bootstrap_Grid_Internal$screenSizeOption = function (size) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption = function (size) {
 	var _p5 = size;
 	switch (_p5.ctor) {
 		case 'XS':
@@ -11158,8 +11359,8 @@ var _user$project$Bootstrap_Grid_Internal$screenSizeOption = function (size) {
 			return _elm_lang$core$Maybe$Just('xl');
 	}
 };
-var _user$project$Bootstrap_Grid_Internal$screenSizeToPartialString = function (screenSize) {
-	var _p6 = _user$project$Bootstrap_Grid_Internal$screenSizeOption(screenSize);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeToPartialString = function (screenSize) {
+	var _p6 = _rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption(screenSize);
 	if (_p6.ctor === 'Just') {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
@@ -11169,7 +11370,7 @@ var _user$project$Bootstrap_Grid_Internal$screenSizeToPartialString = function (
 		return '-';
 	}
 };
-var _user$project$Bootstrap_Grid_Internal$hAlignClass = function (_p7) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$hAlignClass = function (_p7) {
 	var _p8 = _p7;
 	return _elm_lang$html$Html_Attributes$class(
 		A2(
@@ -11185,19 +11386,19 @@ var _user$project$Bootstrap_Grid_Internal$hAlignClass = function (_p7) {
 						function (v) {
 							return A2(_elm_lang$core$Basics_ops['++'], v, '-');
 						},
-						_user$project$Bootstrap_Grid_Internal$screenSizeOption(_p8.screenSize))),
-				_user$project$Bootstrap_Grid_Internal$horizontalAlignOption(_p8.align))));
+						_rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption(_p8.screenSize))),
+				_rundis$elm_bootstrap$Bootstrap_Grid_Internal$horizontalAlignOption(_p8.align))));
 };
-var _user$project$Bootstrap_Grid_Internal$hAlignsToAttributes = function (aligns) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$hAlignsToAttributes = function (aligns) {
 	var align = function (a) {
-		return A2(_elm_lang$core$Maybe$map, _user$project$Bootstrap_Grid_Internal$hAlignClass, a);
+		return A2(_elm_lang$core$Maybe$map, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$hAlignClass, a);
 	};
 	return A2(
 		_elm_lang$core$List$filterMap,
 		_elm_lang$core$Basics$identity,
 		A2(_elm_lang$core$List$map, align, aligns));
 };
-var _user$project$Bootstrap_Grid_Internal$vAlignClass = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$vAlignClass = F2(
 	function (prefix, _p9) {
 		var _p10 = _p9;
 		return _elm_lang$html$Html_Attributes$class(
@@ -11214,15 +11415,15 @@ var _user$project$Bootstrap_Grid_Internal$vAlignClass = F2(
 							function (v) {
 								return A2(_elm_lang$core$Basics_ops['++'], v, '-');
 							},
-							_user$project$Bootstrap_Grid_Internal$screenSizeOption(_p10.screenSize))),
-					_user$project$Bootstrap_Grid_Internal$verticalAlignOption(_p10.align))));
+							_rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption(_p10.screenSize))),
+					_rundis$elm_bootstrap$Bootstrap_Grid_Internal$verticalAlignOption(_p10.align))));
 	});
-var _user$project$Bootstrap_Grid_Internal$vAlignsToAttributes = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$vAlignsToAttributes = F2(
 	function (prefix, aligns) {
 		var align = function (a) {
 			return A2(
 				_elm_lang$core$Maybe$map,
-				_user$project$Bootstrap_Grid_Internal$vAlignClass(prefix),
+				_rundis$elm_bootstrap$Bootstrap_Grid_Internal$vAlignClass(prefix),
 				a);
 		};
 		return A2(
@@ -11230,7 +11431,7 @@ var _user$project$Bootstrap_Grid_Internal$vAlignsToAttributes = F2(
 			_elm_lang$core$Basics$identity,
 			A2(_elm_lang$core$List$map, align, aligns));
 	});
-var _user$project$Bootstrap_Grid_Internal$pushesToAttributes = function (pushes) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$pushesToAttributes = function (pushes) {
 	var push = function (m) {
 		var _p11 = m;
 		if (_p11.ctor === 'Just') {
@@ -11241,8 +11442,8 @@ var _user$project$Bootstrap_Grid_Internal$pushesToAttributes = function (pushes)
 						'push',
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							_user$project$Bootstrap_Grid_Internal$screenSizeToPartialString(_p11._0.screenSize),
-							_user$project$Bootstrap_Grid_Internal$moveCountOption(_p11._0.moveCount)))));
+							_rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeToPartialString(_p11._0.screenSize),
+							_rundis$elm_bootstrap$Bootstrap_Grid_Internal$moveCountOption(_p11._0.moveCount)))));
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
@@ -11252,7 +11453,7 @@ var _user$project$Bootstrap_Grid_Internal$pushesToAttributes = function (pushes)
 		_elm_lang$core$Basics$identity,
 		A2(_elm_lang$core$List$map, push, pushes));
 };
-var _user$project$Bootstrap_Grid_Internal$pullsToAttributes = function (pulls) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$pullsToAttributes = function (pulls) {
 	var pull = function (m) {
 		var _p12 = m;
 		if (_p12.ctor === 'Just') {
@@ -11263,8 +11464,8 @@ var _user$project$Bootstrap_Grid_Internal$pullsToAttributes = function (pulls) {
 						'pull',
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							_user$project$Bootstrap_Grid_Internal$screenSizeToPartialString(_p12._0.screenSize),
-							_user$project$Bootstrap_Grid_Internal$moveCountOption(_p12._0.moveCount)))));
+							_rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeToPartialString(_p12._0.screenSize),
+							_rundis$elm_bootstrap$Bootstrap_Grid_Internal$moveCountOption(_p12._0.moveCount)))));
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
@@ -11274,7 +11475,7 @@ var _user$project$Bootstrap_Grid_Internal$pullsToAttributes = function (pulls) {
 		_elm_lang$core$Basics$identity,
 		A2(_elm_lang$core$List$map, pull, pulls));
 };
-var _user$project$Bootstrap_Grid_Internal$offsetClass = function (_p13) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$offsetClass = function (_p13) {
 	var _p14 = _p13;
 	return _elm_lang$html$Html_Attributes$class(
 		A2(
@@ -11282,19 +11483,19 @@ var _user$project$Bootstrap_Grid_Internal$offsetClass = function (_p13) {
 			'offset',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				_user$project$Bootstrap_Grid_Internal$screenSizeToPartialString(_p14.screenSize),
-				_user$project$Bootstrap_Grid_Internal$offsetCountOption(_p14.offsetCount))));
+				_rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeToPartialString(_p14.screenSize),
+				_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offsetCountOption(_p14.offsetCount))));
 };
-var _user$project$Bootstrap_Grid_Internal$offsetsToAttributes = function (offsets) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$offsetsToAttributes = function (offsets) {
 	var offset = function (m) {
-		return A2(_elm_lang$core$Maybe$map, _user$project$Bootstrap_Grid_Internal$offsetClass, m);
+		return A2(_elm_lang$core$Maybe$map, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$offsetClass, m);
 	};
 	return A2(
 		_elm_lang$core$List$filterMap,
 		_elm_lang$core$Basics$identity,
 		A2(_elm_lang$core$List$map, offset, offsets));
 };
-var _user$project$Bootstrap_Grid_Internal$colWidthClass = function (_p15) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$colWidthClass = function (_p15) {
 	var _p16 = _p15;
 	return _elm_lang$html$Html_Attributes$class(
 		A2(
@@ -11310,7 +11511,7 @@ var _user$project$Bootstrap_Grid_Internal$colWidthClass = function (_p15) {
 						function (v) {
 							return A2(_elm_lang$core$Basics_ops['++'], '-', v);
 						},
-						_user$project$Bootstrap_Grid_Internal$screenSizeOption(_p16.screenSize))),
+						_rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption(_p16.screenSize))),
 				A2(
 					_elm_lang$core$Maybe$withDefault,
 					'',
@@ -11319,18 +11520,18 @@ var _user$project$Bootstrap_Grid_Internal$colWidthClass = function (_p15) {
 						function (v) {
 							return A2(_elm_lang$core$Basics_ops['++'], '-', v);
 						},
-						_user$project$Bootstrap_Grid_Internal$columnCountOption(_p16.columnCount))))));
+						_rundis$elm_bootstrap$Bootstrap_Grid_Internal$columnCountOption(_p16.columnCount))))));
 };
-var _user$project$Bootstrap_Grid_Internal$colWidthsToAttributes = function (widths) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$colWidthsToAttributes = function (widths) {
 	var width = function (w) {
-		return A2(_elm_lang$core$Maybe$map, _user$project$Bootstrap_Grid_Internal$colWidthClass, w);
+		return A2(_elm_lang$core$Maybe$map, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$colWidthClass, w);
 	};
 	return A2(
 		_elm_lang$core$List$filterMap,
 		_elm_lang$core$Basics$identity,
 		A2(_elm_lang$core$List$map, width, widths));
 };
-var _user$project$Bootstrap_Grid_Internal$defaultRowOptions = {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$defaultRowOptions = {
 	attributes: {ctor: '[]'},
 	vAlignXs: _elm_lang$core$Maybe$Nothing,
 	vAlignSm: _elm_lang$core$Maybe$Nothing,
@@ -11343,7 +11544,7 @@ var _user$project$Bootstrap_Grid_Internal$defaultRowOptions = {
 	hAlignLg: _elm_lang$core$Maybe$Nothing,
 	hAlignXl: _elm_lang$core$Maybe$Nothing
 };
-var _user$project$Bootstrap_Grid_Internal$defaultColOptions = {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$defaultColOptions = {
 	attributes: {ctor: '[]'},
 	widthXs: _elm_lang$core$Maybe$Nothing,
 	widthSm: _elm_lang$core$Maybe$Nothing,
@@ -11371,7 +11572,7 @@ var _user$project$Bootstrap_Grid_Internal$defaultColOptions = {
 	alignLg: _elm_lang$core$Maybe$Nothing,
 	alignXl: _elm_lang$core$Maybe$Nothing
 };
-var _user$project$Bootstrap_Grid_Internal$applyRowHAlign = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyRowHAlign = F2(
 	function (align, options) {
 		var _p17 = align.screenSize;
 		switch (_p17.ctor) {
@@ -11407,7 +11608,7 @@ var _user$project$Bootstrap_Grid_Internal$applyRowHAlign = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Grid_Internal$applyRowVAlign = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyRowVAlign = F2(
 	function (align, options) {
 		var _p18 = align.screenSize;
 		switch (_p18.ctor) {
@@ -11443,7 +11644,7 @@ var _user$project$Bootstrap_Grid_Internal$applyRowVAlign = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Grid_Internal$applyRowOption = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyRowOption = F2(
 	function (modifier, options) {
 		var _p19 = modifier;
 		switch (_p19.ctor) {
@@ -11454,12 +11655,12 @@ var _user$project$Bootstrap_Grid_Internal$applyRowOption = F2(
 						attributes: A2(_elm_lang$core$Basics_ops['++'], options.attributes, _p19._0)
 					});
 			case 'RowVAlign':
-				return A2(_user$project$Bootstrap_Grid_Internal$applyRowVAlign, _p19._0, options);
+				return A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyRowVAlign, _p19._0, options);
 			default:
-				return A2(_user$project$Bootstrap_Grid_Internal$applyRowHAlign, _p19._0, options);
+				return A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyRowHAlign, _p19._0, options);
 		}
 	});
-var _user$project$Bootstrap_Grid_Internal$applyColAlign = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyColAlign = F2(
 	function (align, options) {
 		var _p20 = align.screenSize;
 		switch (_p20.ctor) {
@@ -11495,7 +11696,7 @@ var _user$project$Bootstrap_Grid_Internal$applyColAlign = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Grid_Internal$applyColPush = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyColPush = F2(
 	function (push, options) {
 		var _p21 = push.screenSize;
 		switch (_p21.ctor) {
@@ -11531,7 +11732,7 @@ var _user$project$Bootstrap_Grid_Internal$applyColPush = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Grid_Internal$applyColPull = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyColPull = F2(
 	function (pull, options) {
 		var _p22 = pull.screenSize;
 		switch (_p22.ctor) {
@@ -11567,7 +11768,7 @@ var _user$project$Bootstrap_Grid_Internal$applyColPull = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Grid_Internal$applyColOffset = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyColOffset = F2(
 	function (offset, options) {
 		var _p23 = offset.screenSize;
 		switch (_p23.ctor) {
@@ -11603,7 +11804,7 @@ var _user$project$Bootstrap_Grid_Internal$applyColOffset = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Grid_Internal$applyColWidth = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyColWidth = F2(
 	function (width, options) {
 		var _p24 = width.screenSize;
 		switch (_p24.ctor) {
@@ -11639,7 +11840,7 @@ var _user$project$Bootstrap_Grid_Internal$applyColWidth = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Grid_Internal$applyColOption = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyColOption = F2(
 	function (modifier, options) {
 		var _p25 = modifier;
 		switch (_p25.ctor) {
@@ -11650,19 +11851,19 @@ var _user$project$Bootstrap_Grid_Internal$applyColOption = F2(
 						attributes: A2(_elm_lang$core$Basics_ops['++'], options.attributes, _p25._0)
 					});
 			case 'ColWidth':
-				return A2(_user$project$Bootstrap_Grid_Internal$applyColWidth, _p25._0, options);
+				return A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyColWidth, _p25._0, options);
 			case 'ColOffset':
-				return A2(_user$project$Bootstrap_Grid_Internal$applyColOffset, _p25._0, options);
+				return A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyColOffset, _p25._0, options);
 			case 'ColPull':
-				return A2(_user$project$Bootstrap_Grid_Internal$applyColPull, _p25._0, options);
+				return A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyColPull, _p25._0, options);
 			case 'ColPush':
-				return A2(_user$project$Bootstrap_Grid_Internal$applyColPush, _p25._0, options);
+				return A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyColPush, _p25._0, options);
 			default:
-				return A2(_user$project$Bootstrap_Grid_Internal$applyColAlign, _p25._0, options);
+				return A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyColAlign, _p25._0, options);
 		}
 	});
-var _user$project$Bootstrap_Grid_Internal$rowAttributes = function (modifiers) {
-	var options = A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Grid_Internal$applyRowOption, _user$project$Bootstrap_Grid_Internal$defaultRowOptions, modifiers);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowAttributes = function (modifiers) {
+	var options = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyRowOption, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$defaultRowOptions, modifiers);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		{
@@ -11673,7 +11874,7 @@ var _user$project$Bootstrap_Grid_Internal$rowAttributes = function (modifiers) {
 		A2(
 			_elm_lang$core$Basics_ops['++'],
 			A2(
-				_user$project$Bootstrap_Grid_Internal$vAlignsToAttributes,
+				_rundis$elm_bootstrap$Bootstrap_Grid_Internal$vAlignsToAttributes,
 				'align-items-',
 				{
 					ctor: '::',
@@ -11698,7 +11899,7 @@ var _user$project$Bootstrap_Grid_Internal$rowAttributes = function (modifiers) {
 				}),
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				_user$project$Bootstrap_Grid_Internal$hAlignsToAttributes(
+				_rundis$elm_bootstrap$Bootstrap_Grid_Internal$hAlignsToAttributes(
 					{
 						ctor: '::',
 						_0: options.hAlignXs,
@@ -11722,31 +11923,31 @@ var _user$project$Bootstrap_Grid_Internal$rowAttributes = function (modifiers) {
 					}),
 				options.attributes)));
 };
-var _user$project$Bootstrap_Grid_Internal$Width = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Width = F2(
 	function (a, b) {
 		return {screenSize: a, columnCount: b};
 	});
-var _user$project$Bootstrap_Grid_Internal$Offset = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset = F2(
 	function (a, b) {
 		return {screenSize: a, offsetCount: b};
 	});
-var _user$project$Bootstrap_Grid_Internal$Pull = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Pull = F2(
 	function (a, b) {
 		return {screenSize: a, moveCount: b};
 	});
-var _user$project$Bootstrap_Grid_Internal$Push = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Push = F2(
 	function (a, b) {
 		return {screenSize: a, moveCount: b};
 	});
-var _user$project$Bootstrap_Grid_Internal$VAlign = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$VAlign = F2(
 	function (a, b) {
 		return {screenSize: a, align: b};
 	});
-var _user$project$Bootstrap_Grid_Internal$HAlign = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$HAlign = F2(
 	function (a, b) {
 		return {screenSize: a, align: b};
 	});
-var _user$project$Bootstrap_Grid_Internal$ColOptions = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColOptions = function (a) {
 	return function (b) {
 		return function (c) {
 			return function (d) {
@@ -11799,7 +12000,7 @@ var _user$project$Bootstrap_Grid_Internal$ColOptions = function (a) {
 		};
 	};
 };
-var _user$project$Bootstrap_Grid_Internal$RowOptions = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$RowOptions = function (a) {
 	return function (b) {
 		return function (c) {
 			return function (d) {
@@ -11822,89 +12023,89 @@ var _user$project$Bootstrap_Grid_Internal$RowOptions = function (a) {
 		};
 	};
 };
-var _user$project$Bootstrap_Grid_Internal$ColAttrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColAttrs = function (a) {
 	return {ctor: 'ColAttrs', _0: a};
 };
-var _user$project$Bootstrap_Grid_Internal$ColAlign = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColAlign = function (a) {
 	return {ctor: 'ColAlign', _0: a};
 };
-var _user$project$Bootstrap_Grid_Internal$colVAlign = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign = F2(
 	function (size, align) {
-		return _user$project$Bootstrap_Grid_Internal$ColAlign(
-			A2(_user$project$Bootstrap_Grid_Internal$VAlign, size, align));
+		return _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColAlign(
+			A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$VAlign, size, align));
 	});
-var _user$project$Bootstrap_Grid_Internal$ColPush = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColPush = function (a) {
 	return {ctor: 'ColPush', _0: a};
 };
-var _user$project$Bootstrap_Grid_Internal$push = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$push = F2(
 	function (size, count) {
-		return _user$project$Bootstrap_Grid_Internal$ColPush(
-			A2(_user$project$Bootstrap_Grid_Internal$Push, size, count));
+		return _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColPush(
+			A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$Push, size, count));
 	});
-var _user$project$Bootstrap_Grid_Internal$ColPull = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColPull = function (a) {
 	return {ctor: 'ColPull', _0: a};
 };
-var _user$project$Bootstrap_Grid_Internal$pull = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull = F2(
 	function (size, count) {
-		return _user$project$Bootstrap_Grid_Internal$ColPull(
-			A2(_user$project$Bootstrap_Grid_Internal$Pull, size, count));
+		return _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColPull(
+			A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$Pull, size, count));
 	});
-var _user$project$Bootstrap_Grid_Internal$ColOffset = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColOffset = function (a) {
 	return {ctor: 'ColOffset', _0: a};
 };
-var _user$project$Bootstrap_Grid_Internal$offset = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset = F2(
 	function (size, count) {
-		return _user$project$Bootstrap_Grid_Internal$ColOffset(
-			A2(_user$project$Bootstrap_Grid_Internal$Offset, size, count));
+		return _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColOffset(
+			A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset, size, count));
 	});
-var _user$project$Bootstrap_Grid_Internal$ColWidth = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColWidth = function (a) {
 	return {ctor: 'ColWidth', _0: a};
 };
-var _user$project$Bootstrap_Grid_Internal$width = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$width = F2(
 	function (size, count) {
-		return _user$project$Bootstrap_Grid_Internal$ColWidth(
-			A2(_user$project$Bootstrap_Grid_Internal$Width, size, count));
+		return _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColWidth(
+			A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$Width, size, count));
 	});
-var _user$project$Bootstrap_Grid_Internal$RowAttrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$RowAttrs = function (a) {
 	return {ctor: 'RowAttrs', _0: a};
 };
-var _user$project$Bootstrap_Grid_Internal$RowHAlign = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$RowHAlign = function (a) {
 	return {ctor: 'RowHAlign', _0: a};
 };
-var _user$project$Bootstrap_Grid_Internal$rowHAlign = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign = F2(
 	function (size, align) {
-		return _user$project$Bootstrap_Grid_Internal$RowHAlign(
-			A2(_user$project$Bootstrap_Grid_Internal$HAlign, size, align));
+		return _rundis$elm_bootstrap$Bootstrap_Grid_Internal$RowHAlign(
+			A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$HAlign, size, align));
 	});
-var _user$project$Bootstrap_Grid_Internal$RowVAlign = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$RowVAlign = function (a) {
 	return {ctor: 'RowVAlign', _0: a};
 };
-var _user$project$Bootstrap_Grid_Internal$rowVAlign = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign = F2(
 	function (size, align) {
-		return _user$project$Bootstrap_Grid_Internal$RowVAlign(
-			A2(_user$project$Bootstrap_Grid_Internal$VAlign, size, align));
+		return _rundis$elm_bootstrap$Bootstrap_Grid_Internal$RowVAlign(
+			A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$VAlign, size, align));
 	});
-var _user$project$Bootstrap_Grid_Internal$XL = {ctor: 'XL'};
-var _user$project$Bootstrap_Grid_Internal$LG = {ctor: 'LG'};
-var _user$project$Bootstrap_Grid_Internal$MD = {ctor: 'MD'};
-var _user$project$Bootstrap_Grid_Internal$SM = {ctor: 'SM'};
-var _user$project$Bootstrap_Grid_Internal$XS = {ctor: 'XS'};
-var _user$project$Bootstrap_Grid_Internal$ColAuto = {ctor: 'ColAuto'};
-var _user$project$Bootstrap_Grid_Internal$Col12 = {ctor: 'Col12'};
-var _user$project$Bootstrap_Grid_Internal$Col11 = {ctor: 'Col11'};
-var _user$project$Bootstrap_Grid_Internal$Col10 = {ctor: 'Col10'};
-var _user$project$Bootstrap_Grid_Internal$Col9 = {ctor: 'Col9'};
-var _user$project$Bootstrap_Grid_Internal$Col8 = {ctor: 'Col8'};
-var _user$project$Bootstrap_Grid_Internal$Col7 = {ctor: 'Col7'};
-var _user$project$Bootstrap_Grid_Internal$Col6 = {ctor: 'Col6'};
-var _user$project$Bootstrap_Grid_Internal$Col5 = {ctor: 'Col5'};
-var _user$project$Bootstrap_Grid_Internal$Col4 = {ctor: 'Col4'};
-var _user$project$Bootstrap_Grid_Internal$Col3 = {ctor: 'Col3'};
-var _user$project$Bootstrap_Grid_Internal$Col2 = {ctor: 'Col2'};
-var _user$project$Bootstrap_Grid_Internal$Col1 = {ctor: 'Col1'};
-var _user$project$Bootstrap_Grid_Internal$Col = {ctor: 'Col'};
-var _user$project$Bootstrap_Grid_Internal$colAttributes = function (modifiers) {
-	var options = A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Grid_Internal$applyColOption, _user$project$Bootstrap_Grid_Internal$defaultColOptions, modifiers);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL = {ctor: 'XL'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG = {ctor: 'LG'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD = {ctor: 'MD'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM = {ctor: 'SM'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS = {ctor: 'XS'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColAuto = {ctor: 'ColAuto'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col12 = {ctor: 'Col12'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col11 = {ctor: 'Col11'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col10 = {ctor: 'Col10'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col9 = {ctor: 'Col9'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col8 = {ctor: 'Col8'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col7 = {ctor: 'Col7'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col6 = {ctor: 'Col6'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col5 = {ctor: 'Col5'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col4 = {ctor: 'Col4'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col3 = {ctor: 'Col3'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col2 = {ctor: 'Col2'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col1 = {ctor: 'Col1'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col = {ctor: 'Col'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$colAttributes = function (modifiers) {
+	var options = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$applyColOption, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$defaultColOptions, modifiers);
 	var shouldAddDefaultXs = _elm_lang$core$Native_Utils.eq(
 		_elm_lang$core$List$length(
 			A2(
@@ -11934,11 +12135,11 @@ var _user$project$Bootstrap_Grid_Internal$colAttributes = function (modifiers) {
 		0);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
-		_user$project$Bootstrap_Grid_Internal$colWidthsToAttributes(
+		_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colWidthsToAttributes(
 			{
 				ctor: '::',
 				_0: shouldAddDefaultXs ? _elm_lang$core$Maybe$Just(
-					A2(_user$project$Bootstrap_Grid_Internal$Width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col)) : options.widthXs,
+					A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$Width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col)) : options.widthXs,
 				_1: {
 					ctor: '::',
 					_0: options.widthSm,
@@ -11959,7 +12160,7 @@ var _user$project$Bootstrap_Grid_Internal$colAttributes = function (modifiers) {
 			}),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			_user$project$Bootstrap_Grid_Internal$offsetsToAttributes(
+			_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offsetsToAttributes(
 				{
 					ctor: '::',
 					_0: options.offsetXs,
@@ -11983,7 +12184,7 @@ var _user$project$Bootstrap_Grid_Internal$colAttributes = function (modifiers) {
 				}),
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				_user$project$Bootstrap_Grid_Internal$pullsToAttributes(
+				_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pullsToAttributes(
 					{
 						ctor: '::',
 						_0: options.pullXs,
@@ -12007,7 +12208,7 @@ var _user$project$Bootstrap_Grid_Internal$colAttributes = function (modifiers) {
 					}),
 				A2(
 					_elm_lang$core$Basics_ops['++'],
-					_user$project$Bootstrap_Grid_Internal$pushesToAttributes(
+					_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pushesToAttributes(
 						{
 							ctor: '::',
 							_0: options.pushXs,
@@ -12032,7 +12233,7 @@ var _user$project$Bootstrap_Grid_Internal$colAttributes = function (modifiers) {
 					A2(
 						_elm_lang$core$Basics_ops['++'],
 						A2(
-							_user$project$Bootstrap_Grid_Internal$vAlignsToAttributes,
+							_rundis$elm_bootstrap$Bootstrap_Grid_Internal$vAlignsToAttributes,
 							'align-self-',
 							{
 								ctor: '::',
@@ -12057,670 +12258,89 @@ var _user$project$Bootstrap_Grid_Internal$colAttributes = function (modifiers) {
 							}),
 						options.attributes)))));
 };
-var _user$project$Bootstrap_Grid_Internal$Offset11 = {ctor: 'Offset11'};
-var _user$project$Bootstrap_Grid_Internal$Offset10 = {ctor: 'Offset10'};
-var _user$project$Bootstrap_Grid_Internal$Offset9 = {ctor: 'Offset9'};
-var _user$project$Bootstrap_Grid_Internal$Offset8 = {ctor: 'Offset8'};
-var _user$project$Bootstrap_Grid_Internal$Offset7 = {ctor: 'Offset7'};
-var _user$project$Bootstrap_Grid_Internal$Offset6 = {ctor: 'Offset6'};
-var _user$project$Bootstrap_Grid_Internal$Offset5 = {ctor: 'Offset5'};
-var _user$project$Bootstrap_Grid_Internal$Offset4 = {ctor: 'Offset4'};
-var _user$project$Bootstrap_Grid_Internal$Offset3 = {ctor: 'Offset3'};
-var _user$project$Bootstrap_Grid_Internal$Offset2 = {ctor: 'Offset2'};
-var _user$project$Bootstrap_Grid_Internal$Offset1 = {ctor: 'Offset1'};
-var _user$project$Bootstrap_Grid_Internal$Offset0 = {ctor: 'Offset0'};
-var _user$project$Bootstrap_Grid_Internal$Move12 = {ctor: 'Move12'};
-var _user$project$Bootstrap_Grid_Internal$Move11 = {ctor: 'Move11'};
-var _user$project$Bootstrap_Grid_Internal$Move10 = {ctor: 'Move10'};
-var _user$project$Bootstrap_Grid_Internal$Move9 = {ctor: 'Move9'};
-var _user$project$Bootstrap_Grid_Internal$Move8 = {ctor: 'Move8'};
-var _user$project$Bootstrap_Grid_Internal$Move7 = {ctor: 'Move7'};
-var _user$project$Bootstrap_Grid_Internal$Move6 = {ctor: 'Move6'};
-var _user$project$Bootstrap_Grid_Internal$Move5 = {ctor: 'Move5'};
-var _user$project$Bootstrap_Grid_Internal$Move4 = {ctor: 'Move4'};
-var _user$project$Bootstrap_Grid_Internal$Move3 = {ctor: 'Move3'};
-var _user$project$Bootstrap_Grid_Internal$Move2 = {ctor: 'Move2'};
-var _user$project$Bootstrap_Grid_Internal$Move1 = {ctor: 'Move1'};
-var _user$project$Bootstrap_Grid_Internal$Move0 = {ctor: 'Move0'};
-var _user$project$Bootstrap_Grid_Internal$Bottom = {ctor: 'Bottom'};
-var _user$project$Bootstrap_Grid_Internal$Middle = {ctor: 'Middle'};
-var _user$project$Bootstrap_Grid_Internal$Top = {ctor: 'Top'};
-var _user$project$Bootstrap_Grid_Internal$Between = {ctor: 'Between'};
-var _user$project$Bootstrap_Grid_Internal$Around = {ctor: 'Around'};
-var _user$project$Bootstrap_Grid_Internal$Right = {ctor: 'Right'};
-var _user$project$Bootstrap_Grid_Internal$Center = {ctor: 'Center'};
-var _user$project$Bootstrap_Grid_Internal$Left = {ctor: 'Left'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset11 = {ctor: 'Offset11'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset10 = {ctor: 'Offset10'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset9 = {ctor: 'Offset9'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset8 = {ctor: 'Offset8'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset7 = {ctor: 'Offset7'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset6 = {ctor: 'Offset6'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset5 = {ctor: 'Offset5'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset4 = {ctor: 'Offset4'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset3 = {ctor: 'Offset3'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset2 = {ctor: 'Offset2'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset1 = {ctor: 'Offset1'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset0 = {ctor: 'Offset0'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move12 = {ctor: 'Move12'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move11 = {ctor: 'Move11'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move10 = {ctor: 'Move10'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move9 = {ctor: 'Move9'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move8 = {ctor: 'Move8'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move7 = {ctor: 'Move7'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move6 = {ctor: 'Move6'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move5 = {ctor: 'Move5'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move4 = {ctor: 'Move4'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move3 = {ctor: 'Move3'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move2 = {ctor: 'Move2'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move1 = {ctor: 'Move1'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move0 = {ctor: 'Move0'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Bottom = {ctor: 'Bottom'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Middle = {ctor: 'Middle'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Top = {ctor: 'Top'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Between = {ctor: 'Between'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Around = {ctor: 'Around'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Right = {ctor: 'Right'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Center = {ctor: 'Center'};
+var _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Left = {ctor: 'Left'};
 
-var _user$project$Bootstrap_Internal_Button$roleClass = function (role) {
-	var _p0 = role;
-	switch (_p0.ctor) {
-		case 'Primary':
-			return 'primary';
-		case 'Secondary':
-			return 'secondary';
-		case 'Success':
-			return 'success';
-		case 'Info':
-			return 'info';
-		case 'Warning':
-			return 'warning';
-		case 'Danger':
-			return 'danger';
-		case 'Dark':
-			return 'dark';
-		case 'Light':
-			return 'light';
-		default:
-			return 'link';
-	}
-};
-var _user$project$Bootstrap_Internal_Button$applyModifier = F2(
-	function (modifier, options) {
-		var _p1 = modifier;
-		switch (_p1.ctor) {
-			case 'Size':
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						size: _elm_lang$core$Maybe$Just(_p1._0)
-					});
-			case 'Coloring':
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						coloring: _elm_lang$core$Maybe$Just(_p1._0)
-					});
-			case 'Block':
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{block: true});
-			case 'Disabled':
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{disabled: _p1._0});
-			default:
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						attributes: A2(_elm_lang$core$Basics_ops['++'], options.attributes, _p1._0)
-					});
-		}
-	});
-var _user$project$Bootstrap_Internal_Button$defaultOptions = {
-	coloring: _elm_lang$core$Maybe$Nothing,
-	block: false,
-	disabled: false,
-	size: _elm_lang$core$Maybe$Nothing,
-	attributes: {ctor: '[]'}
-};
-var _user$project$Bootstrap_Internal_Button$buttonAttributes = function (modifiers) {
-	var options = A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Internal_Button$applyModifier, _user$project$Bootstrap_Internal_Button$defaultOptions, modifiers);
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$classList(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'btn', _1: true},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'btn-block', _1: options.block},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'disabled', _1: options.disabled},
-							_1: {ctor: '[]'}
-						}
-					}
-				}),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$disabled(options.disabled),
-				_1: {ctor: '[]'}
-			}
-		},
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			function () {
-				var _p2 = A2(_elm_lang$core$Maybe$andThen, _user$project$Bootstrap_Grid_Internal$screenSizeOption, options.size);
-				if (_p2.ctor === 'Just') {
-					return {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class(
-							A2(_elm_lang$core$Basics_ops['++'], 'btn-', _p2._0)),
-						_1: {ctor: '[]'}
-					};
-				} else {
-					return {ctor: '[]'};
-				}
-			}(),
+var _rundis$elm_bootstrap$Bootstrap_Internal_Role$toClass = F2(
+	function (prefix, role) {
+		return _elm_lang$html$Html_Attributes$class(
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				function () {
-					var _p3 = options.coloring;
-					if (_p3.ctor === 'Just') {
-						if (_p3._0.ctor === 'Roled') {
-							return {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class(
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										'btn-',
-										_user$project$Bootstrap_Internal_Button$roleClass(_p3._0._0))),
-								_1: {ctor: '[]'}
-							};
-						} else {
-							return {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class(
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										'btn-outline-',
-										_user$project$Bootstrap_Internal_Button$roleClass(_p3._0._0))),
-								_1: {ctor: '[]'}
-							};
+				prefix,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'-',
+					function () {
+						var _p0 = role;
+						switch (_p0.ctor) {
+							case 'Primary':
+								return 'primary';
+							case 'Secondary':
+								return 'secondary';
+							case 'Success':
+								return 'success';
+							case 'Info':
+								return 'info';
+							case 'Warning':
+								return 'warning';
+							case 'Danger':
+								return 'danger';
+							case 'Light':
+								return 'light';
+							default:
+								return 'dark';
 						}
-					} else {
-						return {ctor: '[]'};
-					}
-				}(),
-				options.attributes)));
-};
-var _user$project$Bootstrap_Internal_Button$Options = F5(
-	function (a, b, c, d, e) {
-		return {coloring: a, block: b, disabled: c, size: d, attributes: e};
+					}())));
 	});
-var _user$project$Bootstrap_Internal_Button$Attrs = function (a) {
-	return {ctor: 'Attrs', _0: a};
-};
-var _user$project$Bootstrap_Internal_Button$Disabled = function (a) {
-	return {ctor: 'Disabled', _0: a};
-};
-var _user$project$Bootstrap_Internal_Button$Block = {ctor: 'Block'};
-var _user$project$Bootstrap_Internal_Button$Coloring = function (a) {
-	return {ctor: 'Coloring', _0: a};
-};
-var _user$project$Bootstrap_Internal_Button$Size = function (a) {
-	return {ctor: 'Size', _0: a};
-};
-var _user$project$Bootstrap_Internal_Button$Outlined = function (a) {
-	return {ctor: 'Outlined', _0: a};
-};
-var _user$project$Bootstrap_Internal_Button$Roled = function (a) {
-	return {ctor: 'Roled', _0: a};
-};
-var _user$project$Bootstrap_Internal_Button$Link = {ctor: 'Link'};
-var _user$project$Bootstrap_Internal_Button$Light = {ctor: 'Light'};
-var _user$project$Bootstrap_Internal_Button$Dark = {ctor: 'Dark'};
-var _user$project$Bootstrap_Internal_Button$Danger = {ctor: 'Danger'};
-var _user$project$Bootstrap_Internal_Button$Warning = {ctor: 'Warning'};
-var _user$project$Bootstrap_Internal_Button$Info = {ctor: 'Info'};
-var _user$project$Bootstrap_Internal_Button$Success = {ctor: 'Success'};
-var _user$project$Bootstrap_Internal_Button$Secondary = {ctor: 'Secondary'};
-var _user$project$Bootstrap_Internal_Button$Primary = {ctor: 'Primary'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark = {ctor: 'Dark'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Role$Light = {ctor: 'Light'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger = {ctor: 'Danger'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning = {ctor: 'Warning'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Role$Info = {ctor: 'Info'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Role$Success = {ctor: 'Success'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary = {ctor: 'Secondary'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary = {ctor: 'Primary'};
 
-var _user$project$Bootstrap_Button$disabled = function (disabled) {
-	return _user$project$Bootstrap_Internal_Button$Disabled(disabled);
-};
-var _user$project$Bootstrap_Button$block = _user$project$Bootstrap_Internal_Button$Block;
-var _user$project$Bootstrap_Button$outlineDark = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Outlined(_user$project$Bootstrap_Internal_Button$Dark));
-var _user$project$Bootstrap_Button$outlineLight = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Outlined(_user$project$Bootstrap_Internal_Button$Light));
-var _user$project$Bootstrap_Button$outlineDanger = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Outlined(_user$project$Bootstrap_Internal_Button$Danger));
-var _user$project$Bootstrap_Button$outlineWarning = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Outlined(_user$project$Bootstrap_Internal_Button$Warning));
-var _user$project$Bootstrap_Button$outlineInfo = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Outlined(_user$project$Bootstrap_Internal_Button$Info));
-var _user$project$Bootstrap_Button$outlineSuccess = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Outlined(_user$project$Bootstrap_Internal_Button$Success));
-var _user$project$Bootstrap_Button$outlineSecondary = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Outlined(_user$project$Bootstrap_Internal_Button$Secondary));
-var _user$project$Bootstrap_Button$outlinePrimary = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Outlined(_user$project$Bootstrap_Internal_Button$Primary));
-var _user$project$Bootstrap_Button$roleLink = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Roled(_user$project$Bootstrap_Internal_Button$Link));
-var _user$project$Bootstrap_Button$dark = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Roled(_user$project$Bootstrap_Internal_Button$Dark));
-var _user$project$Bootstrap_Button$light = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Roled(_user$project$Bootstrap_Internal_Button$Light));
-var _user$project$Bootstrap_Button$danger = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Roled(_user$project$Bootstrap_Internal_Button$Danger));
-var _user$project$Bootstrap_Button$warning = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Roled(_user$project$Bootstrap_Internal_Button$Warning));
-var _user$project$Bootstrap_Button$info = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Roled(_user$project$Bootstrap_Internal_Button$Info));
-var _user$project$Bootstrap_Button$success = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Roled(_user$project$Bootstrap_Internal_Button$Success));
-var _user$project$Bootstrap_Button$secondary = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Roled(_user$project$Bootstrap_Internal_Button$Secondary));
-var _user$project$Bootstrap_Button$primary = _user$project$Bootstrap_Internal_Button$Coloring(
-	_user$project$Bootstrap_Internal_Button$Roled(_user$project$Bootstrap_Internal_Button$Primary));
-var _user$project$Bootstrap_Button$large = _user$project$Bootstrap_Internal_Button$Size(_user$project$Bootstrap_Grid_Internal$LG);
-var _user$project$Bootstrap_Button$small = _user$project$Bootstrap_Internal_Button$Size(_user$project$Bootstrap_Grid_Internal$SM);
-var _user$project$Bootstrap_Button$attrs = function (attrs) {
-	return _user$project$Bootstrap_Internal_Button$Attrs(attrs);
-};
-var _user$project$Bootstrap_Button$onClick = function (message) {
-	var defaultOptions = _elm_lang$html$Html_Events$defaultOptions;
-	return _user$project$Bootstrap_Button$attrs(
-		{
-			ctor: '::',
-			_0: A3(
-				_elm_lang$html$Html_Events$onWithOptions,
-				'click',
-				_elm_lang$core$Native_Utils.update(
-					defaultOptions,
-					{preventDefault: true}),
-				_elm_lang$core$Json_Decode$succeed(message)),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Bootstrap_Button$checkboxButton = F3(
-	function (checked, options, children) {
-		return A2(
-			_elm_lang$html$Html$label,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$classList(
-					{
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'active', _1: checked},
-						_1: {ctor: '[]'}
-					}),
-				_1: _user$project$Bootstrap_Internal_Button$buttonAttributes(options)
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$input,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$type_('checkbox'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$checked(checked),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$autocomplete(false),
-								_1: {ctor: '[]'}
-							}
-						}
-					},
-					{ctor: '[]'}),
-				_1: children
-			});
-	});
-var _user$project$Bootstrap_Button$myRadio = F4(
-	function (checked, options, inputAttributes, children) {
-		var hideRadio = A2(_elm_lang$html$Html_Attributes$attribute, 'data-toggle', 'button');
-		return A2(
-			_elm_lang$html$Html$label,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$classList(
-					{
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'active', _1: checked},
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: hideRadio,
-					_1: _user$project$Bootstrap_Internal_Button$buttonAttributes(options)
-				}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$input,
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$type_('radio'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$checked(checked),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$autocomplete(false),
-									_1: {ctor: '[]'}
-								}
-							}
-						},
-						inputAttributes),
-					{ctor: '[]'}),
-				_1: children
-			});
-	});
-var _user$project$Bootstrap_Button$radioButton = F3(
-	function (checked, options, children) {
-		var hideRadio = A2(_elm_lang$html$Html_Attributes$attribute, 'data-toggle', 'button');
-		return A2(
-			_elm_lang$html$Html$label,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$classList(
-					{
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'active', _1: checked},
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: hideRadio,
-					_1: _user$project$Bootstrap_Internal_Button$buttonAttributes(options)
-				}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$input,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$type_('radio'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$checked(checked),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$autocomplete(false),
-								_1: {ctor: '[]'}
-							}
-						}
-					},
-					{ctor: '[]'}),
-				_1: children
-			});
-	});
-var _user$project$Bootstrap_Button$linkButton = F2(
-	function (options, children) {
-		return A2(
-			_elm_lang$html$Html$a,
-			{
-				ctor: '::',
-				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'button'),
-				_1: _user$project$Bootstrap_Internal_Button$buttonAttributes(options)
-			},
-			children);
-	});
-var _user$project$Bootstrap_Button$button = F2(
-	function (options, children) {
-		return A2(
-			_elm_lang$html$Html$button,
-			_user$project$Bootstrap_Internal_Button$buttonAttributes(options),
-			children);
-	});
-
-var _user$project$Bootstrap_ButtonGroup$defaultOptions = {
-	size: _elm_lang$core$Maybe$Nothing,
-	vertical: false,
-	attributes: {ctor: '[]'}
-};
-var _user$project$Bootstrap_ButtonGroup$applyModifier = F2(
-	function (modifier, options) {
-		var _p0 = modifier;
-		switch (_p0.ctor) {
-			case 'Size':
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						size: _elm_lang$core$Maybe$Just(_p0._0)
-					});
-			case 'Vertical':
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{vertical: true});
-			default:
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						attributes: A2(_elm_lang$core$Basics_ops['++'], options.attributes, _p0._0)
-					});
-		}
-	});
-var _user$project$Bootstrap_ButtonGroup$groupAttributes = F2(
-	function (toggle, modifiers) {
-		var options = A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_ButtonGroup$applyModifier, _user$project$Bootstrap_ButtonGroup$defaultOptions, modifiers);
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			{
-				ctor: '::',
-				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'group'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$classList(
-						{
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'btn-group', _1: true},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'btn-group-toggle', _1: toggle},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'btn-group-vertical', _1: options.vertical},
-									_1: {ctor: '[]'}
-								}
-							}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-toggle', 'buttons'),
-						_1: {ctor: '[]'}
-					}
-				}
-			},
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				function () {
-					var _p1 = A2(_elm_lang$core$Maybe$andThen, _user$project$Bootstrap_Grid_Internal$screenSizeOption, options.size);
-					if (_p1.ctor === 'Just') {
-						return {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class(
-								A2(_elm_lang$core$Basics_ops['++'], 'btn-group-', _p1._0)),
-							_1: {ctor: '[]'}
-						};
-					} else {
-						return {ctor: '[]'};
-					}
-				}(),
-				options.attributes));
-	});
-var _user$project$Bootstrap_ButtonGroup$renderGroup = function (_p2) {
-	var _p3 = _p2;
-	return _p3._0;
-};
-var _user$project$Bootstrap_ButtonGroup$toolbar = F2(
-	function (attributes, items) {
-		return A2(
-			_elm_lang$html$Html$div,
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				{
-					ctor: '::',
-					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'toolbar'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('btn-toolbar'),
-						_1: {ctor: '[]'}
-					}
-				},
-				attributes),
-			A2(_elm_lang$core$List$map, _user$project$Bootstrap_ButtonGroup$renderGroup, items));
-	});
-var _user$project$Bootstrap_ButtonGroup$Options = F3(
-	function (a, b, c) {
-		return {size: a, vertical: b, attributes: c};
-	});
-var _user$project$Bootstrap_ButtonGroup$Attrs = function (a) {
-	return {ctor: 'Attrs', _0: a};
-};
-var _user$project$Bootstrap_ButtonGroup$attrs = function (attrs) {
-	return _user$project$Bootstrap_ButtonGroup$Attrs(attrs);
-};
-var _user$project$Bootstrap_ButtonGroup$Vertical = {ctor: 'Vertical'};
-var _user$project$Bootstrap_ButtonGroup$vertical = _user$project$Bootstrap_ButtonGroup$Vertical;
-var _user$project$Bootstrap_ButtonGroup$Size = function (a) {
-	return {ctor: 'Size', _0: a};
-};
-var _user$project$Bootstrap_ButtonGroup$small = _user$project$Bootstrap_ButtonGroup$Size(_user$project$Bootstrap_Grid_Internal$SM);
-var _user$project$Bootstrap_ButtonGroup$large = _user$project$Bootstrap_ButtonGroup$Size(_user$project$Bootstrap_Grid_Internal$LG);
-var _user$project$Bootstrap_ButtonGroup$GroupItem = function (a) {
-	return {ctor: 'GroupItem', _0: a};
-};
-var _user$project$Bootstrap_ButtonGroup$buttonGroupItem = F2(
-	function (options, items) {
-		return _user$project$Bootstrap_ButtonGroup$GroupItem(
-			A2(
-				_elm_lang$html$Html$div,
-				A2(_user$project$Bootstrap_ButtonGroup$groupAttributes, false, options),
-				A2(
-					_elm_lang$core$List$map,
-					function (_p4) {
-						var _p5 = _p4;
-						return _p5._0;
-					},
-					items)));
-	});
-var _user$project$Bootstrap_ButtonGroup$buttonGroup = F2(
-	function (options, items) {
-		return _user$project$Bootstrap_ButtonGroup$renderGroup(
-			A2(_user$project$Bootstrap_ButtonGroup$buttonGroupItem, options, items));
-	});
-var _user$project$Bootstrap_ButtonGroup$linkButtonGroupItem = F2(
-	function (options, items) {
-		return _user$project$Bootstrap_ButtonGroup$GroupItem(
-			A2(
-				_elm_lang$html$Html$div,
-				A2(_user$project$Bootstrap_ButtonGroup$groupAttributes, false, options),
-				A2(
-					_elm_lang$core$List$map,
-					function (_p6) {
-						var _p7 = _p6;
-						return _p7._0;
-					},
-					items)));
-	});
-var _user$project$Bootstrap_ButtonGroup$linkButtonGroup = F2(
-	function (options, items) {
-		return _user$project$Bootstrap_ButtonGroup$renderGroup(
-			A2(_user$project$Bootstrap_ButtonGroup$linkButtonGroupItem, options, items));
-	});
-var _user$project$Bootstrap_ButtonGroup$radioButtonGroupItem = F2(
-	function (options, items) {
-		return _user$project$Bootstrap_ButtonGroup$GroupItem(
-			A2(
-				_elm_lang$html$Html$div,
-				A2(_user$project$Bootstrap_ButtonGroup$groupAttributes, true, options),
-				A2(
-					_elm_lang$core$List$map,
-					function (_p8) {
-						var _p9 = _p8;
-						return _p9._0;
-					},
-					items)));
-	});
-var _user$project$Bootstrap_ButtonGroup$radioButtonGroup = F2(
-	function (options, items) {
-		return _user$project$Bootstrap_ButtonGroup$renderGroup(
-			A2(_user$project$Bootstrap_ButtonGroup$radioButtonGroupItem, options, items));
-	});
-var _user$project$Bootstrap_ButtonGroup$checkboxButtonGroupItem = F2(
-	function (options, items) {
-		return _user$project$Bootstrap_ButtonGroup$GroupItem(
-			A2(
-				_elm_lang$html$Html$div,
-				A2(_user$project$Bootstrap_ButtonGroup$groupAttributes, true, options),
-				A2(
-					_elm_lang$core$List$map,
-					function (_p10) {
-						var _p11 = _p10;
-						return _p11._0;
-					},
-					items)));
-	});
-var _user$project$Bootstrap_ButtonGroup$checkboxButtonGroup = F2(
-	function (options, items) {
-		return _user$project$Bootstrap_ButtonGroup$renderGroup(
-			A2(_user$project$Bootstrap_ButtonGroup$checkboxButtonGroupItem, options, items));
-	});
-var _user$project$Bootstrap_ButtonGroup$ButtonItem = function (a) {
-	return {ctor: 'ButtonItem', _0: a};
-};
-var _user$project$Bootstrap_ButtonGroup$button = F2(
-	function (options, children) {
-		return _user$project$Bootstrap_ButtonGroup$ButtonItem(
-			A2(_user$project$Bootstrap_Button$button, options, children));
-	});
-var _user$project$Bootstrap_ButtonGroup$LinkButtonItem = function (a) {
-	return {ctor: 'LinkButtonItem', _0: a};
-};
-var _user$project$Bootstrap_ButtonGroup$linkButton = F2(
-	function (options, children) {
-		return _user$project$Bootstrap_ButtonGroup$LinkButtonItem(
-			A2(_user$project$Bootstrap_Button$linkButton, options, children));
-	});
-var _user$project$Bootstrap_ButtonGroup$RadioButtonItem = function (a) {
-	return {ctor: 'RadioButtonItem', _0: a};
-};
-var _user$project$Bootstrap_ButtonGroup$radioButton = F3(
-	function (checked, options, children) {
-		return _user$project$Bootstrap_ButtonGroup$RadioButtonItem(
-			A3(_user$project$Bootstrap_Button$radioButton, checked, options, children));
-	});
-var _user$project$Bootstrap_ButtonGroup$myRadio = F4(
-	function (checked, inputAttributes, options, children) {
-		return _user$project$Bootstrap_ButtonGroup$RadioButtonItem(
-			A4(_user$project$Bootstrap_Button$myRadio, checked, inputAttributes, options, children));
-	});
-var _user$project$Bootstrap_ButtonGroup$CheckboxButtonItem = function (a) {
-	return {ctor: 'CheckboxButtonItem', _0: a};
-};
-var _user$project$Bootstrap_ButtonGroup$checkboxButton = F3(
-	function (checked, options, children) {
-		return _user$project$Bootstrap_ButtonGroup$CheckboxButtonItem(
-			A3(_user$project$Bootstrap_Button$checkboxButton, checked, options, children));
-	});
-
-var _user$project$Bootstrap_CDN$fontAwesome = A3(
-	_elm_lang$html$Html$node,
-	'link',
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
-		_1: {
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$href('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'),
-			_1: {ctor: '[]'}
-		}
-	},
-	{ctor: '[]'});
-var _user$project$Bootstrap_CDN$stylesheet = A3(
-	_elm_lang$html$Html$node,
-	'link',
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
-		_1: {
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$href('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'),
-			_1: {ctor: '[]'}
-		}
-	},
-	{ctor: '[]'});
-
-var _user$project$Bootstrap_Internal_Text$textColorClass = function (color) {
+var _rundis$elm_bootstrap$Bootstrap_Internal_Text$textColorClass = function (color) {
 	var _p0 = color;
 	if (_p0.ctor === 'White') {
 		return _elm_lang$html$Html_Attributes$class('text-white');
 	} else {
-		return A2(_user$project$Bootstrap_Internal_Role$toClass, 'text', _p0._0);
+		return A2(_rundis$elm_bootstrap$Bootstrap_Internal_Role$toClass, 'text', _p0._0);
 	}
 };
-var _user$project$Bootstrap_Internal_Text$textAlignDirOption = function (dir) {
+var _rundis$elm_bootstrap$Bootstrap_Internal_Text$textAlignDirOption = function (dir) {
 	var _p1 = dir;
 	switch (_p1.ctor) {
 		case 'Center':
@@ -12731,7 +12351,7 @@ var _user$project$Bootstrap_Internal_Text$textAlignDirOption = function (dir) {
 			return 'right';
 	}
 };
-var _user$project$Bootstrap_Internal_Text$textAlignClass = function (_p2) {
+var _rundis$elm_bootstrap$Bootstrap_Internal_Text$textAlignClass = function (_p2) {
 	var _p3 = _p2;
 	return _elm_lang$html$Html_Attributes$class(
 		A2(
@@ -12750,62 +12370,62 @@ var _user$project$Bootstrap_Internal_Text$textAlignClass = function (_p2) {
 								'-',
 								A2(_elm_lang$core$Basics_ops['++'], s, '-'));
 						},
-						_user$project$Bootstrap_Grid_Internal$screenSizeOption(_p3.size))),
-				_user$project$Bootstrap_Internal_Text$textAlignDirOption(_p3.dir))));
+						_rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption(_p3.size))),
+				_rundis$elm_bootstrap$Bootstrap_Internal_Text$textAlignDirOption(_p3.dir))));
 };
-var _user$project$Bootstrap_Internal_Text$HAlign = F2(
+var _rundis$elm_bootstrap$Bootstrap_Internal_Text$HAlign = F2(
 	function (a, b) {
 		return {dir: a, size: b};
 	});
-var _user$project$Bootstrap_Internal_Text$Right = {ctor: 'Right'};
-var _user$project$Bootstrap_Internal_Text$Center = {ctor: 'Center'};
-var _user$project$Bootstrap_Internal_Text$Left = {ctor: 'Left'};
-var _user$project$Bootstrap_Internal_Text$White = {ctor: 'White'};
-var _user$project$Bootstrap_Internal_Text$Role = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Internal_Text$Right = {ctor: 'Right'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Text$Center = {ctor: 'Center'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Text$Left = {ctor: 'Left'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Text$White = {ctor: 'White'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role = function (a) {
 	return {ctor: 'Role', _0: a};
 };
 
-var _user$project$Bootstrap_Text$dark = _user$project$Bootstrap_Internal_Text$Role(_user$project$Bootstrap_Internal_Role$Dark);
-var _user$project$Bootstrap_Text$light = _user$project$Bootstrap_Internal_Text$Role(_user$project$Bootstrap_Internal_Role$Light);
-var _user$project$Bootstrap_Text$danger = _user$project$Bootstrap_Internal_Text$Role(_user$project$Bootstrap_Internal_Role$Danger);
-var _user$project$Bootstrap_Text$warning = _user$project$Bootstrap_Internal_Text$Role(_user$project$Bootstrap_Internal_Role$Warning);
-var _user$project$Bootstrap_Text$info = _user$project$Bootstrap_Internal_Text$Role(_user$project$Bootstrap_Internal_Role$Info);
-var _user$project$Bootstrap_Text$success = _user$project$Bootstrap_Internal_Text$Role(_user$project$Bootstrap_Internal_Role$Success);
-var _user$project$Bootstrap_Text$secondary = _user$project$Bootstrap_Internal_Text$Role(_user$project$Bootstrap_Internal_Role$Secondary);
-var _user$project$Bootstrap_Text$primary = _user$project$Bootstrap_Internal_Text$Role(_user$project$Bootstrap_Internal_Role$Primary);
-var _user$project$Bootstrap_Text$white = _user$project$Bootstrap_Internal_Text$White;
-var _user$project$Bootstrap_Text$alignXl = function (dir) {
-	return {dir: dir, size: _user$project$Bootstrap_Grid_Internal$XL};
+var _rundis$elm_bootstrap$Bootstrap_Text$dark = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark);
+var _rundis$elm_bootstrap$Bootstrap_Text$light = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Light);
+var _rundis$elm_bootstrap$Bootstrap_Text$danger = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger);
+var _rundis$elm_bootstrap$Bootstrap_Text$warning = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning);
+var _rundis$elm_bootstrap$Bootstrap_Text$info = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Info);
+var _rundis$elm_bootstrap$Bootstrap_Text$success = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Success);
+var _rundis$elm_bootstrap$Bootstrap_Text$secondary = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary);
+var _rundis$elm_bootstrap$Bootstrap_Text$primary = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary);
+var _rundis$elm_bootstrap$Bootstrap_Text$white = _rundis$elm_bootstrap$Bootstrap_Internal_Text$White;
+var _rundis$elm_bootstrap$Bootstrap_Text$alignXl = function (dir) {
+	return {dir: dir, size: _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL};
 };
-var _user$project$Bootstrap_Text$alignXlRight = _user$project$Bootstrap_Text$alignXl(_user$project$Bootstrap_Internal_Text$Right);
-var _user$project$Bootstrap_Text$alignXlCenter = _user$project$Bootstrap_Text$alignXl(_user$project$Bootstrap_Internal_Text$Center);
-var _user$project$Bootstrap_Text$alignXlLeft = _user$project$Bootstrap_Text$alignXl(_user$project$Bootstrap_Internal_Text$Left);
-var _user$project$Bootstrap_Text$alignLg = function (dir) {
-	return {dir: dir, size: _user$project$Bootstrap_Grid_Internal$LG};
+var _rundis$elm_bootstrap$Bootstrap_Text$alignXlRight = _rundis$elm_bootstrap$Bootstrap_Text$alignXl(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Right);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignXlCenter = _rundis$elm_bootstrap$Bootstrap_Text$alignXl(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Center);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignXlLeft = _rundis$elm_bootstrap$Bootstrap_Text$alignXl(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Left);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignLg = function (dir) {
+	return {dir: dir, size: _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG};
 };
-var _user$project$Bootstrap_Text$alignLgRight = _user$project$Bootstrap_Text$alignLg(_user$project$Bootstrap_Internal_Text$Right);
-var _user$project$Bootstrap_Text$alignLgCenter = _user$project$Bootstrap_Text$alignLg(_user$project$Bootstrap_Internal_Text$Center);
-var _user$project$Bootstrap_Text$alignLgLeft = _user$project$Bootstrap_Text$alignLg(_user$project$Bootstrap_Internal_Text$Left);
-var _user$project$Bootstrap_Text$alignMd = function (dir) {
-	return {dir: dir, size: _user$project$Bootstrap_Grid_Internal$MD};
+var _rundis$elm_bootstrap$Bootstrap_Text$alignLgRight = _rundis$elm_bootstrap$Bootstrap_Text$alignLg(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Right);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignLgCenter = _rundis$elm_bootstrap$Bootstrap_Text$alignLg(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Center);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignLgLeft = _rundis$elm_bootstrap$Bootstrap_Text$alignLg(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Left);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignMd = function (dir) {
+	return {dir: dir, size: _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD};
 };
-var _user$project$Bootstrap_Text$alignMdRight = _user$project$Bootstrap_Text$alignMd(_user$project$Bootstrap_Internal_Text$Right);
-var _user$project$Bootstrap_Text$alignMdCenter = _user$project$Bootstrap_Text$alignMd(_user$project$Bootstrap_Internal_Text$Center);
-var _user$project$Bootstrap_Text$alignMdLeft = _user$project$Bootstrap_Text$alignMd(_user$project$Bootstrap_Internal_Text$Left);
-var _user$project$Bootstrap_Text$alignSm = function (dir) {
-	return {dir: dir, size: _user$project$Bootstrap_Grid_Internal$SM};
+var _rundis$elm_bootstrap$Bootstrap_Text$alignMdRight = _rundis$elm_bootstrap$Bootstrap_Text$alignMd(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Right);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignMdCenter = _rundis$elm_bootstrap$Bootstrap_Text$alignMd(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Center);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignMdLeft = _rundis$elm_bootstrap$Bootstrap_Text$alignMd(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Left);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignSm = function (dir) {
+	return {dir: dir, size: _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM};
 };
-var _user$project$Bootstrap_Text$alignSmRight = _user$project$Bootstrap_Text$alignSm(_user$project$Bootstrap_Internal_Text$Right);
-var _user$project$Bootstrap_Text$alignSmCenter = _user$project$Bootstrap_Text$alignSm(_user$project$Bootstrap_Internal_Text$Center);
-var _user$project$Bootstrap_Text$alignSmLeft = _user$project$Bootstrap_Text$alignSm(_user$project$Bootstrap_Internal_Text$Left);
-var _user$project$Bootstrap_Text$alignXs = function (dir) {
-	return {dir: dir, size: _user$project$Bootstrap_Grid_Internal$XS};
+var _rundis$elm_bootstrap$Bootstrap_Text$alignSmRight = _rundis$elm_bootstrap$Bootstrap_Text$alignSm(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Right);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignSmCenter = _rundis$elm_bootstrap$Bootstrap_Text$alignSm(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Center);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignSmLeft = _rundis$elm_bootstrap$Bootstrap_Text$alignSm(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Left);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignXs = function (dir) {
+	return {dir: dir, size: _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS};
 };
-var _user$project$Bootstrap_Text$alignXsRight = _user$project$Bootstrap_Text$alignXs(_user$project$Bootstrap_Internal_Text$Right);
-var _user$project$Bootstrap_Text$alignXsCenter = _user$project$Bootstrap_Text$alignXs(_user$project$Bootstrap_Internal_Text$Center);
-var _user$project$Bootstrap_Text$alignXsLeft = _user$project$Bootstrap_Text$alignXs(_user$project$Bootstrap_Internal_Text$Left);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignXsRight = _rundis$elm_bootstrap$Bootstrap_Text$alignXs(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Right);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignXsCenter = _rundis$elm_bootstrap$Bootstrap_Text$alignXs(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Center);
+var _rundis$elm_bootstrap$Bootstrap_Text$alignXsLeft = _rundis$elm_bootstrap$Bootstrap_Text$alignXs(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Left);
 
-var _user$project$Bootstrap_Internal_ListGroup$itemAttributes = function (options) {
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$itemAttributes = function (options) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		{
@@ -12847,15 +12467,15 @@ var _user$project$Bootstrap_Internal_ListGroup$itemAttributes = function (option
 						function (r) {
 							return {
 								ctor: '::',
-								_0: A2(_user$project$Bootstrap_Internal_Role$toClass, 'list-group-item', r),
+								_0: A2(_rundis$elm_bootstrap$Bootstrap_Internal_Role$toClass, 'list-group-item', r),
 								_1: {ctor: '[]'}
 							};
 						},
 						options.role)),
 				options.attributes)));
 };
-var _user$project$Bootstrap_Internal_ListGroup$preventClick = A2(_elm_lang$html$Html_Attributes$attribute, 'onclick', 'var event = arguments[0] || window.event; event.preventDefault();');
-var _user$project$Bootstrap_Internal_ListGroup$applyModifier = F2(
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$preventClick = A2(_elm_lang$html$Html_Attributes$attribute, 'onclick', 'var event = arguments[0] || window.event; event.preventDefault();');
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$applyModifier = F2(
 	function (modifier, options) {
 		var _p0 = modifier;
 		switch (_p0.ctor) {
@@ -12885,77 +12505,77 @@ var _user$project$Bootstrap_Internal_ListGroup$applyModifier = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Internal_ListGroup$defaultOptions = {
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$defaultOptions = {
 	role: _elm_lang$core$Maybe$Nothing,
 	active: false,
 	disabled: false,
 	action: false,
 	attributes: {ctor: '[]'}
 };
-var _user$project$Bootstrap_Internal_ListGroup$renderCustomItem = function (_p1) {
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$renderCustomItem = function (_p1) {
 	var _p2 = _p1;
 	return A2(
 		_p2._0.itemFn,
-		_user$project$Bootstrap_Internal_ListGroup$itemAttributes(
-			A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Internal_ListGroup$applyModifier, _user$project$Bootstrap_Internal_ListGroup$defaultOptions, _p2._0.options)),
+		_rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$itemAttributes(
+			A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$applyModifier, _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$defaultOptions, _p2._0.options)),
 		_p2._0.children);
 };
-var _user$project$Bootstrap_Internal_ListGroup$renderItem = function (_p3) {
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$renderItem = function (_p3) {
 	var _p4 = _p3;
 	return A2(
 		_p4._0.itemFn,
-		_user$project$Bootstrap_Internal_ListGroup$itemAttributes(
-			A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Internal_ListGroup$applyModifier, _user$project$Bootstrap_Internal_ListGroup$defaultOptions, _p4._0.options)),
+		_rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$itemAttributes(
+			A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$applyModifier, _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$defaultOptions, _p4._0.options)),
 		_p4._0.children);
 };
-var _user$project$Bootstrap_Internal_ListGroup$ItemOptions = F5(
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$ItemOptions = F5(
 	function (a, b, c, d, e) {
 		return {role: a, active: b, disabled: c, action: d, attributes: e};
 	});
-var _user$project$Bootstrap_Internal_ListGroup$Attrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Attrs = function (a) {
 	return {ctor: 'Attrs', _0: a};
 };
-var _user$project$Bootstrap_Internal_ListGroup$Action = {ctor: 'Action'};
-var _user$project$Bootstrap_Internal_ListGroup$Disabled = {ctor: 'Disabled'};
-var _user$project$Bootstrap_Internal_ListGroup$Active = {ctor: 'Active'};
-var _user$project$Bootstrap_Internal_ListGroup$Roled = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Action = {ctor: 'Action'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Disabled = {ctor: 'Disabled'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Active = {ctor: 'Active'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Roled = function (a) {
 	return {ctor: 'Roled', _0: a};
 };
-var _user$project$Bootstrap_Internal_ListGroup$Item = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Item = function (a) {
 	return {ctor: 'Item', _0: a};
 };
-var _user$project$Bootstrap_Internal_ListGroup$CustomItem = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$CustomItem = function (a) {
 	return {ctor: 'CustomItem', _0: a};
 };
 
-var _user$project$Bootstrap_ListGroup$attrs = function (attrs) {
-	return _user$project$Bootstrap_Internal_ListGroup$Attrs(attrs);
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Attrs(attrs);
 };
-var _user$project$Bootstrap_ListGroup$disabled = _user$project$Bootstrap_Internal_ListGroup$Disabled;
-var _user$project$Bootstrap_ListGroup$active = _user$project$Bootstrap_Internal_ListGroup$Active;
-var _user$project$Bootstrap_ListGroup$dark = _user$project$Bootstrap_Internal_ListGroup$Roled(_user$project$Bootstrap_Internal_Role$Dark);
-var _user$project$Bootstrap_ListGroup$light = _user$project$Bootstrap_Internal_ListGroup$Roled(_user$project$Bootstrap_Internal_Role$Light);
-var _user$project$Bootstrap_ListGroup$danger = _user$project$Bootstrap_Internal_ListGroup$Roled(_user$project$Bootstrap_Internal_Role$Danger);
-var _user$project$Bootstrap_ListGroup$warning = _user$project$Bootstrap_Internal_ListGroup$Roled(_user$project$Bootstrap_Internal_Role$Warning);
-var _user$project$Bootstrap_ListGroup$info = _user$project$Bootstrap_Internal_ListGroup$Roled(_user$project$Bootstrap_Internal_Role$Info);
-var _user$project$Bootstrap_ListGroup$success = _user$project$Bootstrap_Internal_ListGroup$Roled(_user$project$Bootstrap_Internal_Role$Success);
-var _user$project$Bootstrap_ListGroup$secondary = _user$project$Bootstrap_Internal_ListGroup$Roled(_user$project$Bootstrap_Internal_Role$Secondary);
-var _user$project$Bootstrap_ListGroup$primary = _user$project$Bootstrap_Internal_ListGroup$Roled(_user$project$Bootstrap_Internal_Role$Primary);
-var _user$project$Bootstrap_ListGroup$button = F2(
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$disabled = _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Disabled;
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$active = _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Active;
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$dark = _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark);
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$light = _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Light);
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$danger = _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger);
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$warning = _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning);
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$info = _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Info);
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$success = _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Success);
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$secondary = _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary);
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$primary = _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary);
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$button = F2(
 	function (options, children) {
-		return _user$project$Bootstrap_Internal_ListGroup$CustomItem(
+		return _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$CustomItem(
 			{
 				itemFn: _elm_lang$html$Html$button,
 				children: children,
 				options: {
 					ctor: '::',
-					_0: _user$project$Bootstrap_Internal_ListGroup$Action,
+					_0: _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Action,
 					_1: A2(
 						_elm_lang$core$Basics_ops['++'],
 						options,
 						{
 							ctor: '::',
-							_0: _user$project$Bootstrap_Internal_ListGroup$Attrs(
+							_0: _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Attrs(
 								{
 									ctor: '::',
 									_0: _elm_lang$html$Html_Attributes$type_('button'),
@@ -12966,35 +12586,35 @@ var _user$project$Bootstrap_ListGroup$button = F2(
 				}
 			});
 	});
-var _user$project$Bootstrap_ListGroup$anchor = F2(
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$anchor = F2(
 	function (options, children) {
 		var updOptions = A2(
 			_elm_lang$core$List$any,
 			F2(
 				function (x, y) {
 					return _elm_lang$core$Native_Utils.eq(x, y);
-				})(_user$project$Bootstrap_Internal_ListGroup$Disabled),
+				})(_rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Disabled),
 			options) ? A2(
 			_elm_lang$core$Basics_ops['++'],
 			options,
 			{
 				ctor: '::',
-				_0: _user$project$Bootstrap_Internal_ListGroup$Attrs(
+				_0: _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Attrs(
 					{
 						ctor: '::',
-						_0: _user$project$Bootstrap_Internal_ListGroup$preventClick,
+						_0: _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$preventClick,
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
 			}) : options;
-		return _user$project$Bootstrap_Internal_ListGroup$CustomItem(
+		return _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$CustomItem(
 			{
 				itemFn: _elm_lang$html$Html$a,
 				children: children,
-				options: {ctor: '::', _0: _user$project$Bootstrap_Internal_ListGroup$Action, _1: updOptions}
+				options: {ctor: '::', _0: _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Action, _1: updOptions}
 			});
 	});
-var _user$project$Bootstrap_ListGroup$keyedCustom = function (items) {
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$keyedCustom = function (items) {
 	return A3(
 		_elm_lang$html$Html_Keyed$node,
 		'div',
@@ -13010,12 +12630,12 @@ var _user$project$Bootstrap_ListGroup$keyedCustom = function (items) {
 				return {
 					ctor: '_Tuple2',
 					_0: _p1._0,
-					_1: _user$project$Bootstrap_Internal_ListGroup$renderCustomItem(_p1._1)
+					_1: _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$renderCustomItem(_p1._1)
 				};
 			},
 			items));
 };
-var _user$project$Bootstrap_ListGroup$custom = function (items) {
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$custom = function (items) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -13023,14 +12643,14 @@ var _user$project$Bootstrap_ListGroup$custom = function (items) {
 			_0: _elm_lang$html$Html_Attributes$class('list-group'),
 			_1: {ctor: '[]'}
 		},
-		A2(_elm_lang$core$List$map, _user$project$Bootstrap_Internal_ListGroup$renderCustomItem, items));
+		A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$renderCustomItem, items));
 };
-var _user$project$Bootstrap_ListGroup$li = F2(
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$li = F2(
 	function (options, children) {
-		return _user$project$Bootstrap_Internal_ListGroup$Item(
+		return _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$Item(
 			{itemFn: _elm_lang$html$Html$li, children: children, options: options});
 	});
-var _user$project$Bootstrap_ListGroup$keyedUl = function (keyedItems) {
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$keyedUl = function (keyedItems) {
 	return A2(
 		_elm_lang$html$Html_Keyed$ul,
 		{
@@ -13045,12 +12665,12 @@ var _user$project$Bootstrap_ListGroup$keyedUl = function (keyedItems) {
 				return {
 					ctor: '_Tuple2',
 					_0: _p3._0,
-					_1: _user$project$Bootstrap_Internal_ListGroup$renderItem(_p3._1)
+					_1: _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$renderItem(_p3._1)
 				};
 			},
 			keyedItems));
 };
-var _user$project$Bootstrap_ListGroup$ul = function (items) {
+var _rundis$elm_bootstrap$Bootstrap_ListGroup$ul = function (items) {
 	return A2(
 		_elm_lang$html$Html$ul,
 		{
@@ -13058,10 +12678,10 @@ var _user$project$Bootstrap_ListGroup$ul = function (items) {
 			_0: _elm_lang$html$Html_Attributes$class('list-group'),
 			_1: {ctor: '[]'}
 		},
-		A2(_elm_lang$core$List$map, _user$project$Bootstrap_Internal_ListGroup$renderItem, items));
+		A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$renderItem, items));
 };
 
-var _user$project$Bootstrap_Card_Internal$applyModifier = F2(
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$applyModifier = F2(
 	function (option, options) {
 		var _p0 = option;
 		switch (_p0.ctor) {
@@ -13091,14 +12711,14 @@ var _user$project$Bootstrap_Card_Internal$applyModifier = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Card_Internal$defaultOptions = {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$defaultOptions = {
 	aligned: _elm_lang$core$Maybe$Nothing,
 	coloring: _elm_lang$core$Maybe$Nothing,
 	textColoring: _elm_lang$core$Maybe$Nothing,
 	attributes: {ctor: '[]'}
 };
-var _user$project$Bootstrap_Card_Internal$cardAttributes = function (modifiers) {
-	var options = A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Card_Internal$applyModifier, _user$project$Bootstrap_Card_Internal$defaultOptions, modifiers);
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$cardAttributes = function (modifiers) {
+	var options = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Card_Internal$applyModifier, _rundis$elm_bootstrap$Bootstrap_Card_Internal$defaultOptions, modifiers);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		{
@@ -13114,13 +12734,13 @@ var _user$project$Bootstrap_Card_Internal$cardAttributes = function (modifiers) 
 					if (_p1._0.ctor === 'Roled') {
 						return {
 							ctor: '::',
-							_0: A2(_user$project$Bootstrap_Internal_Role$toClass, 'bg', _p1._0._0),
+							_0: A2(_rundis$elm_bootstrap$Bootstrap_Internal_Role$toClass, 'bg', _p1._0._0),
 							_1: {ctor: '[]'}
 						};
 					} else {
 						return {
 							ctor: '::',
-							_0: A2(_user$project$Bootstrap_Internal_Role$toClass, 'border', _p1._0._0),
+							_0: A2(_rundis$elm_bootstrap$Bootstrap_Internal_Role$toClass, 'border', _p1._0._0),
 							_1: {ctor: '[]'}
 						};
 					}
@@ -13135,7 +12755,7 @@ var _user$project$Bootstrap_Card_Internal$cardAttributes = function (modifiers) 
 					if (_p2.ctor === 'Just') {
 						return {
 							ctor: '::',
-							_0: _user$project$Bootstrap_Internal_Text$textColorClass(_p2._0),
+							_0: _rundis$elm_bootstrap$Bootstrap_Internal_Text$textColorClass(_p2._0),
 							_1: {ctor: '[]'}
 						};
 					} else {
@@ -13149,7 +12769,7 @@ var _user$project$Bootstrap_Card_Internal$cardAttributes = function (modifiers) 
 						if (_p3.ctor === 'Just') {
 							return {
 								ctor: '::',
-								_0: _user$project$Bootstrap_Internal_Text$textAlignClass(_p3._0),
+								_0: _rundis$elm_bootstrap$Bootstrap_Internal_Text$textAlignClass(_p3._0),
 								_1: {ctor: '[]'}
 							};
 						} else {
@@ -13158,7 +12778,7 @@ var _user$project$Bootstrap_Card_Internal$cardAttributes = function (modifiers) 
 					}(),
 					options.attributes))));
 };
-var _user$project$Bootstrap_Card_Internal$applyBlockModifier = F2(
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$applyBlockModifier = F2(
 	function (option, options) {
 		var _p4 = option;
 		switch (_p4.ctor) {
@@ -13188,14 +12808,14 @@ var _user$project$Bootstrap_Card_Internal$applyBlockModifier = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Card_Internal$defaultBlockOptions = {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$defaultBlockOptions = {
 	aligned: _elm_lang$core$Maybe$Nothing,
 	coloring: _elm_lang$core$Maybe$Nothing,
 	textColoring: _elm_lang$core$Maybe$Nothing,
 	attributes: {ctor: '[]'}
 };
-var _user$project$Bootstrap_Card_Internal$blockAttributes = function (modifiers) {
-	var options = A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Card_Internal$applyBlockModifier, _user$project$Bootstrap_Card_Internal$defaultBlockOptions, modifiers);
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$blockAttributes = function (modifiers) {
+	var options = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Card_Internal$applyBlockModifier, _rundis$elm_bootstrap$Bootstrap_Card_Internal$defaultBlockOptions, modifiers);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		{
@@ -13210,7 +12830,7 @@ var _user$project$Bootstrap_Card_Internal$blockAttributes = function (modifiers)
 				if (_p5.ctor === 'Just') {
 					return {
 						ctor: '::',
-						_0: _user$project$Bootstrap_Internal_Text$textAlignClass(_p5._0),
+						_0: _rundis$elm_bootstrap$Bootstrap_Internal_Text$textAlignClass(_p5._0),
 						_1: {ctor: '[]'}
 					};
 				} else {
@@ -13224,7 +12844,7 @@ var _user$project$Bootstrap_Card_Internal$blockAttributes = function (modifiers)
 					if (_p6.ctor === 'Just') {
 						return {
 							ctor: '::',
-							_0: A2(_user$project$Bootstrap_Internal_Role$toClass, 'bg', _p6._0),
+							_0: A2(_rundis$elm_bootstrap$Bootstrap_Internal_Role$toClass, 'bg', _p6._0),
 							_1: {ctor: '[]'}
 						};
 					} else {
@@ -13238,7 +12858,7 @@ var _user$project$Bootstrap_Card_Internal$blockAttributes = function (modifiers)
 						if (_p7.ctor === 'Just') {
 							return {
 								ctor: '::',
-								_0: _user$project$Bootstrap_Internal_Text$textColorClass(_p7._0),
+								_0: _rundis$elm_bootstrap$Bootstrap_Internal_Text$textColorClass(_p7._0),
 								_1: {ctor: '[]'}
 							};
 						} else {
@@ -13247,7 +12867,7 @@ var _user$project$Bootstrap_Card_Internal$blockAttributes = function (modifiers)
 					}(),
 					options.attributes))));
 };
-var _user$project$Bootstrap_Card_Internal$renderBlock = function (block) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$renderBlock = function (block) {
 	var _p8 = block;
 	if (_p8.ctor === 'CardBlock') {
 		return _p8._0;
@@ -13255,7 +12875,7 @@ var _user$project$Bootstrap_Card_Internal$renderBlock = function (block) {
 		return _p8._0;
 	}
 };
-var _user$project$Bootstrap_Card_Internal$renderBlocks = function (blocks) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$renderBlocks = function (blocks) {
 	return A2(
 		_elm_lang$core$List$map,
 		function (block) {
@@ -13268,49 +12888,49 @@ var _user$project$Bootstrap_Card_Internal$renderBlocks = function (blocks) {
 		},
 		blocks);
 };
-var _user$project$Bootstrap_Card_Internal$CardOptions = F4(
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$CardOptions = F4(
 	function (a, b, c, d) {
 		return {aligned: a, coloring: b, textColoring: c, attributes: d};
 	});
-var _user$project$Bootstrap_Card_Internal$BlockOptions = F4(
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockOptions = F4(
 	function (a, b, c, d) {
 		return {aligned: a, coloring: b, textColoring: c, attributes: d};
 	});
-var _user$project$Bootstrap_Card_Internal$Attrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$Attrs = function (a) {
 	return {ctor: 'Attrs', _0: a};
 };
-var _user$project$Bootstrap_Card_Internal$TextColoring = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$TextColoring = function (a) {
 	return {ctor: 'TextColoring', _0: a};
 };
-var _user$project$Bootstrap_Card_Internal$Coloring = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring = function (a) {
 	return {ctor: 'Coloring', _0: a};
 };
-var _user$project$Bootstrap_Card_Internal$Aligned = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$Aligned = function (a) {
 	return {ctor: 'Aligned', _0: a};
 };
-var _user$project$Bootstrap_Card_Internal$Outlined = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined = function (a) {
 	return {ctor: 'Outlined', _0: a};
 };
-var _user$project$Bootstrap_Card_Internal$Roled = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled = function (a) {
 	return {ctor: 'Roled', _0: a};
 };
-var _user$project$Bootstrap_Card_Internal$BlockAttrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockAttrs = function (a) {
 	return {ctor: 'BlockAttrs', _0: a};
 };
-var _user$project$Bootstrap_Card_Internal$BlockTextColoring = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockTextColoring = function (a) {
 	return {ctor: 'BlockTextColoring', _0: a};
 };
-var _user$project$Bootstrap_Card_Internal$BlockColoring = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring = function (a) {
 	return {ctor: 'BlockColoring', _0: a};
 };
-var _user$project$Bootstrap_Card_Internal$AlignedBlock = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$AlignedBlock = function (a) {
 	return {ctor: 'AlignedBlock', _0: a};
 };
-var _user$project$Bootstrap_Card_Internal$ListGroup = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$ListGroup = function (a) {
 	return {ctor: 'ListGroup', _0: a};
 };
-var _user$project$Bootstrap_Card_Internal$listGroup = function (items) {
-	return _user$project$Bootstrap_Card_Internal$ListGroup(
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$listGroup = function (items) {
+	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$ListGroup(
 		A2(
 			_elm_lang$html$Html$ul,
 			{
@@ -13318,17 +12938,17 @@ var _user$project$Bootstrap_Card_Internal$listGroup = function (items) {
 				_0: _elm_lang$html$Html_Attributes$class('list-group list-group-flush'),
 				_1: {ctor: '[]'}
 			},
-			A2(_elm_lang$core$List$map, _user$project$Bootstrap_Internal_ListGroup$renderItem, items)));
+			A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$renderItem, items)));
 };
-var _user$project$Bootstrap_Card_Internal$CardBlock = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$CardBlock = function (a) {
 	return {ctor: 'CardBlock', _0: a};
 };
-var _user$project$Bootstrap_Card_Internal$block = F2(
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$block = F2(
 	function (options, items) {
-		return _user$project$Bootstrap_Card_Internal$CardBlock(
+		return _rundis$elm_bootstrap$Bootstrap_Card_Internal$CardBlock(
 			A2(
 				_elm_lang$html$Html$div,
-				_user$project$Bootstrap_Card_Internal$blockAttributes(options),
+				_rundis$elm_bootstrap$Bootstrap_Card_Internal$blockAttributes(options),
 				A2(
 					_elm_lang$core$List$map,
 					function (_p10) {
@@ -13337,30 +12957,30 @@ var _user$project$Bootstrap_Card_Internal$block = F2(
 					},
 					items)));
 	});
-var _user$project$Bootstrap_Card_Internal$BlockItem = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockItem = function (a) {
 	return {ctor: 'BlockItem', _0: a};
 };
 
-var _user$project$Bootstrap_Card_Block$attrs = function (attrs) {
-	return _user$project$Bootstrap_Card_Internal$BlockAttrs(attrs);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockAttrs(attrs);
 };
-var _user$project$Bootstrap_Card_Block$textColor = function (color) {
-	return _user$project$Bootstrap_Card_Internal$BlockTextColoring(color);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$textColor = function (color) {
+	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockTextColoring(color);
 };
-var _user$project$Bootstrap_Card_Block$dark = _user$project$Bootstrap_Card_Internal$BlockColoring(_user$project$Bootstrap_Internal_Role$Dark);
-var _user$project$Bootstrap_Card_Block$light = _user$project$Bootstrap_Card_Internal$BlockColoring(_user$project$Bootstrap_Internal_Role$Light);
-var _user$project$Bootstrap_Card_Block$danger = _user$project$Bootstrap_Card_Internal$BlockColoring(_user$project$Bootstrap_Internal_Role$Danger);
-var _user$project$Bootstrap_Card_Block$warning = _user$project$Bootstrap_Card_Internal$BlockColoring(_user$project$Bootstrap_Internal_Role$Warning);
-var _user$project$Bootstrap_Card_Block$info = _user$project$Bootstrap_Card_Internal$BlockColoring(_user$project$Bootstrap_Internal_Role$Info);
-var _user$project$Bootstrap_Card_Block$success = _user$project$Bootstrap_Card_Internal$BlockColoring(_user$project$Bootstrap_Internal_Role$Success);
-var _user$project$Bootstrap_Card_Block$secondary = _user$project$Bootstrap_Card_Internal$BlockColoring(_user$project$Bootstrap_Internal_Role$Secondary);
-var _user$project$Bootstrap_Card_Block$primary = _user$project$Bootstrap_Card_Internal$BlockColoring(_user$project$Bootstrap_Internal_Role$Primary);
-var _user$project$Bootstrap_Card_Block$align = function (align) {
-	return _user$project$Bootstrap_Card_Internal$AlignedBlock(align);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$dark = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$light = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Light);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$danger = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$warning = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$info = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Info);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$success = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Success);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$secondary = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$primary = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$align = function (align) {
+	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$AlignedBlock(align);
 };
-var _user$project$Bootstrap_Card_Block$title = F3(
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$title = F3(
 	function (elemFn, attributes, children) {
-		return _user$project$Bootstrap_Card_Internal$BlockItem(
+		return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockItem(
 			A2(
 				elemFn,
 				{
@@ -13370,15 +12990,15 @@ var _user$project$Bootstrap_Card_Block$title = F3(
 				},
 				children));
 	});
-var _user$project$Bootstrap_Card_Block$titleH6 = _user$project$Bootstrap_Card_Block$title(_elm_lang$html$Html$h6);
-var _user$project$Bootstrap_Card_Block$titleH5 = _user$project$Bootstrap_Card_Block$title(_elm_lang$html$Html$h5);
-var _user$project$Bootstrap_Card_Block$titleH4 = _user$project$Bootstrap_Card_Block$title(_elm_lang$html$Html$h4);
-var _user$project$Bootstrap_Card_Block$titleH3 = _user$project$Bootstrap_Card_Block$title(_elm_lang$html$Html$h3);
-var _user$project$Bootstrap_Card_Block$titleH2 = _user$project$Bootstrap_Card_Block$title(_elm_lang$html$Html$h2);
-var _user$project$Bootstrap_Card_Block$titleH1 = _user$project$Bootstrap_Card_Block$title(_elm_lang$html$Html$h1);
-var _user$project$Bootstrap_Card_Block$quote = F2(
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$titleH6 = _rundis$elm_bootstrap$Bootstrap_Card_Block$title(_elm_lang$html$Html$h6);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$titleH5 = _rundis$elm_bootstrap$Bootstrap_Card_Block$title(_elm_lang$html$Html$h5);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$titleH4 = _rundis$elm_bootstrap$Bootstrap_Card_Block$title(_elm_lang$html$Html$h4);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$titleH3 = _rundis$elm_bootstrap$Bootstrap_Card_Block$title(_elm_lang$html$Html$h3);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$titleH2 = _rundis$elm_bootstrap$Bootstrap_Card_Block$title(_elm_lang$html$Html$h2);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$titleH1 = _rundis$elm_bootstrap$Bootstrap_Card_Block$title(_elm_lang$html$Html$h1);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$quote = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Card_Internal$BlockItem(
+		return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockItem(
 			A2(
 				_elm_lang$html$Html$blockquote,
 				A2(
@@ -13391,12 +13011,12 @@ var _user$project$Bootstrap_Card_Block$quote = F2(
 					attributes),
 				children));
 	});
-var _user$project$Bootstrap_Card_Block$custom = function (element) {
-	return _user$project$Bootstrap_Card_Internal$BlockItem(element);
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$custom = function (element) {
+	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockItem(element);
 };
-var _user$project$Bootstrap_Card_Block$text = F2(
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$text = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Card_Internal$BlockItem(
+		return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockItem(
 			A2(
 				_elm_lang$html$Html$p,
 				A2(
@@ -13409,9 +13029,9 @@ var _user$project$Bootstrap_Card_Block$text = F2(
 					attributes),
 				children));
 	});
-var _user$project$Bootstrap_Card_Block$link = F2(
+var _rundis$elm_bootstrap$Bootstrap_Card_Block$link = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Card_Internal$BlockItem(
+		return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockItem(
 			A2(
 				_elm_lang$html$Html$a,
 				A2(
@@ -13425,11 +13045,11 @@ var _user$project$Bootstrap_Card_Block$link = F2(
 				children));
 	});
 
-var _user$project$Bootstrap_Card$view = function (_p0) {
+var _rundis$elm_bootstrap$Bootstrap_Card$view = function (_p0) {
 	var _p1 = _p0;
 	return A2(
 		_elm_lang$html$Html$div,
-		_user$project$Bootstrap_Card_Internal$cardAttributes(_p1._0.options),
+		_rundis$elm_bootstrap$Bootstrap_Card_Internal$cardAttributes(_p1._0.options),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
 			A2(
@@ -13458,7 +13078,7 @@ var _user$project$Bootstrap_Card$view = function (_p0) {
 				}),
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				_user$project$Bootstrap_Card_Internal$renderBlocks(_p1._0.blocks),
+				_rundis$elm_bootstrap$Bootstrap_Card_Internal$renderBlocks(_p1._0.blocks),
 				A2(
 					_elm_lang$core$List$filterMap,
 					_elm_lang$core$Basics$identity,
@@ -13484,7 +13104,7 @@ var _user$project$Bootstrap_Card$view = function (_p0) {
 						}
 					}))));
 };
-var _user$project$Bootstrap_Card$group = function (cards) {
+var _rundis$elm_bootstrap$Bootstrap_Card$group = function (cards) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -13492,9 +13112,9 @@ var _user$project$Bootstrap_Card$group = function (cards) {
 			_0: _elm_lang$html$Html_Attributes$class('card-group'),
 			_1: {ctor: '[]'}
 		},
-		A2(_elm_lang$core$List$map, _user$project$Bootstrap_Card$view, cards));
+		A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Card$view, cards));
 };
-var _user$project$Bootstrap_Card$deck = function (cards) {
+var _rundis$elm_bootstrap$Bootstrap_Card$deck = function (cards) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -13502,9 +13122,9 @@ var _user$project$Bootstrap_Card$deck = function (cards) {
 			_0: _elm_lang$html$Html_Attributes$class('card-deck'),
 			_1: {ctor: '[]'}
 		},
-		A2(_elm_lang$core$List$map, _user$project$Bootstrap_Card$view, cards));
+		A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Card$view, cards));
 };
-var _user$project$Bootstrap_Card$columns = function (cards) {
+var _rundis$elm_bootstrap$Bootstrap_Card$columns = function (cards) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -13512,9 +13132,9 @@ var _user$project$Bootstrap_Card$columns = function (cards) {
 			_0: _elm_lang$html$Html_Attributes$class('card-columns'),
 			_1: {ctor: '[]'}
 		},
-		A2(_elm_lang$core$List$map, _user$project$Bootstrap_Card$view, cards));
+		A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Card$view, cards));
 };
-var _user$project$Bootstrap_Card$keyedMulti = F2(
+var _rundis$elm_bootstrap$Bootstrap_Card$keyedMulti = F2(
 	function (clazz, keyedCards) {
 		return A3(
 			_elm_lang$html$Html_Keyed$node,
@@ -13531,60 +13151,60 @@ var _user$project$Bootstrap_Card$keyedMulti = F2(
 					return {
 						ctor: '_Tuple2',
 						_0: _p11._0,
-						_1: _user$project$Bootstrap_Card$view(_p11._1)
+						_1: _rundis$elm_bootstrap$Bootstrap_Card$view(_p11._1)
 					};
 				},
 				keyedCards));
 	});
-var _user$project$Bootstrap_Card$keyedGroup = _user$project$Bootstrap_Card$keyedMulti('card-group');
-var _user$project$Bootstrap_Card$keyedDeck = _user$project$Bootstrap_Card$keyedMulti('card-deck');
-var _user$project$Bootstrap_Card$keyedColumns = _user$project$Bootstrap_Card$keyedMulti('card-columns');
-var _user$project$Bootstrap_Card$attrs = function (attrs) {
-	return _user$project$Bootstrap_Card_Internal$Attrs(attrs);
+var _rundis$elm_bootstrap$Bootstrap_Card$keyedGroup = _rundis$elm_bootstrap$Bootstrap_Card$keyedMulti('card-group');
+var _rundis$elm_bootstrap$Bootstrap_Card$keyedDeck = _rundis$elm_bootstrap$Bootstrap_Card$keyedMulti('card-deck');
+var _rundis$elm_bootstrap$Bootstrap_Card$keyedColumns = _rundis$elm_bootstrap$Bootstrap_Card$keyedMulti('card-columns');
+var _rundis$elm_bootstrap$Bootstrap_Card$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$Attrs(attrs);
 };
-var _user$project$Bootstrap_Card$textColor = function (color) {
-	return _user$project$Bootstrap_Card_Internal$TextColoring(color);
+var _rundis$elm_bootstrap$Bootstrap_Card$textColor = function (color) {
+	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$TextColoring(color);
 };
-var _user$project$Bootstrap_Card$outlineDark = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Outlined(_user$project$Bootstrap_Internal_Role$Dark));
-var _user$project$Bootstrap_Card$outlineLight = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Outlined(_user$project$Bootstrap_Internal_Role$Light));
-var _user$project$Bootstrap_Card$outlineDanger = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Outlined(_user$project$Bootstrap_Internal_Role$Danger));
-var _user$project$Bootstrap_Card$outlineWarning = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Outlined(_user$project$Bootstrap_Internal_Role$Warning));
-var _user$project$Bootstrap_Card$outlineInfo = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Outlined(_user$project$Bootstrap_Internal_Role$Info));
-var _user$project$Bootstrap_Card$outlineSuccess = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Outlined(_user$project$Bootstrap_Internal_Role$Success));
-var _user$project$Bootstrap_Card$outlineSecondary = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Outlined(_user$project$Bootstrap_Internal_Role$Secondary));
-var _user$project$Bootstrap_Card$outlinePrimary = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Outlined(_user$project$Bootstrap_Internal_Role$Primary));
-var _user$project$Bootstrap_Card$dark = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Roled(_user$project$Bootstrap_Internal_Role$Dark));
-var _user$project$Bootstrap_Card$light = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Roled(_user$project$Bootstrap_Internal_Role$Light));
-var _user$project$Bootstrap_Card$danger = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Roled(_user$project$Bootstrap_Internal_Role$Danger));
-var _user$project$Bootstrap_Card$warning = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Roled(_user$project$Bootstrap_Internal_Role$Warning));
-var _user$project$Bootstrap_Card$info = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Roled(_user$project$Bootstrap_Internal_Role$Info));
-var _user$project$Bootstrap_Card$success = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Roled(_user$project$Bootstrap_Internal_Role$Success));
-var _user$project$Bootstrap_Card$secondary = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Roled(_user$project$Bootstrap_Internal_Role$Secondary));
-var _user$project$Bootstrap_Card$primary = _user$project$Bootstrap_Card_Internal$Coloring(
-	_user$project$Bootstrap_Card_Internal$Roled(_user$project$Bootstrap_Internal_Role$Primary));
-var _user$project$Bootstrap_Card$align = function (align) {
-	return _user$project$Bootstrap_Card_Internal$Aligned(align);
+var _rundis$elm_bootstrap$Bootstrap_Card$outlineDark = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark));
+var _rundis$elm_bootstrap$Bootstrap_Card$outlineLight = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Light));
+var _rundis$elm_bootstrap$Bootstrap_Card$outlineDanger = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger));
+var _rundis$elm_bootstrap$Bootstrap_Card$outlineWarning = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning));
+var _rundis$elm_bootstrap$Bootstrap_Card$outlineInfo = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Info));
+var _rundis$elm_bootstrap$Bootstrap_Card$outlineSuccess = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Success));
+var _rundis$elm_bootstrap$Bootstrap_Card$outlineSecondary = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary));
+var _rundis$elm_bootstrap$Bootstrap_Card$outlinePrimary = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary));
+var _rundis$elm_bootstrap$Bootstrap_Card$dark = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark));
+var _rundis$elm_bootstrap$Bootstrap_Card$light = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Light));
+var _rundis$elm_bootstrap$Bootstrap_Card$danger = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger));
+var _rundis$elm_bootstrap$Bootstrap_Card$warning = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning));
+var _rundis$elm_bootstrap$Bootstrap_Card$info = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Info));
+var _rundis$elm_bootstrap$Bootstrap_Card$success = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Success));
+var _rundis$elm_bootstrap$Bootstrap_Card$secondary = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary));
+var _rundis$elm_bootstrap$Bootstrap_Card$primary = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary));
+var _rundis$elm_bootstrap$Bootstrap_Card$align = function (align) {
+	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$Aligned(align);
 };
-var _user$project$Bootstrap_Card$Config = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card$Config = function (a) {
 	return {ctor: 'Config', _0: a};
 };
-var _user$project$Bootstrap_Card$config = function (options) {
-	return _user$project$Bootstrap_Card$Config(
+var _rundis$elm_bootstrap$Bootstrap_Card$config = function (options) {
+	return _rundis$elm_bootstrap$Bootstrap_Card$Config(
 		{
 			options: options,
 			header: _elm_lang$core$Maybe$Nothing,
@@ -13594,11 +13214,11 @@ var _user$project$Bootstrap_Card$config = function (options) {
 			blocks: {ctor: '[]'}
 		});
 };
-var _user$project$Bootstrap_Card$listGroup = F2(
+var _rundis$elm_bootstrap$Bootstrap_Card$listGroup = F2(
 	function (items, _p12) {
 		var _p13 = _p12;
 		var _p14 = _p13._0;
-		return _user$project$Bootstrap_Card$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Card$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p14,
 				{
@@ -13607,16 +13227,16 @@ var _user$project$Bootstrap_Card$listGroup = F2(
 						_p14.blocks,
 						{
 							ctor: '::',
-							_0: _user$project$Bootstrap_Card_Internal$listGroup(items),
+							_0: _rundis$elm_bootstrap$Bootstrap_Card_Internal$listGroup(items),
 							_1: {ctor: '[]'}
 						})
 				}));
 	});
-var _user$project$Bootstrap_Card$block = F3(
+var _rundis$elm_bootstrap$Bootstrap_Card$block = F3(
 	function (options, items, _p15) {
 		var _p16 = _p15;
 		var _p17 = _p16._0;
-		return _user$project$Bootstrap_Card$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Card$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p17,
 				{
@@ -13625,23 +13245,23 @@ var _user$project$Bootstrap_Card$block = F3(
 						_p17.blocks,
 						{
 							ctor: '::',
-							_0: A2(_user$project$Bootstrap_Card_Internal$block, options, items),
+							_0: A2(_rundis$elm_bootstrap$Bootstrap_Card_Internal$block, options, items),
 							_1: {ctor: '[]'}
 						})
 				}));
 	});
-var _user$project$Bootstrap_Card$Header = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card$Header = function (a) {
 	return {ctor: 'Header', _0: a};
 };
-var _user$project$Bootstrap_Card$headerPrivate = F4(
+var _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate = F4(
 	function (elemFn, attributes, children, _p18) {
 		var _p19 = _p18;
-		return _user$project$Bootstrap_Card$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Card$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p19._0,
 				{
 					header: _elm_lang$core$Maybe$Just(
-						_user$project$Bootstrap_Card$Header(
+						_rundis$elm_bootstrap$Bootstrap_Card$Header(
 							A2(
 								elemFn,
 								{
@@ -13652,25 +13272,25 @@ var _user$project$Bootstrap_Card$headerPrivate = F4(
 								children)))
 				}));
 	});
-var _user$project$Bootstrap_Card$header = _user$project$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$div);
-var _user$project$Bootstrap_Card$headerH1 = _user$project$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h1);
-var _user$project$Bootstrap_Card$headerH2 = _user$project$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h2);
-var _user$project$Bootstrap_Card$headerH3 = _user$project$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h3);
-var _user$project$Bootstrap_Card$headerH4 = _user$project$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h4);
-var _user$project$Bootstrap_Card$headerH5 = _user$project$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h5);
-var _user$project$Bootstrap_Card$headerH6 = _user$project$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h6);
-var _user$project$Bootstrap_Card$Footer = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card$header = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$div);
+var _rundis$elm_bootstrap$Bootstrap_Card$headerH1 = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h1);
+var _rundis$elm_bootstrap$Bootstrap_Card$headerH2 = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h2);
+var _rundis$elm_bootstrap$Bootstrap_Card$headerH3 = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h3);
+var _rundis$elm_bootstrap$Bootstrap_Card$headerH4 = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h4);
+var _rundis$elm_bootstrap$Bootstrap_Card$headerH5 = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h5);
+var _rundis$elm_bootstrap$Bootstrap_Card$headerH6 = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h6);
+var _rundis$elm_bootstrap$Bootstrap_Card$Footer = function (a) {
 	return {ctor: 'Footer', _0: a};
 };
-var _user$project$Bootstrap_Card$footer = F3(
+var _rundis$elm_bootstrap$Bootstrap_Card$footer = F3(
 	function (attributes, children, _p20) {
 		var _p21 = _p20;
-		return _user$project$Bootstrap_Card$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Card$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p21._0,
 				{
 					footer: _elm_lang$core$Maybe$Just(
-						_user$project$Bootstrap_Card$Footer(
+						_rundis$elm_bootstrap$Bootstrap_Card$Footer(
 							A2(
 								_elm_lang$html$Html$div,
 								{
@@ -13681,18 +13301,18 @@ var _user$project$Bootstrap_Card$footer = F3(
 								children)))
 				}));
 	});
-var _user$project$Bootstrap_Card$ImageTop = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card$ImageTop = function (a) {
 	return {ctor: 'ImageTop', _0: a};
 };
-var _user$project$Bootstrap_Card$imgTop = F3(
+var _rundis$elm_bootstrap$Bootstrap_Card$imgTop = F3(
 	function (attributes, children, _p22) {
 		var _p23 = _p22;
-		return _user$project$Bootstrap_Card$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Card$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p23._0,
 				{
 					imgTop: _elm_lang$core$Maybe$Just(
-						_user$project$Bootstrap_Card$ImageTop(
+						_rundis$elm_bootstrap$Bootstrap_Card$ImageTop(
 							A2(
 								_elm_lang$html$Html$img,
 								A2(
@@ -13706,18 +13326,18 @@ var _user$project$Bootstrap_Card$imgTop = F3(
 								children)))
 				}));
 	});
-var _user$project$Bootstrap_Card$ImageBottom = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Card$ImageBottom = function (a) {
 	return {ctor: 'ImageBottom', _0: a};
 };
-var _user$project$Bootstrap_Card$imgBottom = F3(
+var _rundis$elm_bootstrap$Bootstrap_Card$imgBottom = F3(
 	function (attributes, children, _p24) {
 		var _p25 = _p24;
-		return _user$project$Bootstrap_Card$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Card$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p25._0,
 				{
 					imgBottom: _elm_lang$core$Maybe$Just(
-						_user$project$Bootstrap_Card$ImageBottom(
+						_rundis$elm_bootstrap$Bootstrap_Card$ImageBottom(
 							A2(
 								_elm_lang$html$Html$img,
 								A2(
@@ -13732,7 +13352,919 @@ var _user$project$Bootstrap_Card$imgBottom = F3(
 				}));
 	});
 
-var _user$project$Bootstrap_Dropdown$sizeDecoder = A3(
+var _rundis$elm_bootstrap$Bootstrap_Alert$headingPrivate = F3(
+	function (elemFn, attributes, children) {
+		return A2(
+			elemFn,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('alert-header'),
+				_1: attributes
+			},
+			children);
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$h6 = F2(
+	function (attributes, children) {
+		return A3(_rundis$elm_bootstrap$Bootstrap_Alert$headingPrivate, _elm_lang$html$Html$h6, attributes, children);
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$h5 = F2(
+	function (attributes, children) {
+		return A3(_rundis$elm_bootstrap$Bootstrap_Alert$headingPrivate, _elm_lang$html$Html$h5, attributes, children);
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$h4 = F2(
+	function (attributes, children) {
+		return A3(_rundis$elm_bootstrap$Bootstrap_Alert$headingPrivate, _elm_lang$html$Html$h4, attributes, children);
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$h3 = F2(
+	function (attributes, children) {
+		return A3(_rundis$elm_bootstrap$Bootstrap_Alert$headingPrivate, _elm_lang$html$Html$h3, attributes, children);
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$h2 = F2(
+	function (attributes, children) {
+		return A3(_rundis$elm_bootstrap$Bootstrap_Alert$headingPrivate, _elm_lang$html$Html$h2, attributes, children);
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$h1 = F2(
+	function (attributes, children) {
+		return A3(_rundis$elm_bootstrap$Bootstrap_Alert$headingPrivate, _elm_lang$html$Html$h1, attributes, children);
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$link = F2(
+	function (attributes, children) {
+		return A2(
+			_elm_lang$html$Html$a,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('alert-link'),
+				_1: attributes
+			},
+			children);
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$isDismissable = function (configRec) {
+	var _p0 = configRec.dismissable;
+	if (_p0.ctor === 'Just') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var _rundis$elm_bootstrap$Bootstrap_Alert$injectButton = F2(
+	function (btn, children) {
+		var _p1 = children;
+		if (_p1.ctor === '::') {
+			return {
+				ctor: '::',
+				_0: _p1._0,
+				_1: {ctor: '::', _0: btn, _1: _p1._1}
+			};
+		} else {
+			return {
+				ctor: '::',
+				_0: btn,
+				_1: {ctor: '[]'}
+			};
+		}
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$ConfigRec = F6(
+	function (a, b, c, d, e, f) {
+		return {visibility: a, dismissable: b, attributes: c, children: d, role: e, withAnimation: f};
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$Config = function (a) {
+	return {ctor: 'Config', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Alert$role = F2(
+	function (role, _p2) {
+		var _p3 = _p2;
+		return _rundis$elm_bootstrap$Bootstrap_Alert$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p3._0,
+				{role: role}));
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$primary = function (config) {
+	return A2(_rundis$elm_bootstrap$Bootstrap_Alert$role, _rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary, config);
+};
+var _rundis$elm_bootstrap$Bootstrap_Alert$secondary = function (config) {
+	return A2(_rundis$elm_bootstrap$Bootstrap_Alert$role, _rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary, config);
+};
+var _rundis$elm_bootstrap$Bootstrap_Alert$success = function (config) {
+	return A2(_rundis$elm_bootstrap$Bootstrap_Alert$role, _rundis$elm_bootstrap$Bootstrap_Internal_Role$Success, config);
+};
+var _rundis$elm_bootstrap$Bootstrap_Alert$info = function (config) {
+	return A2(_rundis$elm_bootstrap$Bootstrap_Alert$role, _rundis$elm_bootstrap$Bootstrap_Internal_Role$Info, config);
+};
+var _rundis$elm_bootstrap$Bootstrap_Alert$warning = function (config) {
+	return A2(_rundis$elm_bootstrap$Bootstrap_Alert$role, _rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning, config);
+};
+var _rundis$elm_bootstrap$Bootstrap_Alert$danger = function (config) {
+	return A2(_rundis$elm_bootstrap$Bootstrap_Alert$role, _rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger, config);
+};
+var _rundis$elm_bootstrap$Bootstrap_Alert$dark = function (config) {
+	return A2(_rundis$elm_bootstrap$Bootstrap_Alert$role, _rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark, config);
+};
+var _rundis$elm_bootstrap$Bootstrap_Alert$light = function (config) {
+	return A2(_rundis$elm_bootstrap$Bootstrap_Alert$role, _rundis$elm_bootstrap$Bootstrap_Internal_Role$Light, config);
+};
+var _rundis$elm_bootstrap$Bootstrap_Alert$attrs = F2(
+	function (attributes, _p4) {
+		var _p5 = _p4;
+		return _rundis$elm_bootstrap$Bootstrap_Alert$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p5._0,
+				{attributes: attributes}));
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$dismissable = F2(
+	function (dismissMsg, _p6) {
+		var _p7 = _p6;
+		return _rundis$elm_bootstrap$Bootstrap_Alert$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p7._0,
+				{
+					dismissable: _elm_lang$core$Maybe$Just(dismissMsg)
+				}));
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$dismissableWithAnimation = F2(
+	function (dismissMsg, _p8) {
+		var _p9 = _p8;
+		return _rundis$elm_bootstrap$Bootstrap_Alert$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p9._0,
+				{
+					dismissable: _elm_lang$core$Maybe$Just(dismissMsg),
+					withAnimation: true
+				}));
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$children = F2(
+	function (children, _p10) {
+		var _p11 = _p10;
+		return _rundis$elm_bootstrap$Bootstrap_Alert$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p11._0,
+				{children: children}));
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$Closed = {ctor: 'Closed'};
+var _rundis$elm_bootstrap$Bootstrap_Alert$closed = _rundis$elm_bootstrap$Bootstrap_Alert$Closed;
+var _rundis$elm_bootstrap$Bootstrap_Alert$FadeClose = {ctor: 'FadeClose'};
+var _rundis$elm_bootstrap$Bootstrap_Alert$subscriptions = F2(
+	function (visibility, animateMsg) {
+		var _p12 = visibility;
+		if (_p12.ctor === 'StartClose') {
+			return _elm_lang$animation_frame$AnimationFrame$times(
+				function (_p13) {
+					return animateMsg(_rundis$elm_bootstrap$Bootstrap_Alert$FadeClose);
+				});
+		} else {
+			return _elm_lang$core$Platform_Sub$none;
+		}
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$StartClose = {ctor: 'StartClose'};
+var _rundis$elm_bootstrap$Bootstrap_Alert$clickHandler = F2(
+	function (visibility, configRec) {
+		var handleClick = F2(
+			function (viz, toMsg) {
+				return _elm_lang$html$Html_Events$onClick(
+					toMsg(viz));
+			});
+		var _p14 = configRec.dismissable;
+		if (_p14.ctor === 'Just') {
+			var _p15 = _p14._0;
+			return {
+				ctor: '::',
+				_0: configRec.withAnimation ? A2(handleClick, _rundis$elm_bootstrap$Bootstrap_Alert$StartClose, _p15) : A2(handleClick, _rundis$elm_bootstrap$Bootstrap_Alert$Closed, _p15),
+				_1: {ctor: '[]'}
+			};
+		} else {
+			return {ctor: '[]'};
+		}
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$maybeAddDismissButton = F3(
+	function (visibilty, configRec, children) {
+		return _rundis$elm_bootstrap$Bootstrap_Alert$isDismissable(configRec) ? A2(
+			_rundis$elm_bootstrap$Bootstrap_Alert$injectButton,
+			A2(
+				_elm_lang$html$Html$button,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$type_('button'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('close'),
+							_1: {
+								ctor: '::',
+								_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-label', 'close'),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					A2(_rundis$elm_bootstrap$Bootstrap_Alert$clickHandler, visibilty, configRec)),
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$span,
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-hidden', 'true'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('×'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			children) : children;
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$Shown = {ctor: 'Shown'};
+var _rundis$elm_bootstrap$Bootstrap_Alert$shown = _rundis$elm_bootstrap$Bootstrap_Alert$Shown;
+var _rundis$elm_bootstrap$Bootstrap_Alert$config = _rundis$elm_bootstrap$Bootstrap_Alert$Config(
+	{
+		visibility: _rundis$elm_bootstrap$Bootstrap_Alert$Shown,
+		dismissable: _elm_lang$core$Maybe$Nothing,
+		attributes: {ctor: '[]'},
+		children: {ctor: '[]'},
+		role: _rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary,
+		withAnimation: false
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$viewAttributes = F2(
+	function (visibility, configRec) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			{
+				ctor: '::',
+				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'alert'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$classList(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'alert', _1: true},
+							_1: {
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'alert-dismissible',
+									_1: _rundis$elm_bootstrap$Bootstrap_Alert$isDismissable(configRec)
+								},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'fade', _1: configRec.withAnimation},
+									_1: {
+										ctor: '::',
+										_0: {
+											ctor: '_Tuple2',
+											_0: 'show',
+											_1: _elm_lang$core$Native_Utils.eq(visibility, _rundis$elm_bootstrap$Bootstrap_Alert$Shown)
+										},
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(_rundis$elm_bootstrap$Bootstrap_Internal_Role$toClass, 'alert', configRec.role),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			_elm_lang$core$Native_Utils.eq(visibility, _rundis$elm_bootstrap$Bootstrap_Alert$Closed) ? {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'display', _1: 'none'},
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			} : A2(
+				_elm_lang$core$Basics_ops['++'],
+				{ctor: '[]'},
+				function () {
+					if (configRec.withAnimation) {
+						var _p16 = configRec.dismissable;
+						if (_p16.ctor === 'Just') {
+							return {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html_Events$on,
+									'transitionend',
+									_elm_lang$core$Json_Decode$succeed(
+										_p16._0(_rundis$elm_bootstrap$Bootstrap_Alert$Closed))),
+								_1: {ctor: '[]'}
+							};
+						} else {
+							return {ctor: '[]'};
+						}
+					} else {
+						return {ctor: '[]'};
+					}
+				}()));
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$view = F2(
+	function (visibility, _p17) {
+		var _p18 = _p17;
+		var _p19 = _p18._0;
+		return A2(
+			_elm_lang$html$Html$div,
+			A2(_rundis$elm_bootstrap$Bootstrap_Alert$viewAttributes, visibility, _p19),
+			A3(_rundis$elm_bootstrap$Bootstrap_Alert$maybeAddDismissButton, visibility, _p19, _p19.children));
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$simple = F3(
+	function (role_, attributes, children_) {
+		return A2(
+			_rundis$elm_bootstrap$Bootstrap_Alert$view,
+			_rundis$elm_bootstrap$Bootstrap_Alert$Shown,
+			A2(
+				_rundis$elm_bootstrap$Bootstrap_Alert$children,
+				children_,
+				A2(
+					_rundis$elm_bootstrap$Bootstrap_Alert$attrs,
+					attributes,
+					A2(_rundis$elm_bootstrap$Bootstrap_Alert$role, role_, _rundis$elm_bootstrap$Bootstrap_Alert$config))));
+	});
+var _rundis$elm_bootstrap$Bootstrap_Alert$simplePrimary = _rundis$elm_bootstrap$Bootstrap_Alert$simple(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary);
+var _rundis$elm_bootstrap$Bootstrap_Alert$simpleSecondary = _rundis$elm_bootstrap$Bootstrap_Alert$simple(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary);
+var _rundis$elm_bootstrap$Bootstrap_Alert$simpleSuccess = _rundis$elm_bootstrap$Bootstrap_Alert$simple(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Success);
+var _rundis$elm_bootstrap$Bootstrap_Alert$simpleInfo = _rundis$elm_bootstrap$Bootstrap_Alert$simple(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Info);
+var _rundis$elm_bootstrap$Bootstrap_Alert$simpleWarning = _rundis$elm_bootstrap$Bootstrap_Alert$simple(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning);
+var _rundis$elm_bootstrap$Bootstrap_Alert$simpleDanger = _rundis$elm_bootstrap$Bootstrap_Alert$simple(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger);
+var _rundis$elm_bootstrap$Bootstrap_Alert$simpleDark = _rundis$elm_bootstrap$Bootstrap_Alert$simple(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark);
+var _rundis$elm_bootstrap$Bootstrap_Alert$simpleLight = _rundis$elm_bootstrap$Bootstrap_Alert$simple(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Light);
+
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$roleClass = function (role) {
+	var _p0 = role;
+	switch (_p0.ctor) {
+		case 'Primary':
+			return 'primary';
+		case 'Secondary':
+			return 'secondary';
+		case 'Success':
+			return 'success';
+		case 'Info':
+			return 'info';
+		case 'Warning':
+			return 'warning';
+		case 'Danger':
+			return 'danger';
+		case 'Dark':
+			return 'dark';
+		case 'Light':
+			return 'light';
+		default:
+			return 'link';
+	}
+};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$applyModifier = F2(
+	function (modifier, options) {
+		var _p1 = modifier;
+		switch (_p1.ctor) {
+			case 'Size':
+				return _elm_lang$core$Native_Utils.update(
+					options,
+					{
+						size: _elm_lang$core$Maybe$Just(_p1._0)
+					});
+			case 'Coloring':
+				return _elm_lang$core$Native_Utils.update(
+					options,
+					{
+						coloring: _elm_lang$core$Maybe$Just(_p1._0)
+					});
+			case 'Block':
+				return _elm_lang$core$Native_Utils.update(
+					options,
+					{block: true});
+			case 'Disabled':
+				return _elm_lang$core$Native_Utils.update(
+					options,
+					{disabled: _p1._0});
+			default:
+				return _elm_lang$core$Native_Utils.update(
+					options,
+					{
+						attributes: A2(_elm_lang$core$Basics_ops['++'], options.attributes, _p1._0)
+					});
+		}
+	});
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$defaultOptions = {
+	coloring: _elm_lang$core$Maybe$Nothing,
+	block: false,
+	disabled: false,
+	size: _elm_lang$core$Maybe$Nothing,
+	attributes: {ctor: '[]'}
+};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$buttonAttributes = function (modifiers) {
+	var options = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Internal_Button$applyModifier, _rundis$elm_bootstrap$Bootstrap_Internal_Button$defaultOptions, modifiers);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$classList(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'btn', _1: true},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'btn-block', _1: options.block},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'disabled', _1: options.disabled},
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$disabled(options.disabled),
+				_1: {ctor: '[]'}
+			}
+		},
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			function () {
+				var _p2 = A2(_elm_lang$core$Maybe$andThen, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption, options.size);
+				if (_p2.ctor === 'Just') {
+					return {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(
+							A2(_elm_lang$core$Basics_ops['++'], 'btn-', _p2._0)),
+						_1: {ctor: '[]'}
+					};
+				} else {
+					return {ctor: '[]'};
+				}
+			}(),
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				function () {
+					var _p3 = options.coloring;
+					if (_p3.ctor === 'Just') {
+						if (_p3._0.ctor === 'Roled') {
+							return {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										'btn-',
+										_rundis$elm_bootstrap$Bootstrap_Internal_Button$roleClass(_p3._0._0))),
+								_1: {ctor: '[]'}
+							};
+						} else {
+							return {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										'btn-outline-',
+										_rundis$elm_bootstrap$Bootstrap_Internal_Button$roleClass(_p3._0._0))),
+								_1: {ctor: '[]'}
+							};
+						}
+					} else {
+						return {ctor: '[]'};
+					}
+				}(),
+				options.attributes)));
+};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Options = F5(
+	function (a, b, c, d, e) {
+		return {coloring: a, block: b, disabled: c, size: d, attributes: e};
+	});
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Attrs = function (a) {
+	return {ctor: 'Attrs', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Disabled = function (a) {
+	return {ctor: 'Disabled', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Block = {ctor: 'Block'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring = function (a) {
+	return {ctor: 'Coloring', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Size = function (a) {
+	return {ctor: 'Size', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Outlined = function (a) {
+	return {ctor: 'Outlined', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Roled = function (a) {
+	return {ctor: 'Roled', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Link = {ctor: 'Link'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Light = {ctor: 'Light'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Dark = {ctor: 'Dark'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Danger = {ctor: 'Danger'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Warning = {ctor: 'Warning'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Info = {ctor: 'Info'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Success = {ctor: 'Success'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Secondary = {ctor: 'Secondary'};
+var _rundis$elm_bootstrap$Bootstrap_Internal_Button$Primary = {ctor: 'Primary'};
+
+var _rundis$elm_bootstrap$Bootstrap_Button$disabled = function (disabled) {
+	return _rundis$elm_bootstrap$Bootstrap_Internal_Button$Disabled(disabled);
+};
+var _rundis$elm_bootstrap$Bootstrap_Button$block = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Block;
+var _rundis$elm_bootstrap$Bootstrap_Button$outlineDark = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Dark));
+var _rundis$elm_bootstrap$Bootstrap_Button$outlineLight = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Light));
+var _rundis$elm_bootstrap$Bootstrap_Button$outlineDanger = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Danger));
+var _rundis$elm_bootstrap$Bootstrap_Button$outlineWarning = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Warning));
+var _rundis$elm_bootstrap$Bootstrap_Button$outlineInfo = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Info));
+var _rundis$elm_bootstrap$Bootstrap_Button$outlineSuccess = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Success));
+var _rundis$elm_bootstrap$Bootstrap_Button$outlineSecondary = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Secondary));
+var _rundis$elm_bootstrap$Bootstrap_Button$outlinePrimary = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Primary));
+var _rundis$elm_bootstrap$Bootstrap_Button$roleLink = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Link));
+var _rundis$elm_bootstrap$Bootstrap_Button$dark = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Dark));
+var _rundis$elm_bootstrap$Bootstrap_Button$light = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Light));
+var _rundis$elm_bootstrap$Bootstrap_Button$danger = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Danger));
+var _rundis$elm_bootstrap$Bootstrap_Button$warning = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Warning));
+var _rundis$elm_bootstrap$Bootstrap_Button$info = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Info));
+var _rundis$elm_bootstrap$Bootstrap_Button$success = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Success));
+var _rundis$elm_bootstrap$Bootstrap_Button$secondary = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Secondary));
+var _rundis$elm_bootstrap$Bootstrap_Button$primary = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Coloring(
+	_rundis$elm_bootstrap$Bootstrap_Internal_Button$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Button$Primary));
+var _rundis$elm_bootstrap$Bootstrap_Button$large = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Size(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG);
+var _rundis$elm_bootstrap$Bootstrap_Button$small = _rundis$elm_bootstrap$Bootstrap_Internal_Button$Size(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM);
+var _rundis$elm_bootstrap$Bootstrap_Button$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Internal_Button$Attrs(attrs);
+};
+var _rundis$elm_bootstrap$Bootstrap_Button$onClick = function (message) {
+	var defaultOptions = _elm_lang$html$Html_Events$defaultOptions;
+	return _rundis$elm_bootstrap$Bootstrap_Button$attrs(
+		{
+			ctor: '::',
+			_0: A3(
+				_elm_lang$html$Html_Events$onWithOptions,
+				'click',
+				_elm_lang$core$Native_Utils.update(
+					defaultOptions,
+					{preventDefault: true}),
+				_elm_lang$core$Json_Decode$succeed(message)),
+			_1: {ctor: '[]'}
+		});
+};
+var _rundis$elm_bootstrap$Bootstrap_Button$checkboxButton = F3(
+	function (checked, options, children) {
+		return A2(
+			_elm_lang$html$Html$label,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$classList(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'active', _1: checked},
+						_1: {ctor: '[]'}
+					}),
+				_1: _rundis$elm_bootstrap$Bootstrap_Internal_Button$buttonAttributes(options)
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$input,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$type_('checkbox'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$checked(checked),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$autocomplete(false),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: children
+			});
+	});
+var _rundis$elm_bootstrap$Bootstrap_Button$radioButton = F3(
+	function (checked, options, children) {
+		var hideRadio = A2(_elm_lang$html$Html_Attributes$attribute, 'data-toggle', 'button');
+		return A2(
+			_elm_lang$html$Html$label,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$classList(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'active', _1: checked},
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: hideRadio,
+					_1: _rundis$elm_bootstrap$Bootstrap_Internal_Button$buttonAttributes(options)
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$input,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$type_('radio'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$checked(checked),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$autocomplete(false),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: children
+			});
+	});
+var _rundis$elm_bootstrap$Bootstrap_Button$linkButton = F2(
+	function (options, children) {
+		return A2(
+			_elm_lang$html$Html$a,
+			{
+				ctor: '::',
+				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'button'),
+				_1: _rundis$elm_bootstrap$Bootstrap_Internal_Button$buttonAttributes(options)
+			},
+			children);
+	});
+var _rundis$elm_bootstrap$Bootstrap_Button$button = F2(
+	function (options, children) {
+		return A2(
+			_elm_lang$html$Html$button,
+			_rundis$elm_bootstrap$Bootstrap_Internal_Button$buttonAttributes(options),
+			children);
+	});
+
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$defaultOptions = {
+	size: _elm_lang$core$Maybe$Nothing,
+	vertical: false,
+	attributes: {ctor: '[]'}
+};
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$applyModifier = F2(
+	function (modifier, options) {
+		var _p0 = modifier;
+		switch (_p0.ctor) {
+			case 'Size':
+				return _elm_lang$core$Native_Utils.update(
+					options,
+					{
+						size: _elm_lang$core$Maybe$Just(_p0._0)
+					});
+			case 'Vertical':
+				return _elm_lang$core$Native_Utils.update(
+					options,
+					{vertical: true});
+			default:
+				return _elm_lang$core$Native_Utils.update(
+					options,
+					{
+						attributes: A2(_elm_lang$core$Basics_ops['++'], options.attributes, _p0._0)
+					});
+		}
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$groupAttributes = F2(
+	function (toggle, modifiers) {
+		var options = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_ButtonGroup$applyModifier, _rundis$elm_bootstrap$Bootstrap_ButtonGroup$defaultOptions, modifiers);
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			{
+				ctor: '::',
+				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'group'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$classList(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'btn-group', _1: true},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'btn-group-toggle', _1: toggle},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'btn-group-vertical', _1: options.vertical},
+									_1: {ctor: '[]'}
+								}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-toggle', 'buttons'),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				function () {
+					var _p1 = A2(_elm_lang$core$Maybe$andThen, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption, options.size);
+					if (_p1.ctor === 'Just') {
+						return {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class(
+								A2(_elm_lang$core$Basics_ops['++'], 'btn-group-', _p1._0)),
+							_1: {ctor: '[]'}
+						};
+					} else {
+						return {ctor: '[]'};
+					}
+				}(),
+				options.attributes));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$renderGroup = function (_p2) {
+	var _p3 = _p2;
+	return _p3._0;
+};
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$toolbar = F2(
+	function (attributes, items) {
+		return A2(
+			_elm_lang$html$Html$div,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'toolbar'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('btn-toolbar'),
+						_1: {ctor: '[]'}
+					}
+				},
+				attributes),
+			A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_ButtonGroup$renderGroup, items));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$Options = F3(
+	function (a, b, c) {
+		return {size: a, vertical: b, attributes: c};
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$Attrs = function (a) {
+	return {ctor: 'Attrs', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$Attrs(attrs);
+};
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$Vertical = {ctor: 'Vertical'};
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$vertical = _rundis$elm_bootstrap$Bootstrap_ButtonGroup$Vertical;
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$Size = function (a) {
+	return {ctor: 'Size', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$small = _rundis$elm_bootstrap$Bootstrap_ButtonGroup$Size(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM);
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$large = _rundis$elm_bootstrap$Bootstrap_ButtonGroup$Size(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG);
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$GroupItem = function (a) {
+	return {ctor: 'GroupItem', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$buttonGroupItem = F2(
+	function (options, items) {
+		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$GroupItem(
+			A2(
+				_elm_lang$html$Html$div,
+				A2(_rundis$elm_bootstrap$Bootstrap_ButtonGroup$groupAttributes, false, options),
+				A2(
+					_elm_lang$core$List$map,
+					function (_p4) {
+						var _p5 = _p4;
+						return _p5._0;
+					},
+					items)));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$buttonGroup = F2(
+	function (options, items) {
+		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$renderGroup(
+			A2(_rundis$elm_bootstrap$Bootstrap_ButtonGroup$buttonGroupItem, options, items));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$linkButtonGroupItem = F2(
+	function (options, items) {
+		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$GroupItem(
+			A2(
+				_elm_lang$html$Html$div,
+				A2(_rundis$elm_bootstrap$Bootstrap_ButtonGroup$groupAttributes, false, options),
+				A2(
+					_elm_lang$core$List$map,
+					function (_p6) {
+						var _p7 = _p6;
+						return _p7._0;
+					},
+					items)));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$linkButtonGroup = F2(
+	function (options, items) {
+		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$renderGroup(
+			A2(_rundis$elm_bootstrap$Bootstrap_ButtonGroup$linkButtonGroupItem, options, items));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButtonGroupItem = F2(
+	function (options, items) {
+		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$GroupItem(
+			A2(
+				_elm_lang$html$Html$div,
+				A2(_rundis$elm_bootstrap$Bootstrap_ButtonGroup$groupAttributes, true, options),
+				A2(
+					_elm_lang$core$List$map,
+					function (_p8) {
+						var _p9 = _p8;
+						return _p9._0;
+					},
+					items)));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButtonGroup = F2(
+	function (options, items) {
+		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$renderGroup(
+			A2(_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButtonGroupItem, options, items));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$checkboxButtonGroupItem = F2(
+	function (options, items) {
+		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$GroupItem(
+			A2(
+				_elm_lang$html$Html$div,
+				A2(_rundis$elm_bootstrap$Bootstrap_ButtonGroup$groupAttributes, true, options),
+				A2(
+					_elm_lang$core$List$map,
+					function (_p10) {
+						var _p11 = _p10;
+						return _p11._0;
+					},
+					items)));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$checkboxButtonGroup = F2(
+	function (options, items) {
+		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$renderGroup(
+			A2(_rundis$elm_bootstrap$Bootstrap_ButtonGroup$checkboxButtonGroupItem, options, items));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$ButtonItem = function (a) {
+	return {ctor: 'ButtonItem', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$button = F2(
+	function (options, children) {
+		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$ButtonItem(
+			A2(_rundis$elm_bootstrap$Bootstrap_Button$button, options, children));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$LinkButtonItem = function (a) {
+	return {ctor: 'LinkButtonItem', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$linkButton = F2(
+	function (options, children) {
+		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$LinkButtonItem(
+			A2(_rundis$elm_bootstrap$Bootstrap_Button$linkButton, options, children));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$RadioButtonItem = function (a) {
+	return {ctor: 'RadioButtonItem', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButton = F3(
+	function (checked, options, children) {
+		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$RadioButtonItem(
+			A3(_rundis$elm_bootstrap$Bootstrap_Button$radioButton, checked, options, children));
+	});
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$CheckboxButtonItem = function (a) {
+	return {ctor: 'CheckboxButtonItem', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$checkboxButton = F3(
+	function (checked, options, children) {
+		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$CheckboxButtonItem(
+			A3(_rundis$elm_bootstrap$Bootstrap_Button$checkboxButton, checked, options, children));
+	});
+
+var _rundis$elm_bootstrap$Bootstrap_CDN$fontAwesome = A3(
+	_elm_lang$html$Html$node,
+	'link',
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$href('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'),
+			_1: {ctor: '[]'}
+		}
+	},
+	{ctor: '[]'});
+var _rundis$elm_bootstrap$Bootstrap_CDN$stylesheet = A3(
+	_elm_lang$html$Html$node,
+	'link',
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$href('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'),
+			_1: {ctor: '[]'}
+		}
+	},
+	{ctor: '[]'});
+
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$sizeDecoder = A3(
 	_elm_lang$core$Json_Decode$map2,
 	F2(
 		function (v0, v1) {
@@ -13742,7 +14274,7 @@ var _user$project$Bootstrap_Dropdown$sizeDecoder = A3(
 	_debois$elm_dom$DOM$target(
 		_debois$elm_dom$DOM$nextSibling(
 			A2(_debois$elm_dom$DOM$childNode, 0, _debois$elm_dom$DOM$boundingClientRect))));
-var _user$project$Bootstrap_Dropdown$applyModifier = F2(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$applyModifier = F2(
 	function (option, options) {
 		var _p0 = option;
 		switch (_p0.ctor) {
@@ -13770,17 +14302,17 @@ var _user$project$Bootstrap_Dropdown$applyModifier = F2(
 					{menuAttrs: _p0._0});
 		}
 	});
-var _user$project$Bootstrap_Dropdown$defaultOptions = {
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$defaultOptions = {
 	hasMenuRight: false,
 	isDropUp: false,
 	attributes: {ctor: '[]'},
 	dropDirection: _elm_lang$core$Maybe$Nothing,
 	menuAttrs: {ctor: '[]'}
 };
-var _user$project$Bootstrap_Dropdown$toConfig = function (options) {
-	return A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Dropdown$applyModifier, _user$project$Bootstrap_Dropdown$defaultOptions, options);
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$toConfig = function (options) {
+	return A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Dropdown$applyModifier, _rundis$elm_bootstrap$Bootstrap_Dropdown$defaultOptions, options);
 };
-var _user$project$Bootstrap_Dropdown$menuStyle = F2(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$menuStyle = F2(
 	function (_p1, config) {
 		var _p2 = _p1;
 		var _p5 = _p2._0.toggleSize;
@@ -13893,7 +14425,7 @@ var _user$project$Bootstrap_Dropdown$menuStyle = F2(
 					});
 			}());
 	});
-var _user$project$Bootstrap_Dropdown$dropDir = function (maybeDir) {
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$dropDir = function (maybeDir) {
 	var toAttrs = function (dir) {
 		return {
 			ctor: '::',
@@ -13917,37 +14449,37 @@ var _user$project$Bootstrap_Dropdown$dropDir = function (maybeDir) {
 		{ctor: '[]'},
 		A2(_elm_lang$core$Maybe$map, toAttrs, maybeDir));
 };
-var _user$project$Bootstrap_Dropdown$StateRec = F3(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$StateRec = F3(
 	function (a, b, c) {
 		return {status: a, toggleSize: b, menuSize: c};
 	});
-var _user$project$Bootstrap_Dropdown$SplitToggleConfig = F3(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$SplitToggleConfig = F3(
 	function (a, b, c) {
 		return {options: a, togglerOptions: b, children: c};
 	});
-var _user$project$Bootstrap_Dropdown$Options = F5(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$Options = F5(
 	function (a, b, c, d, e) {
 		return {isDropUp: a, hasMenuRight: b, dropDirection: c, attributes: d, menuAttrs: e};
 	});
-var _user$project$Bootstrap_Dropdown$State = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$State = function (a) {
 	return {ctor: 'State', _0: a};
 };
-var _user$project$Bootstrap_Dropdown$updateStatus = F2(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$updateStatus = F2(
 	function (status, _p7) {
 		var _p8 = _p7;
-		return _user$project$Bootstrap_Dropdown$State(
+		return _rundis$elm_bootstrap$Bootstrap_Dropdown$State(
 			_elm_lang$core$Native_Utils.update(
 				_p8._0,
 				{status: status}));
 	});
-var _user$project$Bootstrap_Dropdown$Closed = {ctor: 'Closed'};
-var _user$project$Bootstrap_Dropdown$initialState = _user$project$Bootstrap_Dropdown$State(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$Closed = {ctor: 'Closed'};
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$initialState = _rundis$elm_bootstrap$Bootstrap_Dropdown$State(
 	{
-		status: _user$project$Bootstrap_Dropdown$Closed,
+		status: _rundis$elm_bootstrap$Bootstrap_Dropdown$Closed,
 		toggleSize: A4(_debois$elm_dom$DOM$Rectangle, 0, 0, 0, 0),
 		menuSize: A4(_debois$elm_dom$DOM$Rectangle, 0, 0, 0, 0)
 	});
-var _user$project$Bootstrap_Dropdown$dropdownAttributes = F2(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$dropdownAttributes = F2(
 	function (status, config) {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
@@ -13962,7 +14494,7 @@ var _user$project$Bootstrap_Dropdown$dropdownAttributes = F2(
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'show',
-								_1: !_elm_lang$core$Native_Utils.eq(status, _user$project$Bootstrap_Dropdown$Closed)
+								_1: !_elm_lang$core$Native_Utils.eq(status, _rundis$elm_bootstrap$Bootstrap_Dropdown$Closed)
 							},
 							_1: {
 								ctor: '::',
@@ -13975,13 +14507,13 @@ var _user$project$Bootstrap_Dropdown$dropdownAttributes = F2(
 			},
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				_user$project$Bootstrap_Dropdown$dropDir(config.dropDirection),
+				_rundis$elm_bootstrap$Bootstrap_Dropdown$dropDir(config.dropDirection),
 				config.attributes));
 	});
-var _user$project$Bootstrap_Dropdown$dropdownMenu = F3(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$dropdownMenu = F3(
 	function (_p9, config, items) {
 		var _p10 = _p9;
-		var wrapperStyle = _elm_lang$core$Native_Utils.eq(_p10._0.status, _user$project$Bootstrap_Dropdown$Closed) ? {
+		var wrapperStyle = _elm_lang$core$Native_Utils.eq(_p10._0.status, _rundis$elm_bootstrap$Bootstrap_Dropdown$Closed) ? {
 			ctor: '::',
 			_0: {ctor: '_Tuple2', _0: 'height', _1: '0'},
 			_1: {
@@ -14029,7 +14561,7 @@ var _user$project$Bootstrap_Dropdown$dropdownMenu = F3(
 								}),
 							_1: {
 								ctor: '::',
-								_0: A2(_user$project$Bootstrap_Dropdown$menuStyle, _p10, config),
+								_0: A2(_rundis$elm_bootstrap$Bootstrap_Dropdown$menuStyle, _p10, config),
 								_1: {ctor: '[]'}
 							}
 						},
@@ -14044,49 +14576,49 @@ var _user$project$Bootstrap_Dropdown$dropdownMenu = F3(
 				_1: {ctor: '[]'}
 			});
 	});
-var _user$project$Bootstrap_Dropdown$dropdown = F2(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$dropdown = F2(
 	function (_p14, _p13) {
 		var _p15 = _p14;
 		var _p18 = _p15;
 		var _p16 = _p13;
-		var config = _user$project$Bootstrap_Dropdown$toConfig(_p16.options);
+		var config = _rundis$elm_bootstrap$Bootstrap_Dropdown$toConfig(_p16.options);
 		var _p17 = _p16.toggleButton;
 		var buttonFn = _p17._0;
 		return A2(
 			_elm_lang$html$Html$div,
-			A2(_user$project$Bootstrap_Dropdown$dropdownAttributes, _p15._0.status, config),
+			A2(_rundis$elm_bootstrap$Bootstrap_Dropdown$dropdownAttributes, _p15._0.status, config),
 			{
 				ctor: '::',
 				_0: A2(buttonFn, _p16.toggleMsg, _p18),
 				_1: {
 					ctor: '::',
-					_0: A3(_user$project$Bootstrap_Dropdown$dropdownMenu, _p18, config, _p16.items),
+					_0: A3(_rundis$elm_bootstrap$Bootstrap_Dropdown$dropdownMenu, _p18, config, _p16.items),
 					_1: {ctor: '[]'}
 				}
 			});
 	});
-var _user$project$Bootstrap_Dropdown$splitDropdown = F2(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$splitDropdown = F2(
 	function (_p20, _p19) {
 		var _p21 = _p20;
 		var _p24 = _p21;
 		var _p22 = _p19;
-		var config = _user$project$Bootstrap_Dropdown$toConfig(_p22.options);
+		var config = _rundis$elm_bootstrap$Bootstrap_Dropdown$toConfig(_p22.options);
 		var _p23 = _p22.toggleButton;
 		var buttonsFn = _p23._0;
 		return A2(
 			_elm_lang$html$Html$div,
-			A2(_user$project$Bootstrap_Dropdown$dropdownAttributes, _p21._0.status, config),
+			A2(_rundis$elm_bootstrap$Bootstrap_Dropdown$dropdownAttributes, _p21._0.status, config),
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				A2(buttonsFn, _p22.toggleMsg, _p24),
 				{
 					ctor: '::',
-					_0: A3(_user$project$Bootstrap_Dropdown$dropdownMenu, _p24, config, _p22.items),
+					_0: A3(_rundis$elm_bootstrap$Bootstrap_Dropdown$dropdownMenu, _p24, config, _p22.items),
 					_1: {ctor: '[]'}
 				}));
 	});
-var _user$project$Bootstrap_Dropdown$ListenClicks = {ctor: 'ListenClicks'};
-var _user$project$Bootstrap_Dropdown$subscriptions = F2(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$ListenClicks = {ctor: 'ListenClicks'};
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$subscriptions = F2(
 	function (_p25, toMsg) {
 		var _p26 = _p25;
 		var _p30 = _p26;
@@ -14096,31 +14628,31 @@ var _user$project$Bootstrap_Dropdown$subscriptions = F2(
 				return _elm_lang$animation_frame$AnimationFrame$times(
 					function (_p28) {
 						return toMsg(
-							A2(_user$project$Bootstrap_Dropdown$updateStatus, _user$project$Bootstrap_Dropdown$ListenClicks, _p30));
+							A2(_rundis$elm_bootstrap$Bootstrap_Dropdown$updateStatus, _rundis$elm_bootstrap$Bootstrap_Dropdown$ListenClicks, _p30));
 					});
 			case 'ListenClicks':
 				return _elm_lang$mouse$Mouse$clicks(
 					function (_p29) {
 						return toMsg(
-							A2(_user$project$Bootstrap_Dropdown$updateStatus, _user$project$Bootstrap_Dropdown$Closed, _p30));
+							A2(_rundis$elm_bootstrap$Bootstrap_Dropdown$updateStatus, _rundis$elm_bootstrap$Bootstrap_Dropdown$Closed, _p30));
 					});
 			default:
 				return _elm_lang$core$Platform_Sub$none;
 		}
 	});
-var _user$project$Bootstrap_Dropdown$Open = {ctor: 'Open'};
-var _user$project$Bootstrap_Dropdown$nextStatus = function (status) {
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$Open = {ctor: 'Open'};
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$nextStatus = function (status) {
 	var _p31 = status;
 	switch (_p31.ctor) {
 		case 'Open':
-			return _user$project$Bootstrap_Dropdown$Closed;
+			return _rundis$elm_bootstrap$Bootstrap_Dropdown$Closed;
 		case 'ListenClicks':
-			return _user$project$Bootstrap_Dropdown$Closed;
+			return _rundis$elm_bootstrap$Bootstrap_Dropdown$Closed;
 		default:
-			return _user$project$Bootstrap_Dropdown$Open;
+			return _rundis$elm_bootstrap$Bootstrap_Dropdown$Open;
 	}
 };
-var _user$project$Bootstrap_Dropdown$clickHandler = F2(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$clickHandler = F2(
 	function (toMsg, _p32) {
 		var _p33 = _p32;
 		return A2(
@@ -14129,22 +14661,22 @@ var _user$project$Bootstrap_Dropdown$clickHandler = F2(
 				var _p35 = _p34;
 				return _elm_lang$core$Json_Decode$succeed(
 					toMsg(
-						_user$project$Bootstrap_Dropdown$State(
+						_rundis$elm_bootstrap$Bootstrap_Dropdown$State(
 							{
-								status: _user$project$Bootstrap_Dropdown$nextStatus(_p33._0.status),
+								status: _rundis$elm_bootstrap$Bootstrap_Dropdown$nextStatus(_p33._0.status),
 								toggleSize: _p35._0,
 								menuSize: _p35._1
 							})));
 			},
-			_user$project$Bootstrap_Dropdown$sizeDecoder);
+			_rundis$elm_bootstrap$Bootstrap_Dropdown$sizeDecoder);
 	});
-var _user$project$Bootstrap_Dropdown$togglePrivate = F4(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$togglePrivate = F4(
 	function (buttonOptions, children, toggleMsg, state) {
 		return A2(
 			_elm_lang$html$Html$button,
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				_user$project$Bootstrap_Internal_Button$buttonAttributes(buttonOptions),
+				_rundis$elm_bootstrap$Bootstrap_Internal_Button$buttonAttributes(buttonOptions),
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$class('dropdown-toggle'),
@@ -14156,21 +14688,21 @@ var _user$project$Bootstrap_Dropdown$togglePrivate = F4(
 							_0: A2(
 								_elm_lang$html$Html_Events$on,
 								'click',
-								A2(_user$project$Bootstrap_Dropdown$clickHandler, toggleMsg, state)),
+								A2(_rundis$elm_bootstrap$Bootstrap_Dropdown$clickHandler, toggleMsg, state)),
 							_1: {ctor: '[]'}
 						}
 					}
 				}),
 			children);
 	});
-var _user$project$Bootstrap_Dropdown$splitToggleButtonPrivate = F3(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$splitToggleButtonPrivate = F3(
 	function (_p36, toggleMsg, state) {
 		var _p37 = _p36;
 		return {
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$button,
-				_user$project$Bootstrap_Internal_Button$buttonAttributes(_p37.options),
+				_rundis$elm_bootstrap$Bootstrap_Internal_Button$buttonAttributes(_p37.options),
 				_p37.children),
 			_1: {
 				ctor: '::',
@@ -14178,7 +14710,7 @@ var _user$project$Bootstrap_Dropdown$splitToggleButtonPrivate = F3(
 					_elm_lang$html$Html$button,
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						_user$project$Bootstrap_Internal_Button$buttonAttributes(_p37.togglerOptions),
+						_rundis$elm_bootstrap$Bootstrap_Internal_Button$buttonAttributes(_p37.togglerOptions),
 						{
 							ctor: '::',
 							_0: _elm_lang$html$Html_Attributes$class('dropdown-toggle'),
@@ -14193,7 +14725,7 @@ var _user$project$Bootstrap_Dropdown$splitToggleButtonPrivate = F3(
 										_0: A2(
 											_elm_lang$html$Html_Events$on,
 											'click',
-											A2(_user$project$Bootstrap_Dropdown$clickHandler, toggleMsg, state)),
+											A2(_rundis$elm_bootstrap$Bootstrap_Dropdown$clickHandler, toggleMsg, state)),
 										_1: {ctor: '[]'}
 									}
 								}
@@ -14204,44 +14736,44 @@ var _user$project$Bootstrap_Dropdown$splitToggleButtonPrivate = F3(
 			}
 		};
 	});
-var _user$project$Bootstrap_Dropdown$toggleOpen = F2(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$toggleOpen = F2(
 	function (toMsg, _p38) {
 		var _p39 = _p38;
 		return toMsg(
 			A2(
-				_user$project$Bootstrap_Dropdown$updateStatus,
-				_user$project$Bootstrap_Dropdown$nextStatus(_p39._0.status),
+				_rundis$elm_bootstrap$Bootstrap_Dropdown$updateStatus,
+				_rundis$elm_bootstrap$Bootstrap_Dropdown$nextStatus(_p39._0.status),
 				_p39));
 	});
-var _user$project$Bootstrap_Dropdown$Attrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$Attrs = function (a) {
 	return {ctor: 'Attrs', _0: a};
 };
-var _user$project$Bootstrap_Dropdown$attrs = function (attrs) {
-	return _user$project$Bootstrap_Dropdown$Attrs(attrs);
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Dropdown$Attrs(attrs);
 };
-var _user$project$Bootstrap_Dropdown$MenuAttrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$MenuAttrs = function (a) {
 	return {ctor: 'MenuAttrs', _0: a};
 };
-var _user$project$Bootstrap_Dropdown$menuAttrs = function (attrs) {
-	return _user$project$Bootstrap_Dropdown$MenuAttrs(attrs);
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$menuAttrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Dropdown$MenuAttrs(attrs);
 };
-var _user$project$Bootstrap_Dropdown$DropToDir = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$DropToDir = function (a) {
 	return {ctor: 'DropToDir', _0: a};
 };
-var _user$project$Bootstrap_Dropdown$AlignMenuRight = {ctor: 'AlignMenuRight'};
-var _user$project$Bootstrap_Dropdown$alignMenuRight = _user$project$Bootstrap_Dropdown$AlignMenuRight;
-var _user$project$Bootstrap_Dropdown$Dropup = {ctor: 'Dropup'};
-var _user$project$Bootstrap_Dropdown$dropUp = _user$project$Bootstrap_Dropdown$Dropup;
-var _user$project$Bootstrap_Dropdown$Dropright = {ctor: 'Dropright'};
-var _user$project$Bootstrap_Dropdown$dropRight = _user$project$Bootstrap_Dropdown$DropToDir(_user$project$Bootstrap_Dropdown$Dropright);
-var _user$project$Bootstrap_Dropdown$Dropleft = {ctor: 'Dropleft'};
-var _user$project$Bootstrap_Dropdown$dropLeft = _user$project$Bootstrap_Dropdown$DropToDir(_user$project$Bootstrap_Dropdown$Dropleft);
-var _user$project$Bootstrap_Dropdown$DropdownItem = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$AlignMenuRight = {ctor: 'AlignMenuRight'};
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$alignMenuRight = _rundis$elm_bootstrap$Bootstrap_Dropdown$AlignMenuRight;
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$Dropup = {ctor: 'Dropup'};
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$dropUp = _rundis$elm_bootstrap$Bootstrap_Dropdown$Dropup;
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$Dropright = {ctor: 'Dropright'};
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$dropRight = _rundis$elm_bootstrap$Bootstrap_Dropdown$DropToDir(_rundis$elm_bootstrap$Bootstrap_Dropdown$Dropright);
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$Dropleft = {ctor: 'Dropleft'};
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$dropLeft = _rundis$elm_bootstrap$Bootstrap_Dropdown$DropToDir(_rundis$elm_bootstrap$Bootstrap_Dropdown$Dropleft);
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$DropdownItem = function (a) {
 	return {ctor: 'DropdownItem', _0: a};
 };
-var _user$project$Bootstrap_Dropdown$anchorItem = F2(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$anchorItem = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Dropdown$DropdownItem(
+		return _rundis$elm_bootstrap$Bootstrap_Dropdown$DropdownItem(
 			A2(
 				_elm_lang$html$Html$a,
 				A2(
@@ -14254,9 +14786,9 @@ var _user$project$Bootstrap_Dropdown$anchorItem = F2(
 					attributes),
 				children));
 	});
-var _user$project$Bootstrap_Dropdown$buttonItem = F2(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$buttonItem = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Dropdown$DropdownItem(
+		return _rundis$elm_bootstrap$Bootstrap_Dropdown$DropdownItem(
 			A2(
 				_elm_lang$html$Html$button,
 				A2(
@@ -14273,7 +14805,7 @@ var _user$project$Bootstrap_Dropdown$buttonItem = F2(
 					attributes),
 				children));
 	});
-var _user$project$Bootstrap_Dropdown$divider = _user$project$Bootstrap_Dropdown$DropdownItem(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$divider = _rundis$elm_bootstrap$Bootstrap_Dropdown$DropdownItem(
 	A2(
 		_elm_lang$html$Html$div,
 		{
@@ -14282,8 +14814,8 @@ var _user$project$Bootstrap_Dropdown$divider = _user$project$Bootstrap_Dropdown$
 			_1: {ctor: '[]'}
 		},
 		{ctor: '[]'}));
-var _user$project$Bootstrap_Dropdown$header = function (children) {
-	return _user$project$Bootstrap_Dropdown$DropdownItem(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$header = function (children) {
+	return _rundis$elm_bootstrap$Bootstrap_Dropdown$DropdownItem(
 		A2(
 			_elm_lang$html$Html$h6,
 			{
@@ -14293,363 +14825,363 @@ var _user$project$Bootstrap_Dropdown$header = function (children) {
 			},
 			children));
 };
-var _user$project$Bootstrap_Dropdown$DropdownToggle = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$DropdownToggle = function (a) {
 	return {ctor: 'DropdownToggle', _0: a};
 };
-var _user$project$Bootstrap_Dropdown$toggle = F2(
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$toggle = F2(
 	function (buttonOptions, children) {
-		return _user$project$Bootstrap_Dropdown$DropdownToggle(
-			A2(_user$project$Bootstrap_Dropdown$togglePrivate, buttonOptions, children));
+		return _rundis$elm_bootstrap$Bootstrap_Dropdown$DropdownToggle(
+			A2(_rundis$elm_bootstrap$Bootstrap_Dropdown$togglePrivate, buttonOptions, children));
 	});
-var _user$project$Bootstrap_Dropdown$SplitDropdownToggle = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$SplitDropdownToggle = function (a) {
 	return {ctor: 'SplitDropdownToggle', _0: a};
 };
-var _user$project$Bootstrap_Dropdown$splitToggle = function (config) {
-	return _user$project$Bootstrap_Dropdown$SplitDropdownToggle(
-		_user$project$Bootstrap_Dropdown$splitToggleButtonPrivate(config));
+var _rundis$elm_bootstrap$Bootstrap_Dropdown$splitToggle = function (config) {
+	return _rundis$elm_bootstrap$Bootstrap_Dropdown$SplitDropdownToggle(
+		_rundis$elm_bootstrap$Bootstrap_Dropdown$splitToggleButtonPrivate(config));
 };
 
-var _user$project$Bootstrap_Grid_Row$betweenXl = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Between);
-var _user$project$Bootstrap_Grid_Row$betweenLg = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Between);
-var _user$project$Bootstrap_Grid_Row$betweenMd = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Between);
-var _user$project$Bootstrap_Grid_Row$betweenSm = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Between);
-var _user$project$Bootstrap_Grid_Row$betweenXs = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Between);
-var _user$project$Bootstrap_Grid_Row$aroundXl = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Around);
-var _user$project$Bootstrap_Grid_Row$aroundLg = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Around);
-var _user$project$Bootstrap_Grid_Row$aroundMd = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Around);
-var _user$project$Bootstrap_Grid_Row$aroundSm = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Around);
-var _user$project$Bootstrap_Grid_Row$aroundXs = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Around);
-var _user$project$Bootstrap_Grid_Row$rightXl = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Right);
-var _user$project$Bootstrap_Grid_Row$rightLg = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Right);
-var _user$project$Bootstrap_Grid_Row$rightMd = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Right);
-var _user$project$Bootstrap_Grid_Row$rightSm = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Right);
-var _user$project$Bootstrap_Grid_Row$rightXs = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Right);
-var _user$project$Bootstrap_Grid_Row$centerXl = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Center);
-var _user$project$Bootstrap_Grid_Row$centerLg = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Center);
-var _user$project$Bootstrap_Grid_Row$centerMd = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Center);
-var _user$project$Bootstrap_Grid_Row$centerSm = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Center);
-var _user$project$Bootstrap_Grid_Row$centerXs = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Center);
-var _user$project$Bootstrap_Grid_Row$leftXl = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Left);
-var _user$project$Bootstrap_Grid_Row$leftLg = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Left);
-var _user$project$Bootstrap_Grid_Row$leftMd = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Left);
-var _user$project$Bootstrap_Grid_Row$leftSm = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Left);
-var _user$project$Bootstrap_Grid_Row$leftXs = A2(_user$project$Bootstrap_Grid_Internal$rowHAlign, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Left);
-var _user$project$Bootstrap_Grid_Row$bottomXl = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Bottom);
-var _user$project$Bootstrap_Grid_Row$bottomLg = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Bottom);
-var _user$project$Bootstrap_Grid_Row$bottomMd = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Bottom);
-var _user$project$Bootstrap_Grid_Row$bottomSm = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Bottom);
-var _user$project$Bootstrap_Grid_Row$bottomXs = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Bottom);
-var _user$project$Bootstrap_Grid_Row$middleXl = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Middle);
-var _user$project$Bootstrap_Grid_Row$middleLg = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Middle);
-var _user$project$Bootstrap_Grid_Row$middleMd = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Middle);
-var _user$project$Bootstrap_Grid_Row$middleSm = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Middle);
-var _user$project$Bootstrap_Grid_Row$middleXs = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Middle);
-var _user$project$Bootstrap_Grid_Row$topXl = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Top);
-var _user$project$Bootstrap_Grid_Row$topLg = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Top);
-var _user$project$Bootstrap_Grid_Row$topMd = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Top);
-var _user$project$Bootstrap_Grid_Row$topSm = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Top);
-var _user$project$Bootstrap_Grid_Row$topXs = A2(_user$project$Bootstrap_Grid_Internal$rowVAlign, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Top);
-var _user$project$Bootstrap_Grid_Row$attrs = function (attrs) {
-	return _user$project$Bootstrap_Grid_Internal$RowAttrs(attrs);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$betweenXl = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Between);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$betweenLg = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Between);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$betweenMd = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Between);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$betweenSm = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Between);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$betweenXs = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Between);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$aroundXl = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Around);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$aroundLg = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Around);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$aroundMd = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Around);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$aroundSm = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Around);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$aroundXs = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Around);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$rightXl = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Right);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$rightLg = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Right);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$rightMd = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Right);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$rightSm = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Right);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$rightXs = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Right);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$centerXl = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Center);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$centerLg = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Center);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$centerMd = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Center);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$centerSm = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Center);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$centerXs = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Center);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$leftXl = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Left);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$leftLg = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Left);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$leftMd = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Left);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$leftSm = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Left);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$leftXs = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowHAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Left);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$bottomXl = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Bottom);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$bottomLg = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Bottom);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$bottomMd = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Bottom);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$bottomSm = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Bottom);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$bottomXs = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Bottom);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$middleXl = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Middle);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$middleLg = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Middle);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$middleMd = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Middle);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$middleSm = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Middle);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$middleXs = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Middle);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$topXl = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Top);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$topLg = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Top);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$topMd = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Top);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$topSm = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Top);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$topXs = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Top);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Row$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Grid_Internal$RowAttrs(attrs);
 };
 
-var _user$project$Bootstrap_Grid_Col$pushXl12 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move12);
-var _user$project$Bootstrap_Grid_Col$pushXl11 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move11);
-var _user$project$Bootstrap_Grid_Col$pushXl10 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move10);
-var _user$project$Bootstrap_Grid_Col$pushXl9 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move9);
-var _user$project$Bootstrap_Grid_Col$pushXl8 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move8);
-var _user$project$Bootstrap_Grid_Col$pushXl7 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move7);
-var _user$project$Bootstrap_Grid_Col$pushXl6 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move6);
-var _user$project$Bootstrap_Grid_Col$pushXl5 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move5);
-var _user$project$Bootstrap_Grid_Col$pushXl4 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move4);
-var _user$project$Bootstrap_Grid_Col$pushXl3 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move3);
-var _user$project$Bootstrap_Grid_Col$pushXl2 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move2);
-var _user$project$Bootstrap_Grid_Col$pushXl1 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move1);
-var _user$project$Bootstrap_Grid_Col$pushXl0 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move0);
-var _user$project$Bootstrap_Grid_Col$pushLg12 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move12);
-var _user$project$Bootstrap_Grid_Col$pushLg11 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move11);
-var _user$project$Bootstrap_Grid_Col$pushLg10 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move10);
-var _user$project$Bootstrap_Grid_Col$pushLg9 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move9);
-var _user$project$Bootstrap_Grid_Col$pushLg8 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move8);
-var _user$project$Bootstrap_Grid_Col$pushLg7 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move7);
-var _user$project$Bootstrap_Grid_Col$pushLg6 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move6);
-var _user$project$Bootstrap_Grid_Col$pushLg5 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move5);
-var _user$project$Bootstrap_Grid_Col$pushLg4 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move4);
-var _user$project$Bootstrap_Grid_Col$pushLg3 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move3);
-var _user$project$Bootstrap_Grid_Col$pushLg2 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move2);
-var _user$project$Bootstrap_Grid_Col$pushLg1 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move1);
-var _user$project$Bootstrap_Grid_Col$pushLg0 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move0);
-var _user$project$Bootstrap_Grid_Col$pushMd12 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move12);
-var _user$project$Bootstrap_Grid_Col$pushMd11 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move11);
-var _user$project$Bootstrap_Grid_Col$pushMd10 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move10);
-var _user$project$Bootstrap_Grid_Col$pushMd9 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move9);
-var _user$project$Bootstrap_Grid_Col$pushMd8 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move8);
-var _user$project$Bootstrap_Grid_Col$pushMd7 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move7);
-var _user$project$Bootstrap_Grid_Col$pushMd6 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move6);
-var _user$project$Bootstrap_Grid_Col$pushMd5 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move5);
-var _user$project$Bootstrap_Grid_Col$pushMd4 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move4);
-var _user$project$Bootstrap_Grid_Col$pushMd3 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move3);
-var _user$project$Bootstrap_Grid_Col$pushMd2 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move2);
-var _user$project$Bootstrap_Grid_Col$pushMd1 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move1);
-var _user$project$Bootstrap_Grid_Col$pushMd0 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move0);
-var _user$project$Bootstrap_Grid_Col$pushSm12 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move12);
-var _user$project$Bootstrap_Grid_Col$pushSm11 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move11);
-var _user$project$Bootstrap_Grid_Col$pushSm10 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move10);
-var _user$project$Bootstrap_Grid_Col$pushSm9 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move9);
-var _user$project$Bootstrap_Grid_Col$pushSm8 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move8);
-var _user$project$Bootstrap_Grid_Col$pushSm7 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move7);
-var _user$project$Bootstrap_Grid_Col$pushSm6 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move6);
-var _user$project$Bootstrap_Grid_Col$pushSm5 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move5);
-var _user$project$Bootstrap_Grid_Col$pushSm4 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move4);
-var _user$project$Bootstrap_Grid_Col$pushSm3 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move3);
-var _user$project$Bootstrap_Grid_Col$pushSm2 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move2);
-var _user$project$Bootstrap_Grid_Col$pushSm1 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move1);
-var _user$project$Bootstrap_Grid_Col$pushSm0 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move0);
-var _user$project$Bootstrap_Grid_Col$pushXs12 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move12);
-var _user$project$Bootstrap_Grid_Col$pushXs11 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move11);
-var _user$project$Bootstrap_Grid_Col$pushXs10 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move10);
-var _user$project$Bootstrap_Grid_Col$pushXs9 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move9);
-var _user$project$Bootstrap_Grid_Col$pushXs8 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move8);
-var _user$project$Bootstrap_Grid_Col$pushXs7 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move7);
-var _user$project$Bootstrap_Grid_Col$pushXs6 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move6);
-var _user$project$Bootstrap_Grid_Col$pushXs5 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move5);
-var _user$project$Bootstrap_Grid_Col$pushXs4 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move4);
-var _user$project$Bootstrap_Grid_Col$pushXs3 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move3);
-var _user$project$Bootstrap_Grid_Col$pushXs2 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move2);
-var _user$project$Bootstrap_Grid_Col$pushXs1 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move1);
-var _user$project$Bootstrap_Grid_Col$pushXs0 = A2(_user$project$Bootstrap_Grid_Internal$push, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move0);
-var _user$project$Bootstrap_Grid_Col$pullXl12 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move12);
-var _user$project$Bootstrap_Grid_Col$pullXl11 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move11);
-var _user$project$Bootstrap_Grid_Col$pullXl10 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move10);
-var _user$project$Bootstrap_Grid_Col$pullXl9 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move9);
-var _user$project$Bootstrap_Grid_Col$pullXl8 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move8);
-var _user$project$Bootstrap_Grid_Col$pullXl7 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move7);
-var _user$project$Bootstrap_Grid_Col$pullXl6 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move6);
-var _user$project$Bootstrap_Grid_Col$pullXl5 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move5);
-var _user$project$Bootstrap_Grid_Col$pullXl4 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move4);
-var _user$project$Bootstrap_Grid_Col$pullXl3 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move3);
-var _user$project$Bootstrap_Grid_Col$pullXl2 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move2);
-var _user$project$Bootstrap_Grid_Col$pullXl1 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move1);
-var _user$project$Bootstrap_Grid_Col$pullXl0 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Move0);
-var _user$project$Bootstrap_Grid_Col$pullLg12 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move12);
-var _user$project$Bootstrap_Grid_Col$pullLg11 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move11);
-var _user$project$Bootstrap_Grid_Col$pullLg10 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move10);
-var _user$project$Bootstrap_Grid_Col$pullLg9 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move9);
-var _user$project$Bootstrap_Grid_Col$pullLg8 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move8);
-var _user$project$Bootstrap_Grid_Col$pullLg7 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move7);
-var _user$project$Bootstrap_Grid_Col$pullLg6 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move6);
-var _user$project$Bootstrap_Grid_Col$pullLg5 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move5);
-var _user$project$Bootstrap_Grid_Col$pullLg4 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move4);
-var _user$project$Bootstrap_Grid_Col$pullLg3 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move3);
-var _user$project$Bootstrap_Grid_Col$pullLg2 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move2);
-var _user$project$Bootstrap_Grid_Col$pullLg1 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move1);
-var _user$project$Bootstrap_Grid_Col$pullLg0 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Move0);
-var _user$project$Bootstrap_Grid_Col$pullMd12 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move12);
-var _user$project$Bootstrap_Grid_Col$pullMd11 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move11);
-var _user$project$Bootstrap_Grid_Col$pullMd10 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move10);
-var _user$project$Bootstrap_Grid_Col$pullMd9 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move9);
-var _user$project$Bootstrap_Grid_Col$pullMd8 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move8);
-var _user$project$Bootstrap_Grid_Col$pullMd7 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move7);
-var _user$project$Bootstrap_Grid_Col$pullMd6 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move6);
-var _user$project$Bootstrap_Grid_Col$pullMd5 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move5);
-var _user$project$Bootstrap_Grid_Col$pullMd4 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move4);
-var _user$project$Bootstrap_Grid_Col$pullMd3 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move3);
-var _user$project$Bootstrap_Grid_Col$pullMd2 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move2);
-var _user$project$Bootstrap_Grid_Col$pullMd1 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move1);
-var _user$project$Bootstrap_Grid_Col$pullMd0 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Move0);
-var _user$project$Bootstrap_Grid_Col$pullSm12 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move12);
-var _user$project$Bootstrap_Grid_Col$pullSm11 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move11);
-var _user$project$Bootstrap_Grid_Col$pullSm10 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move10);
-var _user$project$Bootstrap_Grid_Col$pullSm9 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move9);
-var _user$project$Bootstrap_Grid_Col$pullSm8 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move8);
-var _user$project$Bootstrap_Grid_Col$pullSm7 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move7);
-var _user$project$Bootstrap_Grid_Col$pullSm6 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move6);
-var _user$project$Bootstrap_Grid_Col$pullSm5 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move5);
-var _user$project$Bootstrap_Grid_Col$pullSm4 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move4);
-var _user$project$Bootstrap_Grid_Col$pullSm3 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move3);
-var _user$project$Bootstrap_Grid_Col$pullSm2 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move2);
-var _user$project$Bootstrap_Grid_Col$pullSm1 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move1);
-var _user$project$Bootstrap_Grid_Col$pullSm0 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Move0);
-var _user$project$Bootstrap_Grid_Col$pullXs12 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move12);
-var _user$project$Bootstrap_Grid_Col$pullXs11 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move11);
-var _user$project$Bootstrap_Grid_Col$pullXs10 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move10);
-var _user$project$Bootstrap_Grid_Col$pullXs9 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move9);
-var _user$project$Bootstrap_Grid_Col$pullXs8 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move8);
-var _user$project$Bootstrap_Grid_Col$pullXs7 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move7);
-var _user$project$Bootstrap_Grid_Col$pullXs6 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move6);
-var _user$project$Bootstrap_Grid_Col$pullXs5 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move5);
-var _user$project$Bootstrap_Grid_Col$pullXs4 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move4);
-var _user$project$Bootstrap_Grid_Col$pullXs3 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move3);
-var _user$project$Bootstrap_Grid_Col$pullXs2 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move2);
-var _user$project$Bootstrap_Grid_Col$pullXs1 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move1);
-var _user$project$Bootstrap_Grid_Col$pullXs0 = A2(_user$project$Bootstrap_Grid_Internal$pull, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Move0);
-var _user$project$Bootstrap_Grid_Col$offsetXl11 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Offset11);
-var _user$project$Bootstrap_Grid_Col$offsetXl10 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Offset10);
-var _user$project$Bootstrap_Grid_Col$offsetXl9 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Offset9);
-var _user$project$Bootstrap_Grid_Col$offsetXl8 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Offset8);
-var _user$project$Bootstrap_Grid_Col$offsetXl7 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Offset7);
-var _user$project$Bootstrap_Grid_Col$offsetXl6 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Offset6);
-var _user$project$Bootstrap_Grid_Col$offsetXl5 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Offset5);
-var _user$project$Bootstrap_Grid_Col$offsetXl4 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Offset4);
-var _user$project$Bootstrap_Grid_Col$offsetXl3 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Offset3);
-var _user$project$Bootstrap_Grid_Col$offsetXl2 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Offset2);
-var _user$project$Bootstrap_Grid_Col$offsetXl1 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Offset1);
-var _user$project$Bootstrap_Grid_Col$offsetXl0 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset0);
-var _user$project$Bootstrap_Grid_Col$offsetLg11 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset11);
-var _user$project$Bootstrap_Grid_Col$offsetLg10 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset10);
-var _user$project$Bootstrap_Grid_Col$offsetLg9 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset9);
-var _user$project$Bootstrap_Grid_Col$offsetLg8 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset8);
-var _user$project$Bootstrap_Grid_Col$offsetLg7 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset7);
-var _user$project$Bootstrap_Grid_Col$offsetLg6 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset6);
-var _user$project$Bootstrap_Grid_Col$offsetLg5 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset5);
-var _user$project$Bootstrap_Grid_Col$offsetLg4 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset4);
-var _user$project$Bootstrap_Grid_Col$offsetLg3 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset3);
-var _user$project$Bootstrap_Grid_Col$offsetLg2 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset2);
-var _user$project$Bootstrap_Grid_Col$offsetLg1 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset1);
-var _user$project$Bootstrap_Grid_Col$offsetLg0 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Offset0);
-var _user$project$Bootstrap_Grid_Col$offsetMd11 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Offset11);
-var _user$project$Bootstrap_Grid_Col$offsetMd10 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Offset10);
-var _user$project$Bootstrap_Grid_Col$offsetMd9 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Offset9);
-var _user$project$Bootstrap_Grid_Col$offsetMd8 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Offset8);
-var _user$project$Bootstrap_Grid_Col$offsetMd7 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Offset7);
-var _user$project$Bootstrap_Grid_Col$offsetMd6 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Offset6);
-var _user$project$Bootstrap_Grid_Col$offsetMd5 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Offset5);
-var _user$project$Bootstrap_Grid_Col$offsetMd4 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Offset4);
-var _user$project$Bootstrap_Grid_Col$offsetMd3 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Offset3);
-var _user$project$Bootstrap_Grid_Col$offsetMd2 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Offset2);
-var _user$project$Bootstrap_Grid_Col$offsetMd1 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Offset1);
-var _user$project$Bootstrap_Grid_Col$offsetMd0 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Offset0);
-var _user$project$Bootstrap_Grid_Col$offsetSm11 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Offset11);
-var _user$project$Bootstrap_Grid_Col$offsetSm10 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Offset10);
-var _user$project$Bootstrap_Grid_Col$offsetSm9 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Offset9);
-var _user$project$Bootstrap_Grid_Col$offsetSm8 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Offset8);
-var _user$project$Bootstrap_Grid_Col$offsetSm7 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Offset7);
-var _user$project$Bootstrap_Grid_Col$offsetSm6 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Offset6);
-var _user$project$Bootstrap_Grid_Col$offsetSm5 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Offset5);
-var _user$project$Bootstrap_Grid_Col$offsetSm4 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Offset4);
-var _user$project$Bootstrap_Grid_Col$offsetSm3 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Offset3);
-var _user$project$Bootstrap_Grid_Col$offsetSm2 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Offset2);
-var _user$project$Bootstrap_Grid_Col$offsetSm1 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Offset1);
-var _user$project$Bootstrap_Grid_Col$offsetSm0 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Offset0);
-var _user$project$Bootstrap_Grid_Col$offsetXs11 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Offset11);
-var _user$project$Bootstrap_Grid_Col$offsetXs10 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Offset10);
-var _user$project$Bootstrap_Grid_Col$offsetXs9 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Offset9);
-var _user$project$Bootstrap_Grid_Col$offsetXs8 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Offset8);
-var _user$project$Bootstrap_Grid_Col$offsetXs7 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Offset7);
-var _user$project$Bootstrap_Grid_Col$offsetXs6 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Offset6);
-var _user$project$Bootstrap_Grid_Col$offsetXs5 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Offset5);
-var _user$project$Bootstrap_Grid_Col$offsetXs4 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Offset4);
-var _user$project$Bootstrap_Grid_Col$offsetXs3 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Offset3);
-var _user$project$Bootstrap_Grid_Col$offsetXs2 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Offset2);
-var _user$project$Bootstrap_Grid_Col$offsetXs1 = A2(_user$project$Bootstrap_Grid_Internal$offset, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Offset1);
-var _user$project$Bootstrap_Grid_Col$xlAuto = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$ColAuto);
-var _user$project$Bootstrap_Grid_Col$xl12 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col12);
-var _user$project$Bootstrap_Grid_Col$xl11 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col11);
-var _user$project$Bootstrap_Grid_Col$xl10 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col10);
-var _user$project$Bootstrap_Grid_Col$xl9 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col9);
-var _user$project$Bootstrap_Grid_Col$xl8 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col8);
-var _user$project$Bootstrap_Grid_Col$xl7 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col7);
-var _user$project$Bootstrap_Grid_Col$xl6 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col6);
-var _user$project$Bootstrap_Grid_Col$xl5 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col5);
-var _user$project$Bootstrap_Grid_Col$xl4 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col4);
-var _user$project$Bootstrap_Grid_Col$xl3 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col3);
-var _user$project$Bootstrap_Grid_Col$xl2 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col2);
-var _user$project$Bootstrap_Grid_Col$xl1 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col1);
-var _user$project$Bootstrap_Grid_Col$xl = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Col);
-var _user$project$Bootstrap_Grid_Col$lgAuto = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$ColAuto);
-var _user$project$Bootstrap_Grid_Col$lg12 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col12);
-var _user$project$Bootstrap_Grid_Col$lg11 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col11);
-var _user$project$Bootstrap_Grid_Col$lg10 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col10);
-var _user$project$Bootstrap_Grid_Col$lg9 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col9);
-var _user$project$Bootstrap_Grid_Col$lg8 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col8);
-var _user$project$Bootstrap_Grid_Col$lg7 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col7);
-var _user$project$Bootstrap_Grid_Col$lg6 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col6);
-var _user$project$Bootstrap_Grid_Col$lg5 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col5);
-var _user$project$Bootstrap_Grid_Col$lg4 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col4);
-var _user$project$Bootstrap_Grid_Col$lg3 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col3);
-var _user$project$Bootstrap_Grid_Col$lg2 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col2);
-var _user$project$Bootstrap_Grid_Col$lg1 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col1);
-var _user$project$Bootstrap_Grid_Col$lg = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Col);
-var _user$project$Bootstrap_Grid_Col$mdAuto = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$ColAuto);
-var _user$project$Bootstrap_Grid_Col$md12 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col12);
-var _user$project$Bootstrap_Grid_Col$md11 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col11);
-var _user$project$Bootstrap_Grid_Col$md10 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col10);
-var _user$project$Bootstrap_Grid_Col$md9 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col9);
-var _user$project$Bootstrap_Grid_Col$md8 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col8);
-var _user$project$Bootstrap_Grid_Col$md7 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col7);
-var _user$project$Bootstrap_Grid_Col$md6 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col6);
-var _user$project$Bootstrap_Grid_Col$md5 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col5);
-var _user$project$Bootstrap_Grid_Col$md4 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col4);
-var _user$project$Bootstrap_Grid_Col$md3 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col3);
-var _user$project$Bootstrap_Grid_Col$md2 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col2);
-var _user$project$Bootstrap_Grid_Col$md1 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col1);
-var _user$project$Bootstrap_Grid_Col$md = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Col);
-var _user$project$Bootstrap_Grid_Col$smAuto = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$ColAuto);
-var _user$project$Bootstrap_Grid_Col$sm12 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col12);
-var _user$project$Bootstrap_Grid_Col$sm11 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col11);
-var _user$project$Bootstrap_Grid_Col$sm10 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col10);
-var _user$project$Bootstrap_Grid_Col$sm9 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col9);
-var _user$project$Bootstrap_Grid_Col$sm8 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col8);
-var _user$project$Bootstrap_Grid_Col$sm7 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col7);
-var _user$project$Bootstrap_Grid_Col$sm6 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col6);
-var _user$project$Bootstrap_Grid_Col$sm5 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col5);
-var _user$project$Bootstrap_Grid_Col$sm4 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col4);
-var _user$project$Bootstrap_Grid_Col$sm3 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col3);
-var _user$project$Bootstrap_Grid_Col$sm2 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col2);
-var _user$project$Bootstrap_Grid_Col$sm1 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col1);
-var _user$project$Bootstrap_Grid_Col$sm = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Col);
-var _user$project$Bootstrap_Grid_Col$xsAuto = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$ColAuto);
-var _user$project$Bootstrap_Grid_Col$xs12 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col12);
-var _user$project$Bootstrap_Grid_Col$xs11 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col11);
-var _user$project$Bootstrap_Grid_Col$xs10 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col10);
-var _user$project$Bootstrap_Grid_Col$xs9 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col9);
-var _user$project$Bootstrap_Grid_Col$xs8 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col8);
-var _user$project$Bootstrap_Grid_Col$xs7 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col7);
-var _user$project$Bootstrap_Grid_Col$xs6 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col6);
-var _user$project$Bootstrap_Grid_Col$xs5 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col5);
-var _user$project$Bootstrap_Grid_Col$xs4 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col4);
-var _user$project$Bootstrap_Grid_Col$xs3 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col3);
-var _user$project$Bootstrap_Grid_Col$xs2 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col2);
-var _user$project$Bootstrap_Grid_Col$xs1 = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col1);
-var _user$project$Bootstrap_Grid_Col$xs = A2(_user$project$Bootstrap_Grid_Internal$width, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Col);
-var _user$project$Bootstrap_Grid_Col$bottomXl = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Bottom);
-var _user$project$Bootstrap_Grid_Col$bottomLg = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Bottom);
-var _user$project$Bootstrap_Grid_Col$bottomMd = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Bottom);
-var _user$project$Bootstrap_Grid_Col$bottomSm = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Bottom);
-var _user$project$Bootstrap_Grid_Col$bottomXs = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Bottom);
-var _user$project$Bootstrap_Grid_Col$middleXl = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Middle);
-var _user$project$Bootstrap_Grid_Col$middleLg = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Middle);
-var _user$project$Bootstrap_Grid_Col$middleMd = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Middle);
-var _user$project$Bootstrap_Grid_Col$middleSm = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Middle);
-var _user$project$Bootstrap_Grid_Col$middleXs = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Middle);
-var _user$project$Bootstrap_Grid_Col$topXl = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$XL, _user$project$Bootstrap_Grid_Internal$Top);
-var _user$project$Bootstrap_Grid_Col$topLg = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$LG, _user$project$Bootstrap_Grid_Internal$Top);
-var _user$project$Bootstrap_Grid_Col$topMd = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$MD, _user$project$Bootstrap_Grid_Internal$Top);
-var _user$project$Bootstrap_Grid_Col$topSm = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$SM, _user$project$Bootstrap_Grid_Internal$Top);
-var _user$project$Bootstrap_Grid_Col$topXs = A2(_user$project$Bootstrap_Grid_Internal$colVAlign, _user$project$Bootstrap_Grid_Internal$XS, _user$project$Bootstrap_Grid_Internal$Top);
-var _user$project$Bootstrap_Grid_Col$attrs = function (attrs) {
-	return _user$project$Bootstrap_Grid_Internal$ColAttrs(attrs);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXl0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushLg0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushMd0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushSm0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pushXs0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$push, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXl0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullLg0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullMd0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullSm0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$pullXs0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$pull, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Move0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXl11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXl10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXl9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXl8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXl7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXl6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXl5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXl4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXl3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXl2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXl1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXl0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetLg11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetLg10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetLg9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetLg8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetLg7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetLg6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetLg5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetLg4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetLg3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetLg2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetLg1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetLg0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetMd11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetMd10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetMd9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetMd8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetMd7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetMd6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetMd5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetMd4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetMd3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetMd2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetMd1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetMd0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetSm11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetSm10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetSm9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetSm8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetSm7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetSm6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetSm5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetSm4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetSm3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetSm2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetSm1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetSm0 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset0);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXs11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXs10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXs9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXs8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXs7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXs6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXs5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXs4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXs3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXs2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$offsetXs1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$offset, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Offset1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xlAuto = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColAuto);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xl = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lgAuto = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColAuto);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$lg = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$mdAuto = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColAuto);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$md = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$smAuto = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColAuto);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$sm = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xsAuto = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColAuto);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs12 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col12);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs11 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col11);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs10 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col10);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs9 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col9);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs8 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col8);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs7 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col7);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs6 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col6);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs5 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col5);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs4 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col4);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs3 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col3);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs2 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col2);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs1 = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col1);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$xs = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$width, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Col);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$bottomXl = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Bottom);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$bottomLg = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Bottom);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$bottomMd = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Bottom);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$bottomSm = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Bottom);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$bottomXs = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Bottom);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$middleXl = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Middle);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$middleLg = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Middle);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$middleMd = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Middle);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$middleSm = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Middle);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$middleXs = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Middle);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$topXl = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Top);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$topLg = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Top);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$topMd = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Top);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$topSm = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Top);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$topXs = A2(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colVAlign, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS, _rundis$elm_bootstrap$Bootstrap_Grid_Internal$Top);
+var _rundis$elm_bootstrap$Bootstrap_Grid_Col$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Grid_Internal$ColAttrs(attrs);
 };
 
-var _user$project$Bootstrap_Form$renderCol = function (_p0) {
+var _rundis$elm_bootstrap$Bootstrap_Form$renderCol = function (_p0) {
 	var _p1 = _p0;
 	return A2(
 		_p1._0.elemFn,
-		_user$project$Bootstrap_Grid_Internal$colAttributes(_p1._0.options),
+		_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colAttributes(_p1._0.options),
 		_p1._0.children);
 };
-var _user$project$Bootstrap_Form$row = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form$row = F2(
 	function (options, cols) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
 				_0: _elm_lang$html$Html_Attributes$class('form-group'),
-				_1: _user$project$Bootstrap_Grid_Internal$rowAttributes(options)
+				_1: _rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowAttributes(options)
 			},
-			A2(_elm_lang$core$List$map, _user$project$Bootstrap_Form$renderCol, cols));
+			A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Form$renderCol, cols));
 	});
-var _user$project$Bootstrap_Form$applyModifier = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form$applyModifier = F2(
 	function (modifier, options) {
 		var _p2 = modifier;
 		return _elm_lang$core$Native_Utils.update(
@@ -14658,11 +15190,11 @@ var _user$project$Bootstrap_Form$applyModifier = F2(
 				attributes: A2(_elm_lang$core$Basics_ops['++'], options.attributes, _p2._0)
 			});
 	});
-var _user$project$Bootstrap_Form$defaultOptions = {
+var _rundis$elm_bootstrap$Bootstrap_Form$defaultOptions = {
 	attributes: {ctor: '[]'}
 };
-var _user$project$Bootstrap_Form$toAttributes = function (modifiers) {
-	var options = A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Form$applyModifier, _user$project$Bootstrap_Form$defaultOptions, modifiers);
+var _rundis$elm_bootstrap$Bootstrap_Form$toAttributes = function (modifiers) {
+	var options = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Form$applyModifier, _rundis$elm_bootstrap$Bootstrap_Form$defaultOptions, modifiers);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		{
@@ -14672,7 +15204,7 @@ var _user$project$Bootstrap_Form$toAttributes = function (modifiers) {
 		},
 		options.attributes);
 };
-var _user$project$Bootstrap_Form$invalidFeedback = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form$invalidFeedback = F2(
 	function (attributes, children) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -14683,7 +15215,7 @@ var _user$project$Bootstrap_Form$invalidFeedback = F2(
 			},
 			children);
 	});
-var _user$project$Bootstrap_Form$validFeedback = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form$validFeedback = F2(
 	function (attributes, children) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -14694,7 +15226,7 @@ var _user$project$Bootstrap_Form$validFeedback = F2(
 			},
 			children);
 	});
-var _user$project$Bootstrap_Form$helpInline = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form$helpInline = F2(
 	function (attributes, children) {
 		return A2(
 			_elm_lang$html$Html$small,
@@ -14705,7 +15237,7 @@ var _user$project$Bootstrap_Form$helpInline = F2(
 			},
 			children);
 	});
-var _user$project$Bootstrap_Form$help = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form$help = F2(
 	function (attributes, children) {
 		return A2(
 			_elm_lang$html$Html$small,
@@ -14716,7 +15248,7 @@ var _user$project$Bootstrap_Form$help = F2(
 			},
 			children);
 	});
-var _user$project$Bootstrap_Form$label = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form$label = F2(
 	function (attributes, children) {
 		return A2(
 			_elm_lang$html$Html$label,
@@ -14727,44 +15259,44 @@ var _user$project$Bootstrap_Form$label = F2(
 			},
 			children);
 	});
-var _user$project$Bootstrap_Form$group = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form$group = F2(
 	function (options, children) {
 		return A2(
 			_elm_lang$html$Html$div,
-			_user$project$Bootstrap_Form$toAttributes(options),
+			_rundis$elm_bootstrap$Bootstrap_Form$toAttributes(options),
 			children);
 	});
-var _user$project$Bootstrap_Form$form = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form$form = F2(
 	function (attributes, children) {
 		return A2(_elm_lang$html$Html$form, attributes, children);
 	});
-var _user$project$Bootstrap_Form$formInline = function (attributes) {
-	return _user$project$Bootstrap_Form$form(
+var _rundis$elm_bootstrap$Bootstrap_Form$formInline = function (attributes) {
+	return _rundis$elm_bootstrap$Bootstrap_Form$form(
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$class('form-inline'),
 			_1: attributes
 		});
 };
-var _user$project$Bootstrap_Form$Options = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form$Options = function (a) {
 	return {attributes: a};
 };
-var _user$project$Bootstrap_Form$Col = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form$Col = function (a) {
 	return {ctor: 'Col', _0: a};
 };
-var _user$project$Bootstrap_Form$col = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form$col = F2(
 	function (options, children) {
-		return _user$project$Bootstrap_Form$Col(
+		return _rundis$elm_bootstrap$Bootstrap_Form$Col(
 			{elemFn: _elm_lang$html$Html$div, options: options, children: children});
 	});
-var _user$project$Bootstrap_Form$colLabel = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form$colLabel = F2(
 	function (options, children) {
-		return _user$project$Bootstrap_Form$Col(
+		return _rundis$elm_bootstrap$Bootstrap_Form$Col(
 			{
 				elemFn: _elm_lang$html$Html$label,
 				options: {
 					ctor: '::',
-					_0: _user$project$Bootstrap_Grid_Col$attrs(
+					_0: _rundis$elm_bootstrap$Bootstrap_Grid_Col$attrs(
 						{
 							ctor: '::',
 							_0: _elm_lang$html$Html_Attributes$class('col-form-label'),
@@ -14775,11 +15307,11 @@ var _user$project$Bootstrap_Form$colLabel = F2(
 				children: children
 			});
 	});
-var _user$project$Bootstrap_Form$colLabelSm = function (options) {
-	return _user$project$Bootstrap_Form$colLabel(
+var _rundis$elm_bootstrap$Bootstrap_Form$colLabelSm = function (options) {
+	return _rundis$elm_bootstrap$Bootstrap_Form$colLabel(
 		{
 			ctor: '::',
-			_0: _user$project$Bootstrap_Grid_Col$attrs(
+			_0: _rundis$elm_bootstrap$Bootstrap_Grid_Col$attrs(
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$class('col-form-label-sm'),
@@ -14788,11 +15320,11 @@ var _user$project$Bootstrap_Form$colLabelSm = function (options) {
 			_1: options
 		});
 };
-var _user$project$Bootstrap_Form$colLabelLg = function (options) {
-	return _user$project$Bootstrap_Form$colLabel(
+var _rundis$elm_bootstrap$Bootstrap_Form$colLabelLg = function (options) {
+	return _rundis$elm_bootstrap$Bootstrap_Form$colLabel(
 		{
 			ctor: '::',
-			_0: _user$project$Bootstrap_Grid_Col$attrs(
+			_0: _rundis$elm_bootstrap$Bootstrap_Grid_Col$attrs(
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$class('col-form-label-lg'),
@@ -14801,11 +15333,11 @@ var _user$project$Bootstrap_Form$colLabelLg = function (options) {
 			_1: options
 		});
 };
-var _user$project$Bootstrap_Form$Attrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form$Attrs = function (a) {
 	return {ctor: 'Attrs', _0: a};
 };
 
-var _user$project$Bootstrap_Form_FormInternal$validationToString = function (validation) {
+var _rundis$elm_bootstrap$Bootstrap_Form_FormInternal$validationToString = function (validation) {
 	var _p0 = validation;
 	if (_p0.ctor === 'Success') {
 		return 'is-valid';
@@ -14813,17 +15345,17 @@ var _user$project$Bootstrap_Form_FormInternal$validationToString = function (val
 		return 'is-invalid';
 	}
 };
-var _user$project$Bootstrap_Form_FormInternal$validationWrapperAttribute = function (validation) {
+var _rundis$elm_bootstrap$Bootstrap_Form_FormInternal$validationWrapperAttribute = function (validation) {
 	return _elm_lang$html$Html_Attributes$class(
 		A2(
 			_elm_lang$core$Basics_ops['++'],
 			'has-',
-			_user$project$Bootstrap_Form_FormInternal$validationToString(validation)));
+			_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$validationToString(validation)));
 };
-var _user$project$Bootstrap_Form_FormInternal$Danger = {ctor: 'Danger'};
-var _user$project$Bootstrap_Form_FormInternal$Success = {ctor: 'Success'};
+var _rundis$elm_bootstrap$Bootstrap_Form_FormInternal$Danger = {ctor: 'Danger'};
+var _rundis$elm_bootstrap$Bootstrap_Form_FormInternal$Success = {ctor: 'Success'};
 
-var _user$project$Bootstrap_Form_Checkbox$stateAttribute = function (state) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$stateAttribute = function (state) {
 	var _p0 = state;
 	switch (_p0.ctor) {
 		case 'On':
@@ -14834,7 +15366,7 @@ var _user$project$Bootstrap_Form_Checkbox$stateAttribute = function (state) {
 			return A2(_elm_lang$html$Html_Attributes$attribute, 'indeterminate', 'true');
 	}
 };
-var _user$project$Bootstrap_Form_Checkbox$toAttributes = function (options) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$toAttributes = function (options) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		{
@@ -14857,7 +15389,7 @@ var _user$project$Bootstrap_Form_Checkbox$toAttributes = function (options) {
 					_0: _elm_lang$html$Html_Attributes$disabled(options.disabled),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Bootstrap_Form_Checkbox$stateAttribute(options.state),
+						_0: _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$stateAttribute(options.state),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -14885,7 +15417,7 @@ var _user$project$Bootstrap_Form_Checkbox$toAttributes = function (options) {
 						return {
 							ctor: '::',
 							_0: _elm_lang$html$Html_Attributes$class(
-								_user$project$Bootstrap_Form_FormInternal$validationToString(_p1._0)),
+								_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$validationToString(_p1._0)),
 							_1: {ctor: '[]'}
 						};
 					} else {
@@ -14894,7 +15426,7 @@ var _user$project$Bootstrap_Form_Checkbox$toAttributes = function (options) {
 				}(),
 				options.attributes)));
 };
-var _user$project$Bootstrap_Form_Checkbox$applyModifier = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$applyModifier = F2(
 	function (modifier, options) {
 		var _p2 = modifier;
 		switch (_p2.ctor) {
@@ -14940,59 +15472,59 @@ var _user$project$Bootstrap_Form_Checkbox$applyModifier = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Form_Checkbox$Options = F8(
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Options = F8(
 	function (a, b, c, d, e, f, g, h) {
 		return {id: a, state: b, inline: c, custom: d, disabled: e, onChecked: f, validation: g, attributes: h};
 	});
-var _user$project$Bootstrap_Form_Checkbox$Checkbox = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Checkbox = function (a) {
 	return {ctor: 'Checkbox', _0: a};
 };
-var _user$project$Bootstrap_Form_Checkbox$create = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$create = F2(
 	function (options, label) {
-		return _user$project$Bootstrap_Form_Checkbox$Checkbox(
+		return _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Checkbox(
 			{options: options, label: label});
 	});
-var _user$project$Bootstrap_Form_Checkbox$Attrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Attrs = function (a) {
 	return {ctor: 'Attrs', _0: a};
 };
-var _user$project$Bootstrap_Form_Checkbox$attrs = function (attrs) {
-	return _user$project$Bootstrap_Form_Checkbox$Attrs(attrs);
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Attrs(attrs);
 };
-var _user$project$Bootstrap_Form_Checkbox$Validation = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Validation = function (a) {
 	return {ctor: 'Validation', _0: a};
 };
-var _user$project$Bootstrap_Form_Checkbox$success = _user$project$Bootstrap_Form_Checkbox$Validation(_user$project$Bootstrap_Form_FormInternal$Success);
-var _user$project$Bootstrap_Form_Checkbox$danger = _user$project$Bootstrap_Form_Checkbox$Validation(_user$project$Bootstrap_Form_FormInternal$Danger);
-var _user$project$Bootstrap_Form_Checkbox$Disabled = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$success = _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Validation(_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$Success);
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$danger = _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Validation(_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$Danger);
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Disabled = function (a) {
 	return {ctor: 'Disabled', _0: a};
 };
-var _user$project$Bootstrap_Form_Checkbox$disabled = function (disabled) {
-	return _user$project$Bootstrap_Form_Checkbox$Disabled(disabled);
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$disabled = function (disabled) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Disabled(disabled);
 };
-var _user$project$Bootstrap_Form_Checkbox$Custom = {ctor: 'Custom'};
-var _user$project$Bootstrap_Form_Checkbox$OnChecked = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Custom = {ctor: 'Custom'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$OnChecked = function (a) {
 	return {ctor: 'OnChecked', _0: a};
 };
-var _user$project$Bootstrap_Form_Checkbox$onCheck = function (toMsg) {
-	return _user$project$Bootstrap_Form_Checkbox$OnChecked(toMsg);
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$onCheck = function (toMsg) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$OnChecked(toMsg);
 };
-var _user$project$Bootstrap_Form_Checkbox$Inline = {ctor: 'Inline'};
-var _user$project$Bootstrap_Form_Checkbox$inline = _user$project$Bootstrap_Form_Checkbox$Inline;
-var _user$project$Bootstrap_Form_Checkbox$Value = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Inline = {ctor: 'Inline'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$inline = _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Inline;
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Value = function (a) {
 	return {ctor: 'Value', _0: a};
 };
-var _user$project$Bootstrap_Form_Checkbox$Id = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Id = function (a) {
 	return {ctor: 'Id', _0: a};
 };
-var _user$project$Bootstrap_Form_Checkbox$id = function (theId) {
-	return _user$project$Bootstrap_Form_Checkbox$Id(theId);
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$id = function (theId) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Id(theId);
 };
-var _user$project$Bootstrap_Form_Checkbox$Indeterminate = {ctor: 'Indeterminate'};
-var _user$project$Bootstrap_Form_Checkbox$indeterminate = _user$project$Bootstrap_Form_Checkbox$Value(_user$project$Bootstrap_Form_Checkbox$Indeterminate);
-var _user$project$Bootstrap_Form_Checkbox$Off = {ctor: 'Off'};
-var _user$project$Bootstrap_Form_Checkbox$defaultOptions = {
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Indeterminate = {ctor: 'Indeterminate'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$indeterminate = _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Value(_rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Indeterminate);
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Off = {ctor: 'Off'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$defaultOptions = {
 	id: _elm_lang$core$Maybe$Nothing,
-	state: _user$project$Bootstrap_Form_Checkbox$Off,
+	state: _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Off,
 	inline: false,
 	custom: false,
 	disabled: false,
@@ -15000,10 +15532,10 @@ var _user$project$Bootstrap_Form_Checkbox$defaultOptions = {
 	validation: _elm_lang$core$Maybe$Nothing,
 	attributes: {ctor: '[]'}
 };
-var _user$project$Bootstrap_Form_Checkbox$view = function (_p3) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$view = function (_p3) {
 	var _p4 = _p3;
 	var _p6 = _p4._0;
-	var opts = A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Form_Checkbox$applyModifier, _user$project$Bootstrap_Form_Checkbox$defaultOptions, _p6.options);
+	var opts = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$applyModifier, _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$defaultOptions, _p6.options);
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -15036,7 +15568,7 @@ var _user$project$Bootstrap_Form_Checkbox$view = function (_p3) {
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$input,
-				_user$project$Bootstrap_Form_Checkbox$toAttributes(opts),
+				_rundis$elm_bootstrap$Bootstrap_Form_Checkbox$toAttributes(opts),
 				{ctor: '[]'}),
 			_1: {
 				ctor: '::',
@@ -15079,27 +15611,27 @@ var _user$project$Bootstrap_Form_Checkbox$view = function (_p3) {
 			}
 		});
 };
-var _user$project$Bootstrap_Form_Checkbox$checkbox = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$checkbox = F2(
 	function (options, label) {
-		return _user$project$Bootstrap_Form_Checkbox$view(
-			A2(_user$project$Bootstrap_Form_Checkbox$create, options, label));
+		return _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$view(
+			A2(_rundis$elm_bootstrap$Bootstrap_Form_Checkbox$create, options, label));
 	});
-var _user$project$Bootstrap_Form_Checkbox$custom = function (options) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$custom = function (options) {
 	return function (_p7) {
-		return _user$project$Bootstrap_Form_Checkbox$view(
+		return _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$view(
 			A2(
-				_user$project$Bootstrap_Form_Checkbox$create,
-				{ctor: '::', _0: _user$project$Bootstrap_Form_Checkbox$Custom, _1: options},
+				_rundis$elm_bootstrap$Bootstrap_Form_Checkbox$create,
+				{ctor: '::', _0: _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Custom, _1: options},
 				_p7));
 	};
 };
-var _user$project$Bootstrap_Form_Checkbox$On = {ctor: 'On'};
-var _user$project$Bootstrap_Form_Checkbox$checked = function (isCheck) {
-	return _user$project$Bootstrap_Form_Checkbox$Value(
-		isCheck ? _user$project$Bootstrap_Form_Checkbox$On : _user$project$Bootstrap_Form_Checkbox$Off);
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$On = {ctor: 'On'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$checked = function (isCheck) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Value(
+		isCheck ? _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$On : _rundis$elm_bootstrap$Bootstrap_Form_Checkbox$Off);
 };
 
-var _user$project$Bootstrap_Form_Fieldset$view = function (_p0) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$view = function (_p0) {
 	var _p1 = _p0;
 	var _p2 = _p1._0.options;
 	return A2(
@@ -15139,18 +15671,18 @@ var _user$project$Bootstrap_Form_Fieldset$view = function (_p0) {
 					},
 					_p1._0.legend))));
 };
-var _user$project$Bootstrap_Form_Fieldset$ConfigRec = F3(
+var _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$ConfigRec = F3(
 	function (a, b, c) {
 		return {options: a, legend: b, children: c};
 	});
-var _user$project$Bootstrap_Form_Fieldset$Options = F3(
+var _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$Options = F3(
 	function (a, b, c) {
 		return {isGroup: a, disabled: b, attributes: c};
 	});
-var _user$project$Bootstrap_Form_Fieldset$Config = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$Config = function (a) {
 	return {ctor: 'Config', _0: a};
 };
-var _user$project$Bootstrap_Form_Fieldset$config = _user$project$Bootstrap_Form_Fieldset$Config(
+var _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$config = _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$Config(
 	{
 		options: {
 			isGroup: false,
@@ -15160,15 +15692,15 @@ var _user$project$Bootstrap_Form_Fieldset$config = _user$project$Bootstrap_Form_
 		legend: _elm_lang$core$Maybe$Nothing,
 		children: {ctor: '[]'}
 	});
-var _user$project$Bootstrap_Form_Fieldset$mapConfig = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$mapConfig = F2(
 	function (mapper, _p3) {
 		var _p4 = _p3;
-		return _user$project$Bootstrap_Form_Fieldset$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$Config(
 			mapper(_p4._0));
 	});
-var _user$project$Bootstrap_Form_Fieldset$legend = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$legend = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Form_Fieldset$mapConfig(
+		return _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$mapConfig(
 			function (conf) {
 				return _elm_lang$core$Native_Utils.update(
 					conf,
@@ -15178,40 +15710,40 @@ var _user$project$Bootstrap_Form_Fieldset$legend = F2(
 					});
 			});
 	});
-var _user$project$Bootstrap_Form_Fieldset$children = function (children) {
-	return _user$project$Bootstrap_Form_Fieldset$mapConfig(
+var _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$children = function (children) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$mapConfig(
 		function (conf) {
 			return _elm_lang$core$Native_Utils.update(
 				conf,
 				{children: children});
 		});
 };
-var _user$project$Bootstrap_Form_Fieldset$mapOptions = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$mapOptions = F2(
 	function (mapper, _p5) {
 		var _p6 = _p5;
-		return _user$project$Bootstrap_Form_Fieldset$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p6._0,
 				{
 					options: mapper(_p6._0.options)
 				}));
 	});
-var _user$project$Bootstrap_Form_Fieldset$asGroup = _user$project$Bootstrap_Form_Fieldset$mapOptions(
+var _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$asGroup = _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$mapOptions(
 	function (opts) {
 		return _elm_lang$core$Native_Utils.update(
 			opts,
 			{isGroup: true});
 	});
-var _user$project$Bootstrap_Form_Fieldset$disabled = function (isDisabled) {
-	return _user$project$Bootstrap_Form_Fieldset$mapOptions(
+var _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$disabled = function (isDisabled) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$mapOptions(
 		function (opts) {
 			return _elm_lang$core$Native_Utils.update(
 				opts,
 				{disabled: isDisabled});
 		});
 };
-var _user$project$Bootstrap_Form_Fieldset$attrs = function (attrs) {
-	return _user$project$Bootstrap_Form_Fieldset$mapOptions(
+var _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Fieldset$mapOptions(
 		function (opts) {
 			return _elm_lang$core$Native_Utils.update(
 				opts,
@@ -15221,11 +15753,11 @@ var _user$project$Bootstrap_Form_Fieldset$attrs = function (attrs) {
 		});
 };
 
-var _user$project$Bootstrap_Form_Input$validationAttribute = function (validation) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$validationAttribute = function (validation) {
 	return _elm_lang$html$Html_Attributes$class(
-		_user$project$Bootstrap_Form_FormInternal$validationToString(validation));
+		_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$validationToString(validation));
 };
-var _user$project$Bootstrap_Form_Input$typeAttribute = function (inputType) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$typeAttribute = function (inputType) {
 	return _elm_lang$html$Html_Attributes$type_(
 		function () {
 			var _p0 = inputType;
@@ -15259,16 +15791,16 @@ var _user$project$Bootstrap_Form_Input$typeAttribute = function (inputType) {
 			}
 		}());
 };
-var _user$project$Bootstrap_Form_Input$sizeAttribute = function (size) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$sizeAttribute = function (size) {
 	return A2(
 		_elm_lang$core$Maybe$map,
 		function (s) {
 			return _elm_lang$html$Html_Attributes$class(
 				A2(_elm_lang$core$Basics_ops['++'], 'form-control-', s));
 		},
-		_user$project$Bootstrap_Grid_Internal$screenSizeOption(size));
+		_rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption(size));
 };
-var _user$project$Bootstrap_Form_Input$applyModifier = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$applyModifier = F2(
 	function (modifier, options) {
 		var _p1 = modifier;
 		switch (_p1.ctor) {
@@ -15334,7 +15866,7 @@ var _user$project$Bootstrap_Form_Input$applyModifier = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Form_Input$Options = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Options = function (a) {
 	return function (b) {
 		return function (c) {
 			return function (d) {
@@ -15357,96 +15889,96 @@ var _user$project$Bootstrap_Form_Input$Options = function (a) {
 		};
 	};
 };
-var _user$project$Bootstrap_Form_Input$Input = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Input = function (a) {
 	return {ctor: 'Input', _0: a};
 };
-var _user$project$Bootstrap_Form_Input$Attrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Attrs = function (a) {
 	return {ctor: 'Attrs', _0: a};
 };
-var _user$project$Bootstrap_Form_Input$attrs = function (attrs) {
-	return _user$project$Bootstrap_Form_Input$Attrs(attrs);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Input$Attrs(attrs);
 };
-var _user$project$Bootstrap_Form_Input$Readonly = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Readonly = function (a) {
 	return {ctor: 'Readonly', _0: a};
 };
-var _user$project$Bootstrap_Form_Input$readonly = function (readonly) {
-	return _user$project$Bootstrap_Form_Input$Readonly(readonly);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$readonly = function (readonly) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Input$Readonly(readonly);
 };
-var _user$project$Bootstrap_Form_Input$Placeholder = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Placeholder = function (a) {
 	return {ctor: 'Placeholder', _0: a};
 };
-var _user$project$Bootstrap_Form_Input$placeholder = function (value) {
-	return _user$project$Bootstrap_Form_Input$Placeholder(value);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$placeholder = function (value) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Input$Placeholder(value);
 };
-var _user$project$Bootstrap_Form_Input$Validation = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Validation = function (a) {
 	return {ctor: 'Validation', _0: a};
 };
-var _user$project$Bootstrap_Form_Input$success = _user$project$Bootstrap_Form_Input$Validation(_user$project$Bootstrap_Form_FormInternal$Success);
-var _user$project$Bootstrap_Form_Input$danger = _user$project$Bootstrap_Form_Input$Validation(_user$project$Bootstrap_Form_FormInternal$Danger);
-var _user$project$Bootstrap_Form_Input$OnInput = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$success = _rundis$elm_bootstrap$Bootstrap_Form_Input$Validation(_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$Success);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$danger = _rundis$elm_bootstrap$Bootstrap_Form_Input$Validation(_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$Danger);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$OnInput = function (a) {
 	return {ctor: 'OnInput', _0: a};
 };
-var _user$project$Bootstrap_Form_Input$onInput = function (toMsg) {
-	return _user$project$Bootstrap_Form_Input$OnInput(toMsg);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$onInput = function (toMsg) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Input$OnInput(toMsg);
 };
-var _user$project$Bootstrap_Form_Input$DefaultValue = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$DefaultValue = function (a) {
 	return {ctor: 'DefaultValue', _0: a};
 };
-var _user$project$Bootstrap_Form_Input$defaultValue = function (value) {
-	return _user$project$Bootstrap_Form_Input$DefaultValue(value);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$defaultValue = function (value) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Input$DefaultValue(value);
 };
-var _user$project$Bootstrap_Form_Input$Value = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Value = function (a) {
 	return {ctor: 'Value', _0: a};
 };
-var _user$project$Bootstrap_Form_Input$value = function (value) {
-	return _user$project$Bootstrap_Form_Input$Value(value);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$value = function (value) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Input$Value(value);
 };
-var _user$project$Bootstrap_Form_Input$Disabled = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Disabled = function (a) {
 	return {ctor: 'Disabled', _0: a};
 };
-var _user$project$Bootstrap_Form_Input$disabled = function (disabled) {
-	return _user$project$Bootstrap_Form_Input$Disabled(disabled);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$disabled = function (disabled) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Input$Disabled(disabled);
 };
-var _user$project$Bootstrap_Form_Input$Type = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Type = function (a) {
 	return {ctor: 'Type', _0: a};
 };
-var _user$project$Bootstrap_Form_Input$create = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$create = F2(
 	function (tipe, options) {
-		return _user$project$Bootstrap_Form_Input$Input(
+		return _rundis$elm_bootstrap$Bootstrap_Form_Input$Input(
 			{
 				options: {
 					ctor: '::',
-					_0: _user$project$Bootstrap_Form_Input$Type(tipe),
+					_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$Type(tipe),
 					_1: options
 				}
 			});
 	});
-var _user$project$Bootstrap_Form_Input$Id = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Id = function (a) {
 	return {ctor: 'Id', _0: a};
 };
-var _user$project$Bootstrap_Form_Input$id = function (id) {
-	return _user$project$Bootstrap_Form_Input$Id(id);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$id = function (id) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Input$Id(id);
 };
-var _user$project$Bootstrap_Form_Input$Size = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Size = function (a) {
 	return {ctor: 'Size', _0: a};
 };
-var _user$project$Bootstrap_Form_Input$small = _user$project$Bootstrap_Form_Input$Size(_user$project$Bootstrap_Grid_Internal$SM);
-var _user$project$Bootstrap_Form_Input$large = _user$project$Bootstrap_Form_Input$Size(_user$project$Bootstrap_Grid_Internal$LG);
-var _user$project$Bootstrap_Form_Input$Color = {ctor: 'Color'};
-var _user$project$Bootstrap_Form_Input$Tel = {ctor: 'Tel'};
-var _user$project$Bootstrap_Form_Input$Search = {ctor: 'Search'};
-var _user$project$Bootstrap_Form_Input$Url = {ctor: 'Url'};
-var _user$project$Bootstrap_Form_Input$Email = {ctor: 'Email'};
-var _user$project$Bootstrap_Form_Input$Number = {ctor: 'Number'};
-var _user$project$Bootstrap_Form_Input$Week = {ctor: 'Week'};
-var _user$project$Bootstrap_Form_Input$Time = {ctor: 'Time'};
-var _user$project$Bootstrap_Form_Input$Month = {ctor: 'Month'};
-var _user$project$Bootstrap_Form_Input$Date = {ctor: 'Date'};
-var _user$project$Bootstrap_Form_Input$DatetimeLocal = {ctor: 'DatetimeLocal'};
-var _user$project$Bootstrap_Form_Input$Password = {ctor: 'Password'};
-var _user$project$Bootstrap_Form_Input$Text = {ctor: 'Text'};
-var _user$project$Bootstrap_Form_Input$defaultOptions = {
-	tipe: _user$project$Bootstrap_Form_Input$Text,
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$small = _rundis$elm_bootstrap$Bootstrap_Form_Input$Size(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$large = _rundis$elm_bootstrap$Bootstrap_Form_Input$Size(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Color = {ctor: 'Color'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Tel = {ctor: 'Tel'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Search = {ctor: 'Search'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Url = {ctor: 'Url'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Email = {ctor: 'Email'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Number = {ctor: 'Number'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Week = {ctor: 'Week'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Time = {ctor: 'Time'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Month = {ctor: 'Month'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Date = {ctor: 'Date'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$DatetimeLocal = {ctor: 'DatetimeLocal'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Password = {ctor: 'Password'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$Text = {ctor: 'Text'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$defaultOptions = {
+	tipe: _rundis$elm_bootstrap$Bootstrap_Form_Input$Text,
 	id: _elm_lang$core$Maybe$Nothing,
 	size: _elm_lang$core$Maybe$Nothing,
 	disabled: false,
@@ -15458,8 +15990,8 @@ var _user$project$Bootstrap_Form_Input$defaultOptions = {
 	readonly: false,
 	attributes: {ctor: '[]'}
 };
-var _user$project$Bootstrap_Form_Input$toAttributes = function (modifiers) {
-	var options = A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Form_Input$applyModifier, _user$project$Bootstrap_Form_Input$defaultOptions, modifiers);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$toAttributes = function (modifiers) {
+	var options = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Form_Input$applyModifier, _rundis$elm_bootstrap$Bootstrap_Form_Input$defaultOptions, modifiers);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		{
@@ -15473,7 +16005,7 @@ var _user$project$Bootstrap_Form_Input$toAttributes = function (modifiers) {
 					_0: _elm_lang$html$Html_Attributes$readonly(options.readonly),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Bootstrap_Form_Input$typeAttribute(options.tipe),
+						_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$typeAttribute(options.tipe),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -15489,7 +16021,7 @@ var _user$project$Bootstrap_Form_Input$toAttributes = function (modifiers) {
 					_0: A2(_elm_lang$core$Maybe$map, _elm_lang$html$Html_Attributes$id, options.id),
 					_1: {
 						ctor: '::',
-						_0: A2(_elm_lang$core$Maybe$andThen, _user$project$Bootstrap_Form_Input$sizeAttribute, options.size),
+						_0: A2(_elm_lang$core$Maybe$andThen, _rundis$elm_bootstrap$Bootstrap_Form_Input$sizeAttribute, options.size),
 						_1: {
 							ctor: '::',
 							_0: A2(_elm_lang$core$Maybe$map, _elm_lang$html$Html_Attributes$value, options.value),
@@ -15504,7 +16036,7 @@ var _user$project$Bootstrap_Form_Input$toAttributes = function (modifiers) {
 										_0: A2(_elm_lang$core$Maybe$map, _elm_lang$html$Html_Events$onInput, options.onInput),
 										_1: {
 											ctor: '::',
-											_0: A2(_elm_lang$core$Maybe$map, _user$project$Bootstrap_Form_Input$validationAttribute, options.validation),
+											_0: A2(_elm_lang$core$Maybe$map, _rundis$elm_bootstrap$Bootstrap_Form_Input$validationAttribute, options.validation),
 											_1: {ctor: '[]'}
 										}
 									}
@@ -15515,42 +16047,42 @@ var _user$project$Bootstrap_Form_Input$toAttributes = function (modifiers) {
 				}),
 			options.attributes));
 };
-var _user$project$Bootstrap_Form_Input$view = function (_p2) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$view = function (_p2) {
 	var _p3 = _p2;
 	return A2(
 		_elm_lang$html$Html$input,
-		_user$project$Bootstrap_Form_Input$toAttributes(_p3._0.options),
+		_rundis$elm_bootstrap$Bootstrap_Form_Input$toAttributes(_p3._0.options),
 		{ctor: '[]'});
 };
-var _user$project$Bootstrap_Form_Input$input = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$input = F2(
 	function (tipe, options) {
-		return _user$project$Bootstrap_Form_Input$view(
-			A2(_user$project$Bootstrap_Form_Input$create, tipe, options));
+		return _rundis$elm_bootstrap$Bootstrap_Form_Input$view(
+			A2(_rundis$elm_bootstrap$Bootstrap_Form_Input$create, tipe, options));
 	});
-var _user$project$Bootstrap_Form_Input$text = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$Text);
-var _user$project$Bootstrap_Form_Input$password = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$Password);
-var _user$project$Bootstrap_Form_Input$datetimeLocal = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$DatetimeLocal);
-var _user$project$Bootstrap_Form_Input$date = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$Date);
-var _user$project$Bootstrap_Form_Input$month = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$Month);
-var _user$project$Bootstrap_Form_Input$time = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$Time);
-var _user$project$Bootstrap_Form_Input$week = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$Week);
-var _user$project$Bootstrap_Form_Input$number = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$Number);
-var _user$project$Bootstrap_Form_Input$email = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$Email);
-var _user$project$Bootstrap_Form_Input$url = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$Url);
-var _user$project$Bootstrap_Form_Input$search = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$Search);
-var _user$project$Bootstrap_Form_Input$tel = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$Tel);
-var _user$project$Bootstrap_Form_Input$color = _user$project$Bootstrap_Form_Input$input(_user$project$Bootstrap_Form_Input$Color);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$text = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$Text);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$password = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$Password);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$datetimeLocal = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$DatetimeLocal);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$date = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$Date);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$month = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$Month);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$time = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$Time);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$week = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$Week);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$number = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$Number);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$email = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$Email);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$url = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$Url);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$search = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$Search);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$tel = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$Tel);
+var _rundis$elm_bootstrap$Bootstrap_Form_Input$color = _rundis$elm_bootstrap$Bootstrap_Form_Input$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$Color);
 
-var _user$project$Bootstrap_Form_InputGroup$sizeAttribute = function (size) {
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$sizeAttribute = function (size) {
 	return A2(
 		_elm_lang$core$Maybe$map,
 		function (s) {
 			return _elm_lang$html$Html_Attributes$class(
 				A2(_elm_lang$core$Basics_ops['++'], 'input-group-', s));
 		},
-		_user$project$Bootstrap_Grid_Internal$screenSizeOption(size));
+		_rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption(size));
 };
-var _user$project$Bootstrap_Form_InputGroup$view = function (_p0) {
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$view = function (_p0) {
 	var _p1 = _p0;
 	var _p7 = _p1._0;
 	var _p2 = _p7.input;
@@ -15571,7 +16103,7 @@ var _user$project$Bootstrap_Form_InputGroup$view = function (_p0) {
 					_elm_lang$core$Basics$identity,
 					{
 						ctor: '::',
-						_0: A2(_elm_lang$core$Maybe$andThen, _user$project$Bootstrap_Form_InputGroup$sizeAttribute, _p7.size),
+						_0: A2(_elm_lang$core$Maybe$andThen, _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$sizeAttribute, _p7.size),
 						_1: {ctor: '[]'}
 					}),
 				_p7.attributes)),
@@ -15621,11 +16153,11 @@ var _user$project$Bootstrap_Form_InputGroup$view = function (_p0) {
 					},
 					_p7.successors))));
 };
-var _user$project$Bootstrap_Form_InputGroup$Config = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Config = function (a) {
 	return {ctor: 'Config', _0: a};
 };
-var _user$project$Bootstrap_Form_InputGroup$config = function (input) {
-	return _user$project$Bootstrap_Form_InputGroup$Config(
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$config = function (input) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Config(
 		{
 			input: input,
 			predecessors: {ctor: '[]'},
@@ -15634,74 +16166,74 @@ var _user$project$Bootstrap_Form_InputGroup$config = function (input) {
 			attributes: {ctor: '[]'}
 		});
 };
-var _user$project$Bootstrap_Form_InputGroup$predecessors = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$predecessors = F2(
 	function (addons, _p8) {
 		var _p9 = _p8;
-		return _user$project$Bootstrap_Form_InputGroup$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p9._0,
 				{predecessors: addons}));
 	});
-var _user$project$Bootstrap_Form_InputGroup$successors = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$successors = F2(
 	function (addons, _p10) {
 		var _p11 = _p10;
-		return _user$project$Bootstrap_Form_InputGroup$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p11._0,
 				{successors: addons}));
 	});
-var _user$project$Bootstrap_Form_InputGroup$large = function (_p12) {
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$large = function (_p12) {
 	var _p13 = _p12;
-	return _user$project$Bootstrap_Form_InputGroup$Config(
+	return _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Config(
 		_elm_lang$core$Native_Utils.update(
 			_p13._0,
 			{
-				size: _elm_lang$core$Maybe$Just(_user$project$Bootstrap_Grid_Internal$LG)
+				size: _elm_lang$core$Maybe$Just(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG)
 			}));
 };
-var _user$project$Bootstrap_Form_InputGroup$small = function (_p14) {
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$small = function (_p14) {
 	var _p15 = _p14;
-	return _user$project$Bootstrap_Form_InputGroup$Config(
+	return _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Config(
 		_elm_lang$core$Native_Utils.update(
 			_p15._0,
 			{
-				size: _elm_lang$core$Maybe$Just(_user$project$Bootstrap_Grid_Internal$SM)
+				size: _elm_lang$core$Maybe$Just(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM)
 			}));
 };
-var _user$project$Bootstrap_Form_InputGroup$attrs = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$attrs = F2(
 	function (attributes, _p16) {
 		var _p17 = _p16;
-		return _user$project$Bootstrap_Form_InputGroup$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p17._0,
 				{attributes: attributes}));
 	});
-var _user$project$Bootstrap_Form_InputGroup$Input = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Input = function (a) {
 	return {ctor: 'Input', _0: a};
 };
-var _user$project$Bootstrap_Form_InputGroup$input = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input = F2(
 	function (inputFn, options) {
-		return _user$project$Bootstrap_Form_InputGroup$Input(
+		return _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Input(
 			inputFn(options));
 	});
-var _user$project$Bootstrap_Form_InputGroup$text = _user$project$Bootstrap_Form_InputGroup$input(_user$project$Bootstrap_Form_Input$text);
-var _user$project$Bootstrap_Form_InputGroup$password = _user$project$Bootstrap_Form_InputGroup$input(_user$project$Bootstrap_Form_Input$password);
-var _user$project$Bootstrap_Form_InputGroup$datetimeLocal = _user$project$Bootstrap_Form_InputGroup$input(_user$project$Bootstrap_Form_Input$datetimeLocal);
-var _user$project$Bootstrap_Form_InputGroup$date = _user$project$Bootstrap_Form_InputGroup$input(_user$project$Bootstrap_Form_Input$date);
-var _user$project$Bootstrap_Form_InputGroup$month = _user$project$Bootstrap_Form_InputGroup$input(_user$project$Bootstrap_Form_Input$month);
-var _user$project$Bootstrap_Form_InputGroup$time = _user$project$Bootstrap_Form_InputGroup$input(_user$project$Bootstrap_Form_Input$time);
-var _user$project$Bootstrap_Form_InputGroup$week = _user$project$Bootstrap_Form_InputGroup$input(_user$project$Bootstrap_Form_Input$week);
-var _user$project$Bootstrap_Form_InputGroup$number = _user$project$Bootstrap_Form_InputGroup$input(_user$project$Bootstrap_Form_Input$number);
-var _user$project$Bootstrap_Form_InputGroup$email = _user$project$Bootstrap_Form_InputGroup$input(_user$project$Bootstrap_Form_Input$email);
-var _user$project$Bootstrap_Form_InputGroup$url = _user$project$Bootstrap_Form_InputGroup$input(_user$project$Bootstrap_Form_Input$url);
-var _user$project$Bootstrap_Form_InputGroup$search = _user$project$Bootstrap_Form_InputGroup$input(_user$project$Bootstrap_Form_Input$search);
-var _user$project$Bootstrap_Form_InputGroup$tel = _user$project$Bootstrap_Form_InputGroup$input(_user$project$Bootstrap_Form_Input$tel);
-var _user$project$Bootstrap_Form_InputGroup$Addon = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$text = _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$text);
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$password = _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$password);
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$datetimeLocal = _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$datetimeLocal);
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$date = _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$date);
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$month = _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$month);
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$time = _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$time);
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$week = _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$week);
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$number = _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$number);
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$email = _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$email);
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$url = _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$url);
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$search = _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$search);
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$tel = _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$input(_rundis$elm_bootstrap$Bootstrap_Form_Input$tel);
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Addon = function (a) {
 	return {ctor: 'Addon', _0: a};
 };
-var _user$project$Bootstrap_Form_InputGroup$span = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$span = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Form_InputGroup$Addon(
+		return _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Addon(
 			A2(
 				_elm_lang$html$Html$span,
 				{
@@ -15711,23 +16243,23 @@ var _user$project$Bootstrap_Form_InputGroup$span = F2(
 				},
 				children));
 	});
-var _user$project$Bootstrap_Form_InputGroup$button = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$button = F2(
 	function (options, children) {
-		return _user$project$Bootstrap_Form_InputGroup$Addon(
-			A2(_user$project$Bootstrap_Button$button, options, children));
+		return _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Addon(
+			A2(_rundis$elm_bootstrap$Bootstrap_Button$button, options, children));
 	});
-var _user$project$Bootstrap_Form_InputGroup$dropdown = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$dropdown = F2(
 	function (state, config) {
-		return _user$project$Bootstrap_Form_InputGroup$Addon(
-			A2(_user$project$Bootstrap_Dropdown$dropdown, state, config));
+		return _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Addon(
+			A2(_rundis$elm_bootstrap$Bootstrap_Dropdown$dropdown, state, config));
 	});
-var _user$project$Bootstrap_Form_InputGroup$splitDropdown = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$splitDropdown = F2(
 	function (state, config) {
-		return _user$project$Bootstrap_Form_InputGroup$Addon(
-			A2(_user$project$Bootstrap_Dropdown$splitDropdown, state, config));
+		return _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$Addon(
+			A2(_rundis$elm_bootstrap$Bootstrap_Dropdown$splitDropdown, state, config));
 	});
 
-var _user$project$Bootstrap_Form_Radio$defaultOptions = {
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$defaultOptions = {
 	id: _elm_lang$core$Maybe$Nothing,
 	checked: false,
 	name: _elm_lang$core$Maybe$Nothing,
@@ -15738,7 +16270,7 @@ var _user$project$Bootstrap_Form_Radio$defaultOptions = {
 	validation: _elm_lang$core$Maybe$Nothing,
 	attributes: {ctor: '[]'}
 };
-var _user$project$Bootstrap_Form_Radio$toAttributes = function (options) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$toAttributes = function (options) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		{
@@ -15787,7 +16319,7 @@ var _user$project$Bootstrap_Form_Radio$toAttributes = function (options) {
 				}),
 			options.attributes));
 };
-var _user$project$Bootstrap_Form_Radio$applyModifier = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$applyModifier = F2(
 	function (modifier, options) {
 		var _p0 = modifier;
 		switch (_p0.ctor) {
@@ -15839,10 +16371,10 @@ var _user$project$Bootstrap_Form_Radio$applyModifier = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Form_Radio$view = function (_p1) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$view = function (_p1) {
 	var _p2 = _p1;
 	var _p4 = _p2._0;
-	var opts = A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Form_Radio$applyModifier, _user$project$Bootstrap_Form_Radio$defaultOptions, _p4.options);
+	var opts = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Form_Radio$applyModifier, _rundis$elm_bootstrap$Bootstrap_Form_Radio$defaultOptions, _p4.options);
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -15875,7 +16407,7 @@ var _user$project$Bootstrap_Form_Radio$view = function (_p1) {
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$input,
-				_user$project$Bootstrap_Form_Radio$toAttributes(opts),
+				_rundis$elm_bootstrap$Bootstrap_Form_Radio$toAttributes(opts),
 				{ctor: '[]'}),
 			_1: {
 				ctor: '::',
@@ -15918,103 +16450,103 @@ var _user$project$Bootstrap_Form_Radio$view = function (_p1) {
 			}
 		});
 };
-var _user$project$Bootstrap_Form_Radio$Options = F9(
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$Options = F9(
 	function (a, b, c, d, e, f, g, h, i) {
 		return {id: a, checked: b, name: c, custom: d, disabled: e, inline: f, onClick: g, validation: h, attributes: i};
 	});
-var _user$project$Bootstrap_Form_Radio$Radio = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$Radio = function (a) {
 	return {ctor: 'Radio', _0: a};
 };
-var _user$project$Bootstrap_Form_Radio$create = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$create = F2(
 	function (options, label) {
-		return _user$project$Bootstrap_Form_Radio$Radio(
+		return _rundis$elm_bootstrap$Bootstrap_Form_Radio$Radio(
 			{options: options, label: label});
 	});
-var _user$project$Bootstrap_Form_Radio$radio = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$radio = F2(
 	function (options, label) {
-		return _user$project$Bootstrap_Form_Radio$view(
-			A2(_user$project$Bootstrap_Form_Radio$create, options, label));
+		return _rundis$elm_bootstrap$Bootstrap_Form_Radio$view(
+			A2(_rundis$elm_bootstrap$Bootstrap_Form_Radio$create, options, label));
 	});
-var _user$project$Bootstrap_Form_Radio$addOption = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$addOption = F2(
 	function (opt, _p5) {
 		var _p6 = _p5;
-		return _user$project$Bootstrap_Form_Radio$Radio(
+		return _rundis$elm_bootstrap$Bootstrap_Form_Radio$Radio(
 			_elm_lang$core$Native_Utils.update(
 				_p6._0,
 				{
 					options: {ctor: '::', _0: opt, _1: _p6._0.options}
 				}));
 	});
-var _user$project$Bootstrap_Form_Radio$Attrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$Attrs = function (a) {
 	return {ctor: 'Attrs', _0: a};
 };
-var _user$project$Bootstrap_Form_Radio$attrs = function (attrs) {
-	return _user$project$Bootstrap_Form_Radio$Attrs(attrs);
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Radio$Attrs(attrs);
 };
-var _user$project$Bootstrap_Form_Radio$Validation = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$Validation = function (a) {
 	return {ctor: 'Validation', _0: a};
 };
-var _user$project$Bootstrap_Form_Radio$success = _user$project$Bootstrap_Form_Radio$Validation(_user$project$Bootstrap_Form_FormInternal$Success);
-var _user$project$Bootstrap_Form_Radio$danger = _user$project$Bootstrap_Form_Radio$Validation(_user$project$Bootstrap_Form_FormInternal$Danger);
-var _user$project$Bootstrap_Form_Radio$Disabled = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$success = _rundis$elm_bootstrap$Bootstrap_Form_Radio$Validation(_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$Success);
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$danger = _rundis$elm_bootstrap$Bootstrap_Form_Radio$Validation(_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$Danger);
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$Disabled = function (a) {
 	return {ctor: 'Disabled', _0: a};
 };
-var _user$project$Bootstrap_Form_Radio$disabled = function (disabled) {
-	return _user$project$Bootstrap_Form_Radio$Disabled(disabled);
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$disabled = function (disabled) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Radio$Disabled(disabled);
 };
-var _user$project$Bootstrap_Form_Radio$Custom = {ctor: 'Custom'};
-var _user$project$Bootstrap_Form_Radio$createCustom = function (options) {
-	return _user$project$Bootstrap_Form_Radio$create(
-		{ctor: '::', _0: _user$project$Bootstrap_Form_Radio$Custom, _1: options});
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$Custom = {ctor: 'Custom'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$createCustom = function (options) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Radio$create(
+		{ctor: '::', _0: _rundis$elm_bootstrap$Bootstrap_Form_Radio$Custom, _1: options});
 };
-var _user$project$Bootstrap_Form_Radio$custom = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$custom = F2(
 	function (options, label) {
-		return _user$project$Bootstrap_Form_Radio$view(
-			A2(_user$project$Bootstrap_Form_Radio$createCustom, options, label));
+		return _rundis$elm_bootstrap$Bootstrap_Form_Radio$view(
+			A2(_rundis$elm_bootstrap$Bootstrap_Form_Radio$createCustom, options, label));
 	});
-var _user$project$Bootstrap_Form_Radio$OnClick = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$OnClick = function (a) {
 	return {ctor: 'OnClick', _0: a};
 };
-var _user$project$Bootstrap_Form_Radio$onClick = function (toMsg) {
-	return _user$project$Bootstrap_Form_Radio$OnClick(toMsg);
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$onClick = function (toMsg) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Radio$OnClick(toMsg);
 };
-var _user$project$Bootstrap_Form_Radio$Name = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$Name = function (a) {
 	return {ctor: 'Name', _0: a};
 };
-var _user$project$Bootstrap_Form_Radio$name = function (name) {
-	return _user$project$Bootstrap_Form_Radio$Name(name);
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$name = function (name) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Radio$Name(name);
 };
-var _user$project$Bootstrap_Form_Radio$radioList = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$radioList = F2(
 	function (groupName, radios) {
 		return A2(
 			_elm_lang$core$List$map,
 			function (_p7) {
-				return _user$project$Bootstrap_Form_Radio$view(
-					_user$project$Bootstrap_Form_Radio$addOption(
-						_user$project$Bootstrap_Form_Radio$name(groupName))(_p7));
+				return _rundis$elm_bootstrap$Bootstrap_Form_Radio$view(
+					_rundis$elm_bootstrap$Bootstrap_Form_Radio$addOption(
+						_rundis$elm_bootstrap$Bootstrap_Form_Radio$name(groupName))(_p7));
 			},
 			radios);
 	});
-var _user$project$Bootstrap_Form_Radio$Inline = {ctor: 'Inline'};
-var _user$project$Bootstrap_Form_Radio$inline = _user$project$Bootstrap_Form_Radio$Inline;
-var _user$project$Bootstrap_Form_Radio$Checked = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$Inline = {ctor: 'Inline'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$inline = _rundis$elm_bootstrap$Bootstrap_Form_Radio$Inline;
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$Checked = function (a) {
 	return {ctor: 'Checked', _0: a};
 };
-var _user$project$Bootstrap_Form_Radio$checked = function (isCheck) {
-	return _user$project$Bootstrap_Form_Radio$Checked(isCheck);
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$checked = function (isCheck) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Radio$Checked(isCheck);
 };
-var _user$project$Bootstrap_Form_Radio$Id = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$Id = function (a) {
 	return {ctor: 'Id', _0: a};
 };
-var _user$project$Bootstrap_Form_Radio$id = function (theId) {
-	return _user$project$Bootstrap_Form_Radio$Id(theId);
+var _rundis$elm_bootstrap$Bootstrap_Form_Radio$id = function (theId) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Radio$Id(theId);
 };
 
-var _user$project$Bootstrap_Form_Select$validationAttribute = function (validation) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$validationAttribute = function (validation) {
 	return _elm_lang$html$Html_Attributes$class(
-		_user$project$Bootstrap_Form_FormInternal$validationToString(validation));
+		_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$validationToString(validation));
 };
-var _user$project$Bootstrap_Form_Select$sizeAttribute = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$sizeAttribute = F2(
 	function (isCustom, size) {
 		var prefix = isCustom ? 'custom-select-' : 'form-control-';
 		return A2(
@@ -16023,9 +16555,9 @@ var _user$project$Bootstrap_Form_Select$sizeAttribute = F2(
 				return _elm_lang$html$Html_Attributes$class(
 					A2(_elm_lang$core$Basics_ops['++'], prefix, s));
 			},
-			_user$project$Bootstrap_Grid_Internal$screenSizeOption(size));
+			_rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption(size));
 	});
-var _user$project$Bootstrap_Form_Select$applyModifier = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$applyModifier = F2(
 	function (modifier, options) {
 		var _p0 = modifier;
 		switch (_p0.ctor) {
@@ -16069,7 +16601,7 @@ var _user$project$Bootstrap_Form_Select$applyModifier = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Form_Select$defaultOptions = {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$defaultOptions = {
 	id: _elm_lang$core$Maybe$Nothing,
 	size: _elm_lang$core$Maybe$Nothing,
 	custom: false,
@@ -16078,14 +16610,14 @@ var _user$project$Bootstrap_Form_Select$defaultOptions = {
 	validation: _elm_lang$core$Maybe$Nothing,
 	attributes: {ctor: '[]'}
 };
-var _user$project$Bootstrap_Form_Select$customEventOnChange = function (tagger) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$customEventOnChange = function (tagger) {
 	return A2(
 		_elm_lang$html$Html_Events$on,
 		'change',
 		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
 };
-var _user$project$Bootstrap_Form_Select$toAttributes = function (modifiers) {
-	var options = A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Form_Select$applyModifier, _user$project$Bootstrap_Form_Select$defaultOptions, modifiers);
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$toAttributes = function (modifiers) {
+	var options = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Form_Select$applyModifier, _rundis$elm_bootstrap$Bootstrap_Form_Select$defaultOptions, modifiers);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		{
@@ -16118,14 +16650,14 @@ var _user$project$Bootstrap_Form_Select$toAttributes = function (modifiers) {
 						ctor: '::',
 						_0: A2(
 							_elm_lang$core$Maybe$andThen,
-							_user$project$Bootstrap_Form_Select$sizeAttribute(options.custom),
+							_rundis$elm_bootstrap$Bootstrap_Form_Select$sizeAttribute(options.custom),
 							options.size),
 						_1: {
 							ctor: '::',
-							_0: A2(_elm_lang$core$Maybe$map, _user$project$Bootstrap_Form_Select$customEventOnChange, options.onChange),
+							_0: A2(_elm_lang$core$Maybe$map, _rundis$elm_bootstrap$Bootstrap_Form_Select$customEventOnChange, options.onChange),
 							_1: {
 								ctor: '::',
-								_0: A2(_elm_lang$core$Maybe$map, _user$project$Bootstrap_Form_Select$validationAttribute, options.validation),
+								_0: A2(_elm_lang$core$Maybe$map, _rundis$elm_bootstrap$Bootstrap_Form_Select$validationAttribute, options.validation),
 								_1: {ctor: '[]'}
 							}
 						}
@@ -16133,11 +16665,11 @@ var _user$project$Bootstrap_Form_Select$toAttributes = function (modifiers) {
 				}),
 			options.attributes));
 };
-var _user$project$Bootstrap_Form_Select$view = function (_p1) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$view = function (_p1) {
 	var _p2 = _p1;
 	return A2(
 		_elm_lang$html$Html$select,
-		_user$project$Bootstrap_Form_Select$toAttributes(_p2._0.options),
+		_rundis$elm_bootstrap$Bootstrap_Form_Select$toAttributes(_p2._0.options),
 		A2(
 			_elm_lang$core$List$map,
 			function (_p3) {
@@ -16146,81 +16678,81 @@ var _user$project$Bootstrap_Form_Select$view = function (_p1) {
 			},
 			_p2._0.items));
 };
-var _user$project$Bootstrap_Form_Select$Options = F7(
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$Options = F7(
 	function (a, b, c, d, e, f, g) {
 		return {id: a, size: b, disabled: c, custom: d, onChange: e, validation: f, attributes: g};
 	});
-var _user$project$Bootstrap_Form_Select$Select = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$Select = function (a) {
 	return {ctor: 'Select', _0: a};
 };
-var _user$project$Bootstrap_Form_Select$create = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$create = F2(
 	function (options, items) {
-		return _user$project$Bootstrap_Form_Select$Select(
+		return _rundis$elm_bootstrap$Bootstrap_Form_Select$Select(
 			{options: options, items: items});
 	});
-var _user$project$Bootstrap_Form_Select$select = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$select = F2(
 	function (options, items) {
-		return _user$project$Bootstrap_Form_Select$view(
-			A2(_user$project$Bootstrap_Form_Select$create, options, items));
+		return _rundis$elm_bootstrap$Bootstrap_Form_Select$view(
+			A2(_rundis$elm_bootstrap$Bootstrap_Form_Select$create, options, items));
 	});
-var _user$project$Bootstrap_Form_Select$Item = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$Item = function (a) {
 	return {ctor: 'Item', _0: a};
 };
-var _user$project$Bootstrap_Form_Select$item = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$item = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Form_Select$Item(
+		return _rundis$elm_bootstrap$Bootstrap_Form_Select$Item(
 			A2(_elm_lang$html$Html$option, attributes, children));
 	});
-var _user$project$Bootstrap_Form_Select$Attrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$Attrs = function (a) {
 	return {ctor: 'Attrs', _0: a};
 };
-var _user$project$Bootstrap_Form_Select$attrs = function (attrs) {
-	return _user$project$Bootstrap_Form_Select$Attrs(attrs);
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Select$Attrs(attrs);
 };
-var _user$project$Bootstrap_Form_Select$Validation = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$Validation = function (a) {
 	return {ctor: 'Validation', _0: a};
 };
-var _user$project$Bootstrap_Form_Select$success = _user$project$Bootstrap_Form_Select$Validation(_user$project$Bootstrap_Form_FormInternal$Success);
-var _user$project$Bootstrap_Form_Select$danger = _user$project$Bootstrap_Form_Select$Validation(_user$project$Bootstrap_Form_FormInternal$Danger);
-var _user$project$Bootstrap_Form_Select$OnChange = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$success = _rundis$elm_bootstrap$Bootstrap_Form_Select$Validation(_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$Success);
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$danger = _rundis$elm_bootstrap$Bootstrap_Form_Select$Validation(_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$Danger);
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$OnChange = function (a) {
 	return {ctor: 'OnChange', _0: a};
 };
-var _user$project$Bootstrap_Form_Select$onChange = function (toMsg) {
-	return _user$project$Bootstrap_Form_Select$OnChange(toMsg);
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$onChange = function (toMsg) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Select$OnChange(toMsg);
 };
-var _user$project$Bootstrap_Form_Select$Disabled = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$Disabled = function (a) {
 	return {ctor: 'Disabled', _0: a};
 };
-var _user$project$Bootstrap_Form_Select$disabled = function (disabled) {
-	return _user$project$Bootstrap_Form_Select$Disabled(disabled);
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$disabled = function (disabled) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Select$Disabled(disabled);
 };
-var _user$project$Bootstrap_Form_Select$Custom = {ctor: 'Custom'};
-var _user$project$Bootstrap_Form_Select$custom = function (options) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$Custom = {ctor: 'Custom'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$custom = function (options) {
 	return function (_p5) {
-		return _user$project$Bootstrap_Form_Select$view(
+		return _rundis$elm_bootstrap$Bootstrap_Form_Select$view(
 			A2(
-				_user$project$Bootstrap_Form_Select$create,
-				{ctor: '::', _0: _user$project$Bootstrap_Form_Select$Custom, _1: options},
+				_rundis$elm_bootstrap$Bootstrap_Form_Select$create,
+				{ctor: '::', _0: _rundis$elm_bootstrap$Bootstrap_Form_Select$Custom, _1: options},
 				_p5));
 	};
 };
-var _user$project$Bootstrap_Form_Select$Id = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$Id = function (a) {
 	return {ctor: 'Id', _0: a};
 };
-var _user$project$Bootstrap_Form_Select$id = function (id) {
-	return _user$project$Bootstrap_Form_Select$Id(id);
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$id = function (id) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Select$Id(id);
 };
-var _user$project$Bootstrap_Form_Select$Size = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$Size = function (a) {
 	return {ctor: 'Size', _0: a};
 };
-var _user$project$Bootstrap_Form_Select$small = _user$project$Bootstrap_Form_Select$Size(_user$project$Bootstrap_Grid_Internal$SM);
-var _user$project$Bootstrap_Form_Select$large = _user$project$Bootstrap_Form_Select$Size(_user$project$Bootstrap_Grid_Internal$LG);
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$small = _rundis$elm_bootstrap$Bootstrap_Form_Select$Size(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM);
+var _rundis$elm_bootstrap$Bootstrap_Form_Select$large = _rundis$elm_bootstrap$Bootstrap_Form_Select$Size(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG);
 
-var _user$project$Bootstrap_Form_Textarea$validationAttribute = function (validation) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$validationAttribute = function (validation) {
 	return _elm_lang$html$Html_Attributes$class(
-		_user$project$Bootstrap_Form_FormInternal$validationToString(validation));
+		_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$validationToString(validation));
 };
-var _user$project$Bootstrap_Form_Textarea$applyModifier = F2(
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$applyModifier = F2(
 	function (modifier, options) {
 		var _p0 = modifier;
 		switch (_p0.ctor) {
@@ -16272,7 +16804,7 @@ var _user$project$Bootstrap_Form_Textarea$applyModifier = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Form_Textarea$defaultOptions = {
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$defaultOptions = {
 	id: _elm_lang$core$Maybe$Nothing,
 	rows: _elm_lang$core$Maybe$Nothing,
 	disabled: false,
@@ -16282,8 +16814,8 @@ var _user$project$Bootstrap_Form_Textarea$defaultOptions = {
 	validation: _elm_lang$core$Maybe$Nothing,
 	attributes: {ctor: '[]'}
 };
-var _user$project$Bootstrap_Form_Textarea$toAttributes = function (modifiers) {
-	var options = A3(_elm_lang$core$List$foldl, _user$project$Bootstrap_Form_Textarea$applyModifier, _user$project$Bootstrap_Form_Textarea$defaultOptions, modifiers);
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$toAttributes = function (modifiers) {
+	var options = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Form_Textarea$applyModifier, _rundis$elm_bootstrap$Bootstrap_Form_Textarea$defaultOptions, modifiers);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		{
@@ -16317,7 +16849,7 @@ var _user$project$Bootstrap_Form_Textarea$toAttributes = function (modifiers) {
 									_0: A2(_elm_lang$core$Maybe$map, _elm_lang$html$Html_Events$onInput, options.onInput),
 									_1: {
 										ctor: '::',
-										_0: A2(_elm_lang$core$Maybe$map, _user$project$Bootstrap_Form_Textarea$validationAttribute, options.validation),
+										_0: A2(_elm_lang$core$Maybe$map, _rundis$elm_bootstrap$Bootstrap_Form_Textarea$validationAttribute, options.validation),
 										_1: {ctor: '[]'}
 									}
 								}
@@ -16327,79 +16859,79 @@ var _user$project$Bootstrap_Form_Textarea$toAttributes = function (modifiers) {
 				}),
 			options.attributes));
 };
-var _user$project$Bootstrap_Form_Textarea$view = function (_p1) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$view = function (_p1) {
 	var _p2 = _p1;
 	return A2(
 		_elm_lang$html$Html$textarea,
-		_user$project$Bootstrap_Form_Textarea$toAttributes(_p2._0.options),
+		_rundis$elm_bootstrap$Bootstrap_Form_Textarea$toAttributes(_p2._0.options),
 		{ctor: '[]'});
 };
-var _user$project$Bootstrap_Form_Textarea$Options = F8(
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Options = F8(
 	function (a, b, c, d, e, f, g, h) {
 		return {id: a, rows: b, disabled: c, value: d, defaultValue: e, onInput: f, validation: g, attributes: h};
 	});
-var _user$project$Bootstrap_Form_Textarea$Textarea = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Textarea = function (a) {
 	return {ctor: 'Textarea', _0: a};
 };
-var _user$project$Bootstrap_Form_Textarea$create = function (options) {
-	return _user$project$Bootstrap_Form_Textarea$Textarea(
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$create = function (options) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Textarea(
 		{options: options});
 };
-var _user$project$Bootstrap_Form_Textarea$textarea = function (_p3) {
-	return _user$project$Bootstrap_Form_Textarea$view(
-		_user$project$Bootstrap_Form_Textarea$create(_p3));
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$textarea = function (_p3) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Textarea$view(
+		_rundis$elm_bootstrap$Bootstrap_Form_Textarea$create(_p3));
 };
-var _user$project$Bootstrap_Form_Textarea$Attrs = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Attrs = function (a) {
 	return {ctor: 'Attrs', _0: a};
 };
-var _user$project$Bootstrap_Form_Textarea$attrs = function (attrs) {
-	return _user$project$Bootstrap_Form_Textarea$Attrs(attrs);
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$attrs = function (attrs) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Attrs(attrs);
 };
-var _user$project$Bootstrap_Form_Textarea$Validation = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Validation = function (a) {
 	return {ctor: 'Validation', _0: a};
 };
-var _user$project$Bootstrap_Form_Textarea$success = _user$project$Bootstrap_Form_Textarea$Validation(_user$project$Bootstrap_Form_FormInternal$Success);
-var _user$project$Bootstrap_Form_Textarea$danger = _user$project$Bootstrap_Form_Textarea$Validation(_user$project$Bootstrap_Form_FormInternal$Danger);
-var _user$project$Bootstrap_Form_Textarea$OnInput = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$success = _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Validation(_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$Success);
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$danger = _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Validation(_rundis$elm_bootstrap$Bootstrap_Form_FormInternal$Danger);
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$OnInput = function (a) {
 	return {ctor: 'OnInput', _0: a};
 };
-var _user$project$Bootstrap_Form_Textarea$onInput = function (toMsg) {
-	return _user$project$Bootstrap_Form_Textarea$OnInput(toMsg);
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$onInput = function (toMsg) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Textarea$OnInput(toMsg);
 };
-var _user$project$Bootstrap_Form_Textarea$DefaultValue = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$DefaultValue = function (a) {
 	return {ctor: 'DefaultValue', _0: a};
 };
-var _user$project$Bootstrap_Form_Textarea$defaultValue = function (value) {
-	return _user$project$Bootstrap_Form_Textarea$DefaultValue(value);
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$defaultValue = function (value) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Textarea$DefaultValue(value);
 };
-var _user$project$Bootstrap_Form_Textarea$Value = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Value = function (a) {
 	return {ctor: 'Value', _0: a};
 };
-var _user$project$Bootstrap_Form_Textarea$value = function (value) {
-	return _user$project$Bootstrap_Form_Textarea$Value(value);
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$value = function (value) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Value(value);
 };
-var _user$project$Bootstrap_Form_Textarea$Disabled = {ctor: 'Disabled'};
-var _user$project$Bootstrap_Form_Textarea$disabled = _user$project$Bootstrap_Form_Textarea$Disabled;
-var _user$project$Bootstrap_Form_Textarea$Rows = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Disabled = {ctor: 'Disabled'};
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$disabled = _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Disabled;
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Rows = function (a) {
 	return {ctor: 'Rows', _0: a};
 };
-var _user$project$Bootstrap_Form_Textarea$rows = function (rows) {
-	return _user$project$Bootstrap_Form_Textarea$Rows(rows);
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$rows = function (rows) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Rows(rows);
 };
-var _user$project$Bootstrap_Form_Textarea$Id = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Id = function (a) {
 	return {ctor: 'Id', _0: a};
 };
-var _user$project$Bootstrap_Form_Textarea$id = function (id) {
-	return _user$project$Bootstrap_Form_Textarea$Id(id);
+var _rundis$elm_bootstrap$Bootstrap_Form_Textarea$id = function (id) {
+	return _rundis$elm_bootstrap$Bootstrap_Form_Textarea$Id(id);
 };
 
-var _user$project$Bootstrap_Grid$renderCol = function (column) {
+var _rundis$elm_bootstrap$Bootstrap_Grid$renderCol = function (column) {
 	var _p0 = column;
 	switch (_p0.ctor) {
 		case 'Column':
 			return A2(
 				_elm_lang$html$Html$div,
-				_user$project$Bootstrap_Grid_Internal$colAttributes(_p0._0.options),
+				_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colAttributes(_p0._0.options),
 				_p0._0.children);
 		case 'ColBreak':
 			return _p0._0;
@@ -16407,16 +16939,16 @@ var _user$project$Bootstrap_Grid$renderCol = function (column) {
 			return A3(
 				_elm_lang$html$Html_Keyed$node,
 				'div',
-				_user$project$Bootstrap_Grid_Internal$colAttributes(_p0._0.options),
+				_rundis$elm_bootstrap$Bootstrap_Grid_Internal$colAttributes(_p0._0.options),
 				_p0._0.children);
 	}
 };
-var _user$project$Bootstrap_Grid$keyedRow = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid$keyedRow = F2(
 	function (options, keyedCols) {
 		return A3(
 			_elm_lang$html$Html_Keyed$node,
 			'div',
-			_user$project$Bootstrap_Grid_Internal$rowAttributes(options),
+			_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowAttributes(options),
 			A2(
 				_elm_lang$core$List$map,
 				function (_p1) {
@@ -16424,25 +16956,25 @@ var _user$project$Bootstrap_Grid$keyedRow = F2(
 					return {
 						ctor: '_Tuple2',
 						_0: _p2._0,
-						_1: _user$project$Bootstrap_Grid$renderCol(_p2._1)
+						_1: _rundis$elm_bootstrap$Bootstrap_Grid$renderCol(_p2._1)
 					};
 				},
 				keyedCols));
 	});
-var _user$project$Bootstrap_Grid$row = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid$row = F2(
 	function (options, cols) {
 		return A2(
 			_elm_lang$html$Html$div,
-			_user$project$Bootstrap_Grid_Internal$rowAttributes(options),
-			A2(_elm_lang$core$List$map, _user$project$Bootstrap_Grid$renderCol, cols));
+			_rundis$elm_bootstrap$Bootstrap_Grid_Internal$rowAttributes(options),
+			A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Grid$renderCol, cols));
 	});
-var _user$project$Bootstrap_Grid$simpleRow = function (cols) {
+var _rundis$elm_bootstrap$Bootstrap_Grid$simpleRow = function (cols) {
 	return A2(
-		_user$project$Bootstrap_Grid$row,
+		_rundis$elm_bootstrap$Bootstrap_Grid$row,
 		{ctor: '[]'},
 		cols);
 };
-var _user$project$Bootstrap_Grid$containerFluid = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid$containerFluid = F2(
 	function (attributes, children) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -16456,7 +16988,7 @@ var _user$project$Bootstrap_Grid$containerFluid = F2(
 				attributes),
 			children);
 	});
-var _user$project$Bootstrap_Grid$container = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid$container = F2(
 	function (attributes, children) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -16470,19 +17002,19 @@ var _user$project$Bootstrap_Grid$container = F2(
 				attributes),
 			children);
 	});
-var _user$project$Bootstrap_Grid$KeyedColumn = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid$KeyedColumn = function (a) {
 	return {ctor: 'KeyedColumn', _0: a};
 };
-var _user$project$Bootstrap_Grid$keyedCol = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid$keyedCol = F2(
 	function (options, children) {
-		return _user$project$Bootstrap_Grid$KeyedColumn(
+		return _rundis$elm_bootstrap$Bootstrap_Grid$KeyedColumn(
 			{options: options, children: children});
 	});
-var _user$project$Bootstrap_Grid$ColBreak = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid$ColBreak = function (a) {
 	return {ctor: 'ColBreak', _0: a};
 };
-var _user$project$Bootstrap_Grid$colBreak = function (attributes) {
-	return _user$project$Bootstrap_Grid$ColBreak(
+var _rundis$elm_bootstrap$Bootstrap_Grid$colBreak = function (attributes) {
+	return _rundis$elm_bootstrap$Bootstrap_Grid$ColBreak(
 		A2(
 			_elm_lang$html$Html$div,
 			A2(
@@ -16495,16 +17027,16 @@ var _user$project$Bootstrap_Grid$colBreak = function (attributes) {
 				attributes),
 			{ctor: '[]'}));
 };
-var _user$project$Bootstrap_Grid$Column = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Grid$Column = function (a) {
 	return {ctor: 'Column', _0: a};
 };
-var _user$project$Bootstrap_Grid$col = F2(
+var _rundis$elm_bootstrap$Bootstrap_Grid$col = F2(
 	function (options, children) {
-		return _user$project$Bootstrap_Grid$Column(
+		return _rundis$elm_bootstrap$Bootstrap_Grid$Column(
 			{options: options, children: children});
 	});
 
-var _user$project$Bootstrap_Navbar$toRGBString = function (color) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$toRGBString = function (color) {
 	var _p0 = _elm_lang$core$Color$toRgb(color);
 	var red = _p0.red;
 	var green = _p0.green;
@@ -16529,11 +17061,11 @@ var _user$project$Bootstrap_Navbar$toRGBString = function (color) {
 							_elm_lang$core$Basics$toString(blue),
 							')'))))));
 };
-var _user$project$Bootstrap_Navbar$backgroundColorOption = function (bgClass) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$backgroundColorOption = function (bgClass) {
 	var _p1 = bgClass;
 	switch (_p1.ctor) {
 		case 'Roled':
-			return A2(_user$project$Bootstrap_Internal_Role$toClass, 'bg', _p1._0);
+			return A2(_rundis$elm_bootstrap$Bootstrap_Internal_Role$toClass, 'bg', _p1._0);
 		case 'Custom':
 			return _elm_lang$html$Html_Attributes$style(
 				{
@@ -16541,7 +17073,7 @@ var _user$project$Bootstrap_Navbar$backgroundColorOption = function (bgClass) {
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'background-color',
-						_1: _user$project$Bootstrap_Navbar$toRGBString(_p1._0)
+						_1: _rundis$elm_bootstrap$Bootstrap_Navbar$toRGBString(_p1._0)
 					},
 					_1: {ctor: '[]'}
 				});
@@ -16549,7 +17081,7 @@ var _user$project$Bootstrap_Navbar$backgroundColorOption = function (bgClass) {
 			return _elm_lang$html$Html_Attributes$class(_p1._0);
 	}
 };
-var _user$project$Bootstrap_Navbar$linkModifierClass = function (modifier) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$linkModifierClass = function (modifier) {
 	return _elm_lang$html$Html_Attributes$class(
 		function () {
 			var _p2 = modifier;
@@ -16560,19 +17092,19 @@ var _user$project$Bootstrap_Navbar$linkModifierClass = function (modifier) {
 			}
 		}());
 };
-var _user$project$Bootstrap_Navbar$schemeAttributes = function (_p3) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$schemeAttributes = function (_p3) {
 	var _p4 = _p3;
 	return {
 		ctor: '::',
-		_0: _user$project$Bootstrap_Navbar$linkModifierClass(_p4.modifier),
+		_0: _rundis$elm_bootstrap$Bootstrap_Navbar$linkModifierClass(_p4.modifier),
 		_1: {
 			ctor: '::',
-			_0: _user$project$Bootstrap_Navbar$backgroundColorOption(_p4.bgColor),
+			_0: _rundis$elm_bootstrap$Bootstrap_Navbar$backgroundColorOption(_p4.bgColor),
 			_1: {ctor: '[]'}
 		}
 	};
 };
-var _user$project$Bootstrap_Navbar$fixOption = function (fix) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$fixOption = function (fix) {
 	var _p5 = fix;
 	if (_p5.ctor === 'Top') {
 		return 'fixed-top';
@@ -16580,7 +17112,7 @@ var _user$project$Bootstrap_Navbar$fixOption = function (fix) {
 		return 'fixed-bottom';
 	}
 };
-var _user$project$Bootstrap_Navbar$expandOption = function (size) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$expandOption = function (size) {
 	var toClass = function (sz) {
 		return _elm_lang$html$Html_Attributes$class(
 			A2(
@@ -16594,39 +17126,39 @@ var _user$project$Bootstrap_Navbar$expandOption = function (size) {
 						function (s) {
 							return A2(_elm_lang$core$Basics_ops['++'], '-', s);
 						},
-						_user$project$Bootstrap_Grid_Internal$screenSizeOption(sz)))));
+						_rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption(sz)))));
 	};
 	var _p6 = size;
 	switch (_p6.ctor) {
 		case 'XS':
 			return {
 				ctor: '::',
-				_0: toClass(_user$project$Bootstrap_Grid_Internal$SM),
+				_0: toClass(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM),
 				_1: {ctor: '[]'}
 			};
 		case 'SM':
 			return {
 				ctor: '::',
-				_0: toClass(_user$project$Bootstrap_Grid_Internal$MD),
+				_0: toClass(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD),
 				_1: {ctor: '[]'}
 			};
 		case 'MD':
 			return {
 				ctor: '::',
-				_0: toClass(_user$project$Bootstrap_Grid_Internal$LG),
+				_0: toClass(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG),
 				_1: {ctor: '[]'}
 			};
 		case 'LG':
 			return {
 				ctor: '::',
-				_0: toClass(_user$project$Bootstrap_Grid_Internal$XL),
+				_0: toClass(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL),
 				_1: {ctor: '[]'}
 			};
 		default:
 			return {ctor: '[]'};
 	}
 };
-var _user$project$Bootstrap_Navbar$navbarAttributes = function (options) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$navbarAttributes = function (options) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		{
@@ -16645,13 +17177,13 @@ var _user$project$Bootstrap_Navbar$navbarAttributes = function (options) {
 		},
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			_user$project$Bootstrap_Navbar$expandOption(options.toggleAt),
+			_rundis$elm_bootstrap$Bootstrap_Navbar$expandOption(options.toggleAt),
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				function () {
 					var _p7 = options.scheme;
 					if (_p7.ctor === 'Just') {
-						return _user$project$Bootstrap_Navbar$schemeAttributes(_p7._0);
+						return _rundis$elm_bootstrap$Bootstrap_Navbar$schemeAttributes(_p7._0);
 					} else {
 						return {ctor: '[]'};
 					}
@@ -16664,7 +17196,7 @@ var _user$project$Bootstrap_Navbar$navbarAttributes = function (options) {
 							return {
 								ctor: '::',
 								_0: _elm_lang$html$Html_Attributes$class(
-									_user$project$Bootstrap_Navbar$fixOption(_p8._0)),
+									_rundis$elm_bootstrap$Bootstrap_Navbar$fixOption(_p8._0)),
 								_1: {ctor: '[]'}
 							};
 						} else {
@@ -16673,7 +17205,7 @@ var _user$project$Bootstrap_Navbar$navbarAttributes = function (options) {
 					}(),
 					options.attributes))));
 };
-var _user$project$Bootstrap_Navbar$renderCustom = function (items) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$renderCustom = function (items) {
 	return A2(
 		_elm_lang$core$List$map,
 		function (_p9) {
@@ -16682,7 +17214,7 @@ var _user$project$Bootstrap_Navbar$renderCustom = function (items) {
 		},
 		items);
 };
-var _user$project$Bootstrap_Navbar$renderItemLink = function (_p11) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$renderItemLink = function (_p11) {
 	var _p12 = _p11;
 	return A2(
 		_elm_lang$html$Html$li,
@@ -16707,7 +17239,7 @@ var _user$project$Bootstrap_Navbar$renderItemLink = function (_p11) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Bootstrap_Navbar$maybeBrand = function (brand) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$maybeBrand = function (brand) {
 	var _p13 = brand;
 	if (_p13.ctor === 'Just') {
 		return {
@@ -16719,7 +17251,7 @@ var _user$project$Bootstrap_Navbar$maybeBrand = function (brand) {
 		return {ctor: '[]'};
 	}
 };
-var _user$project$Bootstrap_Navbar$transitionStyle = function (maybeHeight) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$transitionStyle = function (maybeHeight) {
 	var pixelHeight = A2(
 		_elm_lang$core$Maybe$withDefault,
 		'0',
@@ -16787,12 +17319,12 @@ var _user$project$Bootstrap_Navbar$transitionStyle = function (maybeHeight) {
 			}
 		});
 };
-var _user$project$Bootstrap_Navbar$toScreenSize = function (_p14) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$toScreenSize = function (_p14) {
 	var _p15 = _p14;
 	var _p16 = _p15.width;
-	return (_elm_lang$core$Native_Utils.cmp(_p16, 576) < 1) ? _user$project$Bootstrap_Grid_Internal$XS : ((_elm_lang$core$Native_Utils.cmp(_p16, 768) < 1) ? _user$project$Bootstrap_Grid_Internal$SM : ((_elm_lang$core$Native_Utils.cmp(_p16, 992) < 1) ? _user$project$Bootstrap_Grid_Internal$MD : ((_elm_lang$core$Native_Utils.cmp(_p16, 1200) < 1) ? _user$project$Bootstrap_Grid_Internal$LG : _user$project$Bootstrap_Grid_Internal$XL)));
+	return (_elm_lang$core$Native_Utils.cmp(_p16, 576) < 1) ? _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS : ((_elm_lang$core$Native_Utils.cmp(_p16, 768) < 1) ? _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM : ((_elm_lang$core$Native_Utils.cmp(_p16, 992) < 1) ? _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD : ((_elm_lang$core$Native_Utils.cmp(_p16, 1200) < 1) ? _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG : _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL)));
 };
-var _user$project$Bootstrap_Navbar$sizeToComparable = function (size) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$sizeToComparable = function (size) {
 	var _p17 = size;
 	switch (_p17.ctor) {
 		case 'XS':
@@ -16807,24 +17339,24 @@ var _user$project$Bootstrap_Navbar$sizeToComparable = function (size) {
 			return 5;
 	}
 };
-var _user$project$Bootstrap_Navbar$shouldHideMenu = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$shouldHideMenu = F2(
 	function (_p19, _p18) {
 		var _p20 = _p19;
 		var _p21 = _p18;
 		var winMedia = function () {
 			var _p22 = _p20._0.windowSize;
 			if (_p22.ctor === 'Just') {
-				return _user$project$Bootstrap_Navbar$toScreenSize(_p22._0);
+				return _rundis$elm_bootstrap$Bootstrap_Navbar$toScreenSize(_p22._0);
 			} else {
-				return _user$project$Bootstrap_Grid_Internal$XS;
+				return _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS;
 			}
 		}();
 		var _p23 = A2(_elm_lang$core$Debug$log, 'ScreenSize', winMedia);
 		return _elm_lang$core$Native_Utils.cmp(
-			_user$project$Bootstrap_Navbar$sizeToComparable(winMedia),
-			_user$project$Bootstrap_Navbar$sizeToComparable(_p21._0.options.toggleAt)) > 0;
+			_rundis$elm_bootstrap$Bootstrap_Navbar$sizeToComparable(winMedia),
+			_rundis$elm_bootstrap$Bootstrap_Navbar$sizeToComparable(_p21._0.options.toggleAt)) > 0;
 	});
-var _user$project$Bootstrap_Navbar$menuWrapperAttributes = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$menuWrapperAttributes = F2(
 	function (_p25, _p24) {
 		var _p26 = _p25;
 		var _p32 = _p26;
@@ -16834,7 +17366,7 @@ var _user$project$Bootstrap_Navbar$menuWrapperAttributes = F2(
 		var display = function () {
 			var _p28 = _p26._0.height;
 			if (_p28.ctor === 'Nothing') {
-				return ((!_p31) || A2(_user$project$Bootstrap_Navbar$shouldHideMenu, _p32, _p30)) ? 'flex' : 'block';
+				return ((!_p31) || A2(_rundis$elm_bootstrap$Bootstrap_Navbar$shouldHideMenu, _p32, _p30)) ? 'flex' : 'block';
 			} else {
 				return 'flex';
 			}
@@ -16879,7 +17411,7 @@ var _user$project$Bootstrap_Navbar$menuWrapperAttributes = F2(
 			case 'StartUp':
 				return styleBlock;
 			default:
-				return ((!_p31) || A2(_user$project$Bootstrap_Navbar$shouldHideMenu, _p32, _p30)) ? {
+				return ((!_p31) || A2(_rundis$elm_bootstrap$Bootstrap_Navbar$shouldHideMenu, _p32, _p30)) ? {
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$class('collapse navbar-collapse show'),
 					_1: {ctor: '[]'}
@@ -16895,7 +17427,7 @@ var _user$project$Bootstrap_Navbar$menuWrapperAttributes = F2(
 				};
 		}
 	});
-var _user$project$Bootstrap_Navbar$heightDecoder = function () {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$heightDecoder = function () {
 	var resToDec = function (res) {
 		var _p33 = res;
 		if (_p33.ctor === 'Ok') {
@@ -16989,39 +17521,39 @@ var _user$project$Bootstrap_Navbar$heightDecoder = function () {
 		_debois$elm_dom$DOM$target(
 			_debois$elm_dom$DOM$parentElement(tagDecoder)));
 }();
-var _user$project$Bootstrap_Navbar$VisibilityState = F4(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$VisibilityState = F4(
 	function (a, b, c, d) {
 		return {visibility: a, height: b, windowSize: c, dropdowns: d};
 	});
-var _user$project$Bootstrap_Navbar$ConfigRec = F6(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$ConfigRec = F6(
 	function (a, b, c, d, e, f) {
 		return {options: a, toMsg: b, withAnimation: c, brand: d, items: e, customItems: f};
 	});
-var _user$project$Bootstrap_Navbar$Options = F5(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Options = F5(
 	function (a, b, c, d, e) {
 		return {fix: a, isContainer: b, scheme: c, toggleAt: d, attributes: e};
 	});
-var _user$project$Bootstrap_Navbar$Scheme = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Scheme = F2(
 	function (a, b) {
 		return {modifier: a, bgColor: b};
 	});
-var _user$project$Bootstrap_Navbar$State = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$State = function (a) {
 	return {ctor: 'State', _0: a};
 };
-var _user$project$Bootstrap_Navbar$mapState = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$mapState = F2(
 	function (mapper, _p38) {
 		var _p39 = _p38;
-		return _user$project$Bootstrap_Navbar$State(
+		return _rundis$elm_bootstrap$Bootstrap_Navbar$State(
 			mapper(_p39._0));
 	});
-var _user$project$Bootstrap_Navbar$initWindowSize = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$initWindowSize = F2(
 	function (toMsg, state) {
 		return A2(
 			_elm_lang$core$Task$perform,
 			function (size) {
 				return toMsg(
 					A2(
-						_user$project$Bootstrap_Navbar$mapState,
+						_rundis$elm_bootstrap$Bootstrap_Navbar$mapState,
 						function (s) {
 							return _elm_lang$core$Native_Utils.update(
 								s,
@@ -17033,22 +17565,22 @@ var _user$project$Bootstrap_Navbar$initWindowSize = F2(
 			},
 			_elm_lang$window$Window$size);
 	});
-var _user$project$Bootstrap_Navbar$Shown = {ctor: 'Shown'};
-var _user$project$Bootstrap_Navbar$AnimatingUp = {ctor: 'AnimatingUp'};
-var _user$project$Bootstrap_Navbar$StartUp = {ctor: 'StartUp'};
-var _user$project$Bootstrap_Navbar$AnimatingDown = {ctor: 'AnimatingDown'};
-var _user$project$Bootstrap_Navbar$StartDown = {ctor: 'StartDown'};
-var _user$project$Bootstrap_Navbar$Hidden = {ctor: 'Hidden'};
-var _user$project$Bootstrap_Navbar$initialState = function (toMsg) {
-	var state = _user$project$Bootstrap_Navbar$State(
-		{visibility: _user$project$Bootstrap_Navbar$Hidden, height: _elm_lang$core$Maybe$Nothing, windowSize: _elm_lang$core$Maybe$Nothing, dropdowns: _elm_lang$core$Dict$empty});
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Shown = {ctor: 'Shown'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$AnimatingUp = {ctor: 'AnimatingUp'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$StartUp = {ctor: 'StartUp'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$AnimatingDown = {ctor: 'AnimatingDown'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$StartDown = {ctor: 'StartDown'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Hidden = {ctor: 'Hidden'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$initialState = function (toMsg) {
+	var state = _rundis$elm_bootstrap$Bootstrap_Navbar$State(
+		{visibility: _rundis$elm_bootstrap$Bootstrap_Navbar$Hidden, height: _elm_lang$core$Maybe$Nothing, windowSize: _elm_lang$core$Maybe$Nothing, dropdowns: _elm_lang$core$Dict$empty});
 	return {
 		ctor: '_Tuple2',
 		_0: state,
-		_1: A2(_user$project$Bootstrap_Navbar$initWindowSize, toMsg, state)
+		_1: A2(_rundis$elm_bootstrap$Bootstrap_Navbar$initWindowSize, toMsg, state)
 	};
 };
-var _user$project$Bootstrap_Navbar$visibilityTransition = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$visibilityTransition = F2(
 	function (withAnimation, visibility) {
 		var _p40 = {ctor: '_Tuple2', _0: withAnimation, _1: visibility};
 		_v23_8:
@@ -17057,24 +17589,24 @@ var _user$project$Bootstrap_Navbar$visibilityTransition = F2(
 				if (_p40._0 === true) {
 					switch (_p40._1.ctor) {
 						case 'Hidden':
-							return _user$project$Bootstrap_Navbar$StartDown;
+							return _rundis$elm_bootstrap$Bootstrap_Navbar$StartDown;
 						case 'StartDown':
-							return _user$project$Bootstrap_Navbar$AnimatingDown;
+							return _rundis$elm_bootstrap$Bootstrap_Navbar$AnimatingDown;
 						case 'AnimatingDown':
-							return _user$project$Bootstrap_Navbar$Shown;
+							return _rundis$elm_bootstrap$Bootstrap_Navbar$Shown;
 						case 'Shown':
-							return _user$project$Bootstrap_Navbar$StartUp;
+							return _rundis$elm_bootstrap$Bootstrap_Navbar$StartUp;
 						case 'StartUp':
-							return _user$project$Bootstrap_Navbar$AnimatingUp;
+							return _rundis$elm_bootstrap$Bootstrap_Navbar$AnimatingUp;
 						default:
-							return _user$project$Bootstrap_Navbar$Hidden;
+							return _rundis$elm_bootstrap$Bootstrap_Navbar$Hidden;
 					}
 				} else {
 					switch (_p40._1.ctor) {
 						case 'Hidden':
-							return _user$project$Bootstrap_Navbar$Shown;
+							return _rundis$elm_bootstrap$Bootstrap_Navbar$Shown;
 						case 'Shown':
-							return _user$project$Bootstrap_Navbar$Hidden;
+							return _rundis$elm_bootstrap$Bootstrap_Navbar$Hidden;
 						default:
 							break _v23_8;
 					}
@@ -17083,21 +17615,21 @@ var _user$project$Bootstrap_Navbar$visibilityTransition = F2(
 				break _v23_8;
 			}
 		} while(false);
-		return _user$project$Bootstrap_Navbar$Hidden;
+		return _rundis$elm_bootstrap$Bootstrap_Navbar$Hidden;
 	});
-var _user$project$Bootstrap_Navbar$toggleHandler = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$toggleHandler = F2(
 	function (_p42, _p41) {
 		var _p43 = _p42;
 		var _p44 = _p41;
 		var updState = function (h) {
 			return A2(
-				_user$project$Bootstrap_Navbar$mapState,
+				_rundis$elm_bootstrap$Bootstrap_Navbar$mapState,
 				function (s) {
 					return _elm_lang$core$Native_Utils.update(
 						s,
 						{
 							height: _elm_lang$core$Maybe$Just(h),
-							visibility: A2(_user$project$Bootstrap_Navbar$visibilityTransition, _p44._0.withAnimation, s.visibility)
+							visibility: A2(_rundis$elm_bootstrap$Bootstrap_Navbar$visibilityTransition, _p44._0.withAnimation, s.visibility)
 						});
 				},
 				_p43);
@@ -17113,25 +17645,25 @@ var _user$project$Bootstrap_Navbar$toggleHandler = F2(
 							(_elm_lang$core$Native_Utils.cmp(v, 0) > 0) ? updState(v) : updState(
 								A2(_elm_lang$core$Maybe$withDefault, 0, _p43._0.height))));
 				},
-				_user$project$Bootstrap_Navbar$heightDecoder));
+				_rundis$elm_bootstrap$Bootstrap_Navbar$heightDecoder));
 	});
-var _user$project$Bootstrap_Navbar$transitionHandler = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$transitionHandler = F2(
 	function (state, _p45) {
 		var _p46 = _p45;
 		return _elm_lang$core$Json_Decode$succeed(
 			_p46._0.toMsg(
 				A2(
-					_user$project$Bootstrap_Navbar$mapState,
+					_rundis$elm_bootstrap$Bootstrap_Navbar$mapState,
 					function (s) {
 						return _elm_lang$core$Native_Utils.update(
 							s,
 							{
-								visibility: A2(_user$project$Bootstrap_Navbar$visibilityTransition, _p46._0.withAnimation, s.visibility)
+								visibility: A2(_rundis$elm_bootstrap$Bootstrap_Navbar$visibilityTransition, _p46._0.withAnimation, s.visibility)
 							});
 					},
 					state)));
 	});
-var _user$project$Bootstrap_Navbar$menuAttributes = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$menuAttributes = F2(
 	function (_p48, _p47) {
 		var _p49 = _p48;
 		var _p55 = _p49;
@@ -17148,7 +17680,7 @@ var _user$project$Bootstrap_Navbar$menuAttributes = F2(
 			case 'Hidden':
 				var _p52 = _p54;
 				if (_p52.ctor === 'Nothing') {
-					return ((!_p50._0.withAnimation) || A2(_user$project$Bootstrap_Navbar$shouldHideMenu, _p55, _p53)) ? defaults : {
+					return ((!_p50._0.withAnimation) || A2(_rundis$elm_bootstrap$Bootstrap_Navbar$shouldHideMenu, _p55, _p53)) ? defaults : {
 						ctor: '::',
 						_0: _elm_lang$html$Html_Attributes$style(
 							{
@@ -17176,39 +17708,39 @@ var _user$project$Bootstrap_Navbar$menuAttributes = F2(
 			case 'StartDown':
 				return {
 					ctor: '::',
-					_0: _user$project$Bootstrap_Navbar$transitionStyle(_elm_lang$core$Maybe$Nothing),
+					_0: _rundis$elm_bootstrap$Bootstrap_Navbar$transitionStyle(_elm_lang$core$Maybe$Nothing),
 					_1: {ctor: '[]'}
 				};
 			case 'AnimatingDown':
 				return {
 					ctor: '::',
-					_0: _user$project$Bootstrap_Navbar$transitionStyle(_p54),
+					_0: _rundis$elm_bootstrap$Bootstrap_Navbar$transitionStyle(_p54),
 					_1: {
 						ctor: '::',
 						_0: A2(
 							_elm_lang$html$Html_Events$on,
 							'transitionend',
-							A2(_user$project$Bootstrap_Navbar$transitionHandler, _p55, _p53)),
+							A2(_rundis$elm_bootstrap$Bootstrap_Navbar$transitionHandler, _p55, _p53)),
 						_1: {ctor: '[]'}
 					}
 				};
 			case 'AnimatingUp':
 				return {
 					ctor: '::',
-					_0: _user$project$Bootstrap_Navbar$transitionStyle(_elm_lang$core$Maybe$Nothing),
+					_0: _rundis$elm_bootstrap$Bootstrap_Navbar$transitionStyle(_elm_lang$core$Maybe$Nothing),
 					_1: {
 						ctor: '::',
 						_0: A2(
 							_elm_lang$html$Html_Events$on,
 							'transitionend',
-							A2(_user$project$Bootstrap_Navbar$transitionHandler, _p55, _p53)),
+							A2(_rundis$elm_bootstrap$Bootstrap_Navbar$transitionHandler, _p55, _p53)),
 						_1: {ctor: '[]'}
 					}
 				};
 			case 'StartUp':
 				return {
 					ctor: '::',
-					_0: _user$project$Bootstrap_Navbar$transitionStyle(_p54),
+					_0: _rundis$elm_bootstrap$Bootstrap_Navbar$transitionStyle(_p54),
 					_1: {ctor: '[]'}
 				};
 			default:
@@ -17222,18 +17754,18 @@ var _user$project$Bootstrap_Navbar$menuAttributes = F2(
 					});
 		}
 	});
-var _user$project$Bootstrap_Navbar$Closed = {ctor: 'Closed'};
-var _user$project$Bootstrap_Navbar$getOrInitDropdownStatus = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Closed = {ctor: 'Closed'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$getOrInitDropdownStatus = F2(
 	function (id, _p56) {
 		var _p57 = _p56;
 		return A2(
 			_elm_lang$core$Maybe$withDefault,
-			_user$project$Bootstrap_Navbar$Closed,
+			_rundis$elm_bootstrap$Bootstrap_Navbar$Closed,
 			A2(_elm_lang$core$Dict$get, id, _p57._0.dropdowns));
 	});
-var _user$project$Bootstrap_Navbar$ListenClicks = {ctor: 'ListenClicks'};
-var _user$project$Bootstrap_Navbar$Open = {ctor: 'Open'};
-var _user$project$Bootstrap_Navbar$dropdownSubscriptions = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$ListenClicks = {ctor: 'ListenClicks'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Open = {ctor: 'Open'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$dropdownSubscriptions = F2(
 	function (_p58, toMsg) {
 		var _p59 = _p58;
 		var _p66 = _p59._0.dropdowns;
@@ -17253,16 +17785,16 @@ var _user$project$Bootstrap_Navbar$dropdownSubscriptions = F2(
 					var _p63 = status;
 					switch (_p63.ctor) {
 						case 'Open':
-							return _user$project$Bootstrap_Navbar$ListenClicks;
+							return _rundis$elm_bootstrap$Bootstrap_Navbar$ListenClicks;
 						case 'ListenClicks':
-							return _user$project$Bootstrap_Navbar$Closed;
+							return _rundis$elm_bootstrap$Bootstrap_Navbar$Closed;
 						default:
-							return _user$project$Bootstrap_Navbar$Closed;
+							return _rundis$elm_bootstrap$Bootstrap_Navbar$Closed;
 					}
 				}),
 			_p66);
 		var updState = A2(
-			_user$project$Bootstrap_Navbar$mapState,
+			_rundis$elm_bootstrap$Bootstrap_Navbar$mapState,
 			function (s) {
 				return _elm_lang$core$Native_Utils.update(
 					s,
@@ -17272,13 +17804,13 @@ var _user$project$Bootstrap_Navbar$dropdownSubscriptions = F2(
 		return _elm_lang$core$Platform_Sub$batch(
 			{
 				ctor: '::',
-				_0: needsSub(_user$project$Bootstrap_Navbar$Open) ? _elm_lang$animation_frame$AnimationFrame$times(
+				_0: needsSub(_rundis$elm_bootstrap$Bootstrap_Navbar$Open) ? _elm_lang$animation_frame$AnimationFrame$times(
 					function (_p64) {
 						return toMsg(updState);
 					}) : _elm_lang$core$Platform_Sub$none,
 				_1: {
 					ctor: '::',
-					_0: needsSub(_user$project$Bootstrap_Navbar$ListenClicks) ? _elm_lang$mouse$Mouse$clicks(
+					_0: needsSub(_rundis$elm_bootstrap$Bootstrap_Navbar$ListenClicks) ? _elm_lang$mouse$Mouse$clicks(
 						function (_p65) {
 							return toMsg(updState);
 						}) : _elm_lang$core$Platform_Sub$none,
@@ -17286,13 +17818,13 @@ var _user$project$Bootstrap_Navbar$dropdownSubscriptions = F2(
 				}
 			});
 	});
-var _user$project$Bootstrap_Navbar$subscriptions = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$subscriptions = F2(
 	function (_p67, toMsg) {
 		var _p68 = _p67;
 		var _p72 = _p68;
 		var updState = function (v) {
 			return A2(
-				_user$project$Bootstrap_Navbar$mapState,
+				_rundis$elm_bootstrap$Bootstrap_Navbar$mapState,
 				function (s) {
 					return _elm_lang$core$Native_Utils.update(
 						s,
@@ -17310,13 +17842,13 @@ var _user$project$Bootstrap_Navbar$subscriptions = F2(
 							return _elm_lang$animation_frame$AnimationFrame$times(
 								function (_p70) {
 									return toMsg(
-										updState(_user$project$Bootstrap_Navbar$AnimatingDown));
+										updState(_rundis$elm_bootstrap$Bootstrap_Navbar$AnimatingDown));
 								});
 						case 'StartUp':
 							return _elm_lang$animation_frame$AnimationFrame$times(
 								function (_p71) {
 									return toMsg(
-										updState(_user$project$Bootstrap_Navbar$AnimatingUp));
+										updState(_rundis$elm_bootstrap$Bootstrap_Navbar$AnimatingUp));
 								});
 						default:
 							return _elm_lang$core$Platform_Sub$none;
@@ -17328,7 +17860,7 @@ var _user$project$Bootstrap_Navbar$subscriptions = F2(
 						function (size) {
 							return toMsg(
 								A2(
-									_user$project$Bootstrap_Navbar$mapState,
+									_rundis$elm_bootstrap$Bootstrap_Navbar$mapState,
 									function (s) {
 										return _elm_lang$core$Native_Utils.update(
 											s,
@@ -17340,30 +17872,30 @@ var _user$project$Bootstrap_Navbar$subscriptions = F2(
 						}),
 					_1: {
 						ctor: '::',
-						_0: A2(_user$project$Bootstrap_Navbar$dropdownSubscriptions, _p72, toMsg),
+						_0: A2(_rundis$elm_bootstrap$Bootstrap_Navbar$dropdownSubscriptions, _p72, toMsg),
 						_1: {ctor: '[]'}
 					}
 				}
 			});
 	});
-var _user$project$Bootstrap_Navbar$toggleOpen = F3(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$toggleOpen = F3(
 	function (state, id, _p73) {
 		var _p74 = _p73;
-		var currStatus = A2(_user$project$Bootstrap_Navbar$getOrInitDropdownStatus, id, state);
+		var currStatus = A2(_rundis$elm_bootstrap$Bootstrap_Navbar$getOrInitDropdownStatus, id, state);
 		var newStatus = function () {
 			var _p75 = currStatus;
 			switch (_p75.ctor) {
 				case 'Open':
-					return _user$project$Bootstrap_Navbar$Closed;
+					return _rundis$elm_bootstrap$Bootstrap_Navbar$Closed;
 				case 'ListenClicks':
-					return _user$project$Bootstrap_Navbar$Closed;
+					return _rundis$elm_bootstrap$Bootstrap_Navbar$Closed;
 				default:
-					return _user$project$Bootstrap_Navbar$Open;
+					return _rundis$elm_bootstrap$Bootstrap_Navbar$Open;
 			}
 		}();
 		return _p74._0.toMsg(
 			A2(
-				_user$project$Bootstrap_Navbar$mapState,
+				_rundis$elm_bootstrap$Bootstrap_Navbar$mapState,
 				function (s) {
 					return _elm_lang$core$Native_Utils.update(
 						s,
@@ -17373,7 +17905,7 @@ var _user$project$Bootstrap_Navbar$toggleOpen = F3(
 				},
 				state));
 	});
-var _user$project$Bootstrap_Navbar$renderDropdownToggle = F4(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$renderDropdownToggle = F4(
 	function (state, id, config, _p76) {
 		var _p77 = _p76;
 		return A2(
@@ -17393,7 +17925,7 @@ var _user$project$Bootstrap_Navbar$renderDropdownToggle = F4(
 								'click',
 								{stopPropagation: false, preventDefault: true},
 								_elm_lang$core$Json_Decode$succeed(
-									A3(_user$project$Bootstrap_Navbar$toggleOpen, state, id, config))),
+									A3(_rundis$elm_bootstrap$Bootstrap_Navbar$toggleOpen, state, id, config))),
 							_1: {ctor: '[]'}
 						}
 					}
@@ -17401,14 +17933,14 @@ var _user$project$Bootstrap_Navbar$renderDropdownToggle = F4(
 				_p77._0.attributes),
 			_p77._0.children);
 	});
-var _user$project$Bootstrap_Navbar$renderDropdown = F3(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$renderDropdown = F3(
 	function (state, _p79, _p78) {
 		var _p80 = _p79;
 		var _p81 = _p78;
 		var _p85 = _p81._0.id;
 		var isShown = !_elm_lang$core$Native_Utils.eq(
-			A2(_user$project$Bootstrap_Navbar$getOrInitDropdownStatus, _p85, state),
-			_user$project$Bootstrap_Navbar$Closed);
+			A2(_rundis$elm_bootstrap$Bootstrap_Navbar$getOrInitDropdownStatus, _p85, state),
+			_rundis$elm_bootstrap$Bootstrap_Navbar$Closed);
 		var needsDropup = A2(
 			_elm_lang$core$Maybe$withDefault,
 			false,
@@ -17449,7 +17981,7 @@ var _user$project$Bootstrap_Navbar$renderDropdown = F3(
 			},
 			{
 				ctor: '::',
-				_0: A4(_user$project$Bootstrap_Navbar$renderDropdownToggle, state, _p85, _p80, _p81._0.toggle),
+				_0: A4(_rundis$elm_bootstrap$Bootstrap_Navbar$renderDropdownToggle, state, _p85, _p80, _p81._0.toggle),
 				_1: {
 					ctor: '::',
 					_0: A2(
@@ -17479,7 +18011,7 @@ var _user$project$Bootstrap_Navbar$renderDropdown = F3(
 				}
 			});
 	});
-var _user$project$Bootstrap_Navbar$renderNav = F3(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$renderNav = F3(
 	function (state, config, navItems) {
 		return A2(
 			_elm_lang$html$Html$ul,
@@ -17493,24 +18025,24 @@ var _user$project$Bootstrap_Navbar$renderNav = F3(
 				function (item) {
 					var _p86 = item;
 					if (_p86.ctor === 'Item') {
-						return _user$project$Bootstrap_Navbar$renderItemLink(_p86._0);
+						return _rundis$elm_bootstrap$Bootstrap_Navbar$renderItemLink(_p86._0);
 					} else {
-						return A3(_user$project$Bootstrap_Navbar$renderDropdown, state, config, _p86._0);
+						return A3(_rundis$elm_bootstrap$Bootstrap_Navbar$renderDropdown, state, config, _p86._0);
 					}
 				},
 				navItems));
 	});
-var _user$project$Bootstrap_Navbar$view = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$view = F2(
 	function (state, _p87) {
 		var _p88 = _p87;
 		var _p91 = _p88;
 		var _p90 = _p88._0.brand;
 		return A2(
 			_elm_lang$html$Html$nav,
-			_user$project$Bootstrap_Navbar$navbarAttributes(_p88._0.options),
+			_rundis$elm_bootstrap$Bootstrap_Navbar$navbarAttributes(_p88._0.options),
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				_user$project$Bootstrap_Navbar$maybeBrand(_p90),
+				_rundis$elm_bootstrap$Bootstrap_Navbar$maybeBrand(_p90),
 				A2(
 					_elm_lang$core$Basics_ops['++'],
 					{
@@ -17537,7 +18069,7 @@ var _user$project$Bootstrap_Navbar$view = F2(
 									_0: _elm_lang$html$Html_Attributes$type_('button'),
 									_1: {
 										ctor: '::',
-										_0: A2(_user$project$Bootstrap_Navbar$toggleHandler, state, _p91),
+										_0: A2(_rundis$elm_bootstrap$Bootstrap_Navbar$toggleHandler, state, _p91),
 										_1: {ctor: '[]'}
 									}
 								}
@@ -17560,37 +18092,37 @@ var _user$project$Bootstrap_Navbar$view = F2(
 						ctor: '::',
 						_0: A2(
 							_elm_lang$html$Html$div,
-							A2(_user$project$Bootstrap_Navbar$menuAttributes, state, _p91),
+							A2(_rundis$elm_bootstrap$Bootstrap_Navbar$menuAttributes, state, _p91),
 							{
 								ctor: '::',
 								_0: A2(
 									_elm_lang$html$Html$div,
-									A2(_user$project$Bootstrap_Navbar$menuWrapperAttributes, state, _p91),
+									A2(_rundis$elm_bootstrap$Bootstrap_Navbar$menuWrapperAttributes, state, _p91),
 									A2(
 										_elm_lang$core$Basics_ops['++'],
 										{
 											ctor: '::',
-											_0: A3(_user$project$Bootstrap_Navbar$renderNav, state, _p91, _p88._0.items),
+											_0: A3(_rundis$elm_bootstrap$Bootstrap_Navbar$renderNav, state, _p91, _p88._0.items),
 											_1: {ctor: '[]'}
 										},
-										_user$project$Bootstrap_Navbar$renderCustom(_p88._0.customItems))),
+										_rundis$elm_bootstrap$Bootstrap_Navbar$renderCustom(_p88._0.customItems))),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
 					})));
 	});
-var _user$project$Bootstrap_Navbar$Config = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Config = function (a) {
 	return {ctor: 'Config', _0: a};
 };
-var _user$project$Bootstrap_Navbar$updateConfig = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$updateConfig = F2(
 	function (mapper, _p92) {
 		var _p93 = _p92;
-		return _user$project$Bootstrap_Navbar$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Navbar$Config(
 			mapper(_p93._0));
 	});
-var _user$project$Bootstrap_Navbar$withAnimation = function (config) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$withAnimation = function (config) {
 	return A2(
-		_user$project$Bootstrap_Navbar$updateConfig,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$updateConfig,
 		function (conf) {
 			return _elm_lang$core$Native_Utils.update(
 				conf,
@@ -17598,10 +18130,10 @@ var _user$project$Bootstrap_Navbar$withAnimation = function (config) {
 		},
 		config);
 };
-var _user$project$Bootstrap_Navbar$items = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$items = F2(
 	function (items, config) {
 		return A2(
-			_user$project$Bootstrap_Navbar$updateConfig,
+			_rundis$elm_bootstrap$Bootstrap_Navbar$updateConfig,
 			function (conf) {
 				return _elm_lang$core$Native_Utils.update(
 					conf,
@@ -17609,10 +18141,10 @@ var _user$project$Bootstrap_Navbar$items = F2(
 			},
 			config);
 	});
-var _user$project$Bootstrap_Navbar$customItems = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$customItems = F2(
 	function (items, config) {
 		return A2(
-			_user$project$Bootstrap_Navbar$updateConfig,
+			_rundis$elm_bootstrap$Bootstrap_Navbar$updateConfig,
 			function (conf) {
 				return _elm_lang$core$Native_Utils.update(
 					conf,
@@ -17620,20 +18152,20 @@ var _user$project$Bootstrap_Navbar$customItems = F2(
 			},
 			config);
 	});
-var _user$project$Bootstrap_Navbar$updateOptions = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$updateOptions = F2(
 	function (mapper, _p94) {
 		var _p95 = _p94;
 		var _p96 = _p95._0;
-		return _user$project$Bootstrap_Navbar$Config(
+		return _rundis$elm_bootstrap$Bootstrap_Navbar$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p96,
 				{
 					options: mapper(_p96.options)
 				}));
 	});
-var _user$project$Bootstrap_Navbar$container = function (config) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$container = function (config) {
 	return A2(
-		_user$project$Bootstrap_Navbar$updateOptions,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$updateOptions,
 		function (opts) {
 			return _elm_lang$core$Native_Utils.update(
 				opts,
@@ -17641,10 +18173,10 @@ var _user$project$Bootstrap_Navbar$container = function (config) {
 		},
 		config);
 };
-var _user$project$Bootstrap_Navbar$scheme = F3(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$scheme = F3(
 	function (modifier, bgColor, config) {
 		return A2(
-			_user$project$Bootstrap_Navbar$updateOptions,
+			_rundis$elm_bootstrap$Bootstrap_Navbar$updateOptions,
 			function (opt) {
 				return _elm_lang$core$Native_Utils.update(
 					opt,
@@ -17655,10 +18187,10 @@ var _user$project$Bootstrap_Navbar$scheme = F3(
 			},
 			config);
 	});
-var _user$project$Bootstrap_Navbar$toggleAt = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$toggleAt = F2(
 	function (size, config) {
 		return A2(
-			_user$project$Bootstrap_Navbar$updateOptions,
+			_rundis$elm_bootstrap$Bootstrap_Navbar$updateOptions,
 			function (opt) {
 				return _elm_lang$core$Native_Utils.update(
 					opt,
@@ -17666,14 +18198,14 @@ var _user$project$Bootstrap_Navbar$toggleAt = F2(
 			},
 			config);
 	});
-var _user$project$Bootstrap_Navbar$collapseSmall = _user$project$Bootstrap_Navbar$toggleAt(_user$project$Bootstrap_Grid_Internal$SM);
-var _user$project$Bootstrap_Navbar$collapseMedium = _user$project$Bootstrap_Navbar$toggleAt(_user$project$Bootstrap_Grid_Internal$MD);
-var _user$project$Bootstrap_Navbar$collapseLarge = _user$project$Bootstrap_Navbar$toggleAt(_user$project$Bootstrap_Grid_Internal$LG);
-var _user$project$Bootstrap_Navbar$collapseExtraLarge = _user$project$Bootstrap_Navbar$toggleAt(_user$project$Bootstrap_Grid_Internal$XL);
-var _user$project$Bootstrap_Navbar$attrs = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$collapseSmall = _rundis$elm_bootstrap$Bootstrap_Navbar$toggleAt(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM);
+var _rundis$elm_bootstrap$Bootstrap_Navbar$collapseMedium = _rundis$elm_bootstrap$Bootstrap_Navbar$toggleAt(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD);
+var _rundis$elm_bootstrap$Bootstrap_Navbar$collapseLarge = _rundis$elm_bootstrap$Bootstrap_Navbar$toggleAt(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG);
+var _rundis$elm_bootstrap$Bootstrap_Navbar$collapseExtraLarge = _rundis$elm_bootstrap$Bootstrap_Navbar$toggleAt(_rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL);
+var _rundis$elm_bootstrap$Bootstrap_Navbar$attrs = F2(
 	function (attrs, config) {
 		return A2(
-			_user$project$Bootstrap_Navbar$updateOptions,
+			_rundis$elm_bootstrap$Bootstrap_Navbar$updateOptions,
 			function (opt) {
 				return _elm_lang$core$Native_Utils.update(
 					opt,
@@ -17683,69 +18215,69 @@ var _user$project$Bootstrap_Navbar$attrs = F2(
 			},
 			config);
 	});
-var _user$project$Bootstrap_Navbar$Bottom = {ctor: 'Bottom'};
-var _user$project$Bootstrap_Navbar$fixBottom = function (config) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Bottom = {ctor: 'Bottom'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$fixBottom = function (config) {
 	return A2(
-		_user$project$Bootstrap_Navbar$updateOptions,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$updateOptions,
 		function (opts) {
 			return _elm_lang$core$Native_Utils.update(
 				opts,
 				{
-					fix: _elm_lang$core$Maybe$Just(_user$project$Bootstrap_Navbar$Bottom)
+					fix: _elm_lang$core$Maybe$Just(_rundis$elm_bootstrap$Bootstrap_Navbar$Bottom)
 				});
 		},
 		config);
 };
-var _user$project$Bootstrap_Navbar$Top = {ctor: 'Top'};
-var _user$project$Bootstrap_Navbar$fixTop = function (config) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Top = {ctor: 'Top'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$fixTop = function (config) {
 	return A2(
-		_user$project$Bootstrap_Navbar$updateOptions,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$updateOptions,
 		function (opts) {
 			return _elm_lang$core$Native_Utils.update(
 				opts,
 				{
-					fix: _elm_lang$core$Maybe$Just(_user$project$Bootstrap_Navbar$Top)
+					fix: _elm_lang$core$Maybe$Just(_rundis$elm_bootstrap$Bootstrap_Navbar$Top)
 				});
 		},
 		config);
 };
-var _user$project$Bootstrap_Navbar$Light = {ctor: 'Light'};
-var _user$project$Bootstrap_Navbar$Dark = {ctor: 'Dark'};
-var _user$project$Bootstrap_Navbar$Class = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Light = {ctor: 'Light'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Dark = {ctor: 'Dark'};
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Class = function (a) {
 	return {ctor: 'Class', _0: a};
 };
-var _user$project$Bootstrap_Navbar$darkCustomClass = function (classString) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$darkCustomClass = function (classString) {
 	return A2(
-		_user$project$Bootstrap_Navbar$scheme,
-		_user$project$Bootstrap_Navbar$Dark,
-		_user$project$Bootstrap_Navbar$Class(classString));
+		_rundis$elm_bootstrap$Bootstrap_Navbar$scheme,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$Dark,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$Class(classString));
 };
-var _user$project$Bootstrap_Navbar$lightCustomClass = function (classString) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$lightCustomClass = function (classString) {
 	return A2(
-		_user$project$Bootstrap_Navbar$scheme,
-		_user$project$Bootstrap_Navbar$Light,
-		_user$project$Bootstrap_Navbar$Class(classString));
+		_rundis$elm_bootstrap$Bootstrap_Navbar$scheme,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$Light,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$Class(classString));
 };
-var _user$project$Bootstrap_Navbar$Custom = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Custom = function (a) {
 	return {ctor: 'Custom', _0: a};
 };
-var _user$project$Bootstrap_Navbar$darkCustom = function (color) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$darkCustom = function (color) {
 	return A2(
-		_user$project$Bootstrap_Navbar$scheme,
-		_user$project$Bootstrap_Navbar$Dark,
-		_user$project$Bootstrap_Navbar$Custom(color));
+		_rundis$elm_bootstrap$Bootstrap_Navbar$scheme,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$Dark,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$Custom(color));
 };
-var _user$project$Bootstrap_Navbar$lightCustom = function (color) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$lightCustom = function (color) {
 	return A2(
-		_user$project$Bootstrap_Navbar$scheme,
-		_user$project$Bootstrap_Navbar$Light,
-		_user$project$Bootstrap_Navbar$Custom(color));
+		_rundis$elm_bootstrap$Bootstrap_Navbar$scheme,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$Light,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$Custom(color));
 };
-var _user$project$Bootstrap_Navbar$Roled = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Roled = function (a) {
 	return {ctor: 'Roled', _0: a};
 };
-var _user$project$Bootstrap_Navbar$config = function (toMsg) {
-	return _user$project$Bootstrap_Navbar$Config(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$config = function (toMsg) {
+	return _rundis$elm_bootstrap$Bootstrap_Navbar$Config(
 		{
 			toMsg: toMsg,
 			withAnimation: false,
@@ -17757,71 +18289,71 @@ var _user$project$Bootstrap_Navbar$config = function (toMsg) {
 				isContainer: false,
 				scheme: _elm_lang$core$Maybe$Just(
 					{
-						modifier: _user$project$Bootstrap_Navbar$Light,
-						bgColor: _user$project$Bootstrap_Navbar$Roled(_user$project$Bootstrap_Internal_Role$Light)
+						modifier: _rundis$elm_bootstrap$Bootstrap_Navbar$Light,
+						bgColor: _rundis$elm_bootstrap$Bootstrap_Navbar$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Light)
 					}),
-				toggleAt: _user$project$Bootstrap_Grid_Internal$XS,
+				toggleAt: _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS,
 				attributes: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Bootstrap_Navbar$light = A2(
-	_user$project$Bootstrap_Navbar$scheme,
-	_user$project$Bootstrap_Navbar$Light,
-	_user$project$Bootstrap_Navbar$Roled(_user$project$Bootstrap_Internal_Role$Light));
-var _user$project$Bootstrap_Navbar$dark = A2(
-	_user$project$Bootstrap_Navbar$scheme,
-	_user$project$Bootstrap_Navbar$Dark,
-	_user$project$Bootstrap_Navbar$Roled(_user$project$Bootstrap_Internal_Role$Dark));
-var _user$project$Bootstrap_Navbar$primary = A2(
-	_user$project$Bootstrap_Navbar$scheme,
-	_user$project$Bootstrap_Navbar$Dark,
-	_user$project$Bootstrap_Navbar$Roled(_user$project$Bootstrap_Internal_Role$Primary));
-var _user$project$Bootstrap_Navbar$secondary = A2(
-	_user$project$Bootstrap_Navbar$scheme,
-	_user$project$Bootstrap_Navbar$Dark,
-	_user$project$Bootstrap_Navbar$Roled(_user$project$Bootstrap_Internal_Role$Secondary));
-var _user$project$Bootstrap_Navbar$success = A2(
-	_user$project$Bootstrap_Navbar$scheme,
-	_user$project$Bootstrap_Navbar$Dark,
-	_user$project$Bootstrap_Navbar$Roled(_user$project$Bootstrap_Internal_Role$Success));
-var _user$project$Bootstrap_Navbar$info = A2(
-	_user$project$Bootstrap_Navbar$scheme,
-	_user$project$Bootstrap_Navbar$Dark,
-	_user$project$Bootstrap_Navbar$Roled(_user$project$Bootstrap_Internal_Role$Info));
-var _user$project$Bootstrap_Navbar$warning = A2(
-	_user$project$Bootstrap_Navbar$scheme,
-	_user$project$Bootstrap_Navbar$Dark,
-	_user$project$Bootstrap_Navbar$Roled(_user$project$Bootstrap_Internal_Role$Warning));
-var _user$project$Bootstrap_Navbar$danger = A2(
-	_user$project$Bootstrap_Navbar$scheme,
-	_user$project$Bootstrap_Navbar$Dark,
-	_user$project$Bootstrap_Navbar$Roled(_user$project$Bootstrap_Internal_Role$Danger));
-var _user$project$Bootstrap_Navbar$NavDropdown = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$light = A2(
+	_rundis$elm_bootstrap$Bootstrap_Navbar$scheme,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Light,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Light));
+var _rundis$elm_bootstrap$Bootstrap_Navbar$dark = A2(
+	_rundis$elm_bootstrap$Bootstrap_Navbar$scheme,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Dark,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark));
+var _rundis$elm_bootstrap$Bootstrap_Navbar$primary = A2(
+	_rundis$elm_bootstrap$Bootstrap_Navbar$scheme,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Dark,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary));
+var _rundis$elm_bootstrap$Bootstrap_Navbar$secondary = A2(
+	_rundis$elm_bootstrap$Bootstrap_Navbar$scheme,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Dark,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary));
+var _rundis$elm_bootstrap$Bootstrap_Navbar$success = A2(
+	_rundis$elm_bootstrap$Bootstrap_Navbar$scheme,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Dark,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Success));
+var _rundis$elm_bootstrap$Bootstrap_Navbar$info = A2(
+	_rundis$elm_bootstrap$Bootstrap_Navbar$scheme,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Dark,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Info));
+var _rundis$elm_bootstrap$Bootstrap_Navbar$warning = A2(
+	_rundis$elm_bootstrap$Bootstrap_Navbar$scheme,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Dark,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning));
+var _rundis$elm_bootstrap$Bootstrap_Navbar$danger = A2(
+	_rundis$elm_bootstrap$Bootstrap_Navbar$scheme,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Dark,
+	_rundis$elm_bootstrap$Bootstrap_Navbar$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger));
+var _rundis$elm_bootstrap$Bootstrap_Navbar$NavDropdown = function (a) {
 	return {ctor: 'NavDropdown', _0: a};
 };
-var _user$project$Bootstrap_Navbar$Item = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Item = function (a) {
 	return {ctor: 'Item', _0: a};
 };
-var _user$project$Bootstrap_Navbar$itemLink = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$itemLink = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Navbar$Item(
+		return _rundis$elm_bootstrap$Bootstrap_Navbar$Item(
 			{attributes: attributes, children: children});
 	});
-var _user$project$Bootstrap_Navbar$itemLinkActive = function (attributes) {
-	return _user$project$Bootstrap_Navbar$itemLink(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$itemLinkActive = function (attributes) {
+	return _rundis$elm_bootstrap$Bootstrap_Navbar$itemLink(
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$class('active'),
 			_1: attributes
 		});
 };
-var _user$project$Bootstrap_Navbar$CustomItem = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$CustomItem = function (a) {
 	return {ctor: 'CustomItem', _0: a};
 };
-var _user$project$Bootstrap_Navbar$textItem = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$textItem = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Navbar$CustomItem(
+		return _rundis$elm_bootstrap$Bootstrap_Navbar$CustomItem(
 			A2(
 				_elm_lang$html$Html$span,
 				{
@@ -17831,9 +18363,9 @@ var _user$project$Bootstrap_Navbar$textItem = F2(
 				},
 				children));
 	});
-var _user$project$Bootstrap_Navbar$formItem = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$formItem = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Navbar$CustomItem(
+		return _rundis$elm_bootstrap$Bootstrap_Navbar$CustomItem(
 			A2(
 				_elm_lang$html$Html$form,
 				{
@@ -17843,22 +18375,22 @@ var _user$project$Bootstrap_Navbar$formItem = F2(
 				},
 				children));
 	});
-var _user$project$Bootstrap_Navbar$customItem = function (elem) {
-	return _user$project$Bootstrap_Navbar$CustomItem(elem);
+var _rundis$elm_bootstrap$Bootstrap_Navbar$customItem = function (elem) {
+	return _rundis$elm_bootstrap$Bootstrap_Navbar$CustomItem(elem);
 };
-var _user$project$Bootstrap_Navbar$Brand = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Brand = function (a) {
 	return {ctor: 'Brand', _0: a};
 };
-var _user$project$Bootstrap_Navbar$brand = F3(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$brand = F3(
 	function (attributes, children, config) {
 		return A2(
-			_user$project$Bootstrap_Navbar$updateConfig,
+			_rundis$elm_bootstrap$Bootstrap_Navbar$updateConfig,
 			function (conf) {
 				return _elm_lang$core$Native_Utils.update(
 					conf,
 					{
 						brand: _elm_lang$core$Maybe$Just(
-							_user$project$Bootstrap_Navbar$Brand(
+							_rundis$elm_bootstrap$Bootstrap_Navbar$Brand(
 								A2(
 									_elm_lang$html$Html$a,
 									A2(
@@ -17874,27 +18406,27 @@ var _user$project$Bootstrap_Navbar$brand = F3(
 			},
 			config);
 	});
-var _user$project$Bootstrap_Navbar$Dropdown = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$Dropdown = function (a) {
 	return {ctor: 'Dropdown', _0: a};
 };
-var _user$project$Bootstrap_Navbar$dropdown = function (config) {
-	return _user$project$Bootstrap_Navbar$NavDropdown(
-		_user$project$Bootstrap_Navbar$Dropdown(config));
+var _rundis$elm_bootstrap$Bootstrap_Navbar$dropdown = function (config) {
+	return _rundis$elm_bootstrap$Bootstrap_Navbar$NavDropdown(
+		_rundis$elm_bootstrap$Bootstrap_Navbar$Dropdown(config));
 };
-var _user$project$Bootstrap_Navbar$DropdownToggle = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$DropdownToggle = function (a) {
 	return {ctor: 'DropdownToggle', _0: a};
 };
-var _user$project$Bootstrap_Navbar$dropdownToggle = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$dropdownToggle = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Navbar$DropdownToggle(
+		return _rundis$elm_bootstrap$Bootstrap_Navbar$DropdownToggle(
 			{attributes: attributes, children: children});
 	});
-var _user$project$Bootstrap_Navbar$DropdownItem = function (a) {
+var _rundis$elm_bootstrap$Bootstrap_Navbar$DropdownItem = function (a) {
 	return {ctor: 'DropdownItem', _0: a};
 };
-var _user$project$Bootstrap_Navbar$dropdownItem = F2(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$dropdownItem = F2(
 	function (attributes, children) {
-		return _user$project$Bootstrap_Navbar$DropdownItem(
+		return _rundis$elm_bootstrap$Bootstrap_Navbar$DropdownItem(
 			A2(
 				_elm_lang$html$Html$a,
 				A2(
@@ -17907,7 +18439,7 @@ var _user$project$Bootstrap_Navbar$dropdownItem = F2(
 					attributes),
 				children));
 	});
-var _user$project$Bootstrap_Navbar$dropdownDivider = _user$project$Bootstrap_Navbar$DropdownItem(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$dropdownDivider = _rundis$elm_bootstrap$Bootstrap_Navbar$DropdownItem(
 	A2(
 		_elm_lang$html$Html$div,
 		{
@@ -17916,8 +18448,8 @@ var _user$project$Bootstrap_Navbar$dropdownDivider = _user$project$Bootstrap_Nav
 			_1: {ctor: '[]'}
 		},
 		{ctor: '[]'}));
-var _user$project$Bootstrap_Navbar$dropdownHeader = function (children) {
-	return _user$project$Bootstrap_Navbar$DropdownItem(
+var _rundis$elm_bootstrap$Bootstrap_Navbar$dropdownHeader = function (children) {
+	return _rundis$elm_bootstrap$Bootstrap_Navbar$DropdownItem(
 		A2(
 			_elm_lang$html$Html$h6,
 			{
@@ -17928,12 +18460,45 @@ var _user$project$Bootstrap_Navbar$dropdownHeader = function (children) {
 			children));
 };
 
+var _user$project$Convenience$traverse = function (f) {
+	var step = F2(
+		function (e, acc) {
+			var _p0 = f(e);
+			if (_p0.ctor === 'Nothing') {
+				return _elm_lang$core$Maybe$Nothing;
+			} else {
+				return A2(
+					_elm_lang$core$Maybe$map,
+					F2(
+						function (x, y) {
+							return {ctor: '::', _0: x, _1: y};
+						})(_p0._0),
+					acc);
+			}
+		});
+	return A2(
+		_elm_lang$core$List$foldr,
+		step,
+		_elm_lang$core$Maybe$Just(
+			{ctor: '[]'}));
+};
+var _user$project$Convenience$isNothing = function (m) {
+	var _p1 = m;
+	if (_p1.ctor === 'Nothing') {
+		return true;
+	} else {
+		return false;
+	}
+};
+
 var _user$project$Ports$sendData = _elm_lang$core$Native_Platform.outgoingPort(
 	'sendData',
 	function (v) {
 		return v;
 	});
 
+var _user$project$Main$alertForeGround = 'rgba(255, 255, 255, 0.63)';
+var _user$project$Main$alertColor = 'rgba(230, 70, 64, 0.54)';
 var _user$project$Main$caption = function (method) {
 	var _p0 = method;
 	switch (_p0.ctor) {
@@ -17961,6 +18526,33 @@ var _user$project$Main$photosPerMonthEnum = {
 			}
 		}
 	}
+};
+var _user$project$Main$invalidFeedback = function (field) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		{ctor: '[]'},
+		A2(
+			_elm_lang$core$Maybe$map,
+			function (invalidBecause) {
+				return {
+					ctor: '::',
+					_0: A2(
+						_rundis$elm_bootstrap$Bootstrap_Form$invalidFeedback,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Maybe$withDefault,
+									'',
+									_elm_lang$core$List$head(
+										_elm_lang$core$Set$toList(invalidBecause)))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				};
+			},
+			_kirchner$form_validation$Validate$errors(field)));
 };
 var _user$project$Main$pageContactUs = function (model) {
 	return {
@@ -18000,40 +18592,90 @@ var _user$project$Main$formDataBody = function (formData) {
 		'Content-Type\', \'application/x-www-form-urlencoded',
 		_user$project$Main$formDatafication(formData));
 };
-var _user$project$Main$formData = function (model) {
-	return {
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'email', _1: model.email},
-		_1: {
-			ctor: '::',
-			_0: {
-				ctor: '_Tuple2',
-				_0: 'photos',
-				_1: _elm_lang$core$Basics$toString(
-					A2(_elm_lang$core$Maybe$withDefault, 0, model.radioPhotosPerMonth))
-			},
-			_1: {
-				ctor: '::',
-				_0: {
-					ctor: '_Tuple2',
-					_0: 'payment',
-					_1: A2(
-						_elm_lang$core$Maybe$withDefault,
-						'',
-						A2(_elm_lang$core$Maybe$map, _user$project$Main$caption, model.radioPaymentMethod))
+var _user$project$Main$validateModel = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			reasonablePrice: A3(
+				_kirchner$form_validation$Validate$satisfies,
+				function (n) {
+					var _p3 = _elm_lang$core$String$toInt(n);
+					if (_p3.ctor === 'Ok') {
+						var _p4 = _p3._0;
+						return (_elm_lang$core$Native_Utils.cmp(_p4, 3) > 0) && (_elm_lang$core$Native_Utils.cmp(_p4, 40) < 0);
+					} else {
+						return false;
+					}
 				},
+				'Price must be between 3 and 40',
+				A3(
+					_kirchner$form_validation$Validate$satisfies,
+					function (s) {
+						var _p5 = _elm_lang$core$String$toInt(s);
+						if (_p5.ctor === 'Ok') {
+							return true;
+						} else {
+							return false;
+						}
+					},
+					'This is not a valid price',
+					A2(_kirchner$form_validation$Validate$isNotEmpty, 'Price must not be empty', model.reasonablePrice))),
+			email: A2(
+				_kirchner$form_validation$Validate$isEmail,
+				'This is not a valid email address',
+				A2(_kirchner$form_validation$Validate$isNotEmpty, 'Email must not be empty', model.email))
+		});
+};
+var _user$project$Main$formData = function (model) {
+	return A2(
+		_elm_lang$core$Maybe$map,
+		A2(
+			_elm_lang$core$List$map2,
+			F2(
+				function (v0, v1) {
+					return {ctor: '_Tuple2', _0: v0, _1: v1};
+				}),
+			{
+				ctor: '::',
+				_0: 'email',
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'price', _1: model.reasonablePrice},
-					_1: {ctor: '[]'}
+					_0: 'photos',
+					_1: {
+						ctor: '::',
+						_0: 'payment',
+						_1: {
+							ctor: '::',
+							_0: 'price',
+							_1: {ctor: '[]'}
+						}
+					}
 				}
-			}
-		}
-	};
+			}),
+		A2(
+			_user$project$Convenience$traverse,
+			_kirchner$form_validation$Validate$validValue,
+			{
+				ctor: '::',
+				_0: model.email,
+				_1: {
+					ctor: '::',
+					_0: A2(_kirchner$form_validation$Validate$map, _elm_lang$core$Basics$toString, model.radioPhotosPerMonth),
+					_1: {
+						ctor: '::',
+						_0: A2(_kirchner$form_validation$Validate$map, _user$project$Main$caption, model.radioPaymentMethod),
+						_1: {
+							ctor: '::',
+							_0: model.reasonablePrice,
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}));
 };
-var _user$project$Main$Model = F7(
-	function (a, b, c, d, e, f, g) {
-		return {page: a, navState: b, radioPhotosPerMonth: c, radioPaymentMethod: d, email: e, reasonablePrice: f, subscribing: g};
+var _user$project$Main$Model = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {page: a, navState: b, radioPhotosPerMonth: c, radioPaymentMethod: d, email: e, reasonablePrice: f, subscribing: g, confirmClicked: h};
 	});
 var _user$project$Main$NotFound = {ctor: 'NotFound'};
 var _user$project$Main$ContactUs = {ctor: 'ContactUs'};
@@ -18056,8 +18698,8 @@ var _user$project$Main$decode = function (location) {
 };
 var _user$project$Main$urlUpdate = F2(
 	function (location, model) {
-		var _p3 = _user$project$Main$decode(location);
-		if (_p3.ctor === 'Nothing') {
+		var _p6 = _user$project$Main$decode(location);
+		if (_p6.ctor === 'Nothing') {
 			return {
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
@@ -18070,9 +18712,130 @@ var _user$project$Main$urlUpdate = F2(
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
 					model,
-					{page: _p3._0}),
+					{page: _p6._0}),
 				_1: _elm_lang$core$Platform_Cmd$none
 			};
+		}
+	});
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p7 = msg;
+		switch (_p7.ctor) {
+			case 'UrlChange':
+				return A2(_user$project$Main$urlUpdate, _p7._0, model);
+			case 'NavMsg':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{navState: _p7._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ChangePage':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{page: _p7._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'RadioPhotosMsg':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							radioPhotosPerMonth: _kirchner$form_validation$Validate$valid(_p7._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'RadioPaymentMsg':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							radioPaymentMethod: _kirchner$form_validation$Validate$valid(_p7._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'SubscribePressed':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{subscribing: true}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ConfirmPressed':
+				var validated = _user$project$Main$validateModel(model);
+				var validatedFormData = _user$project$Main$formData(validated);
+				var valid = !_elm_lang$core$Native_Utils.eq(validatedFormData, _elm_lang$core$Maybe$Nothing);
+				return {
+					ctor: '_Tuple2',
+					_0: valid ? _elm_lang$core$Native_Utils.update(
+						validated,
+						{radioPhotosPerMonth: _kirchner$form_validation$Validate$empty, radioPaymentMethod: _kirchner$form_validation$Validate$empty, email: _kirchner$form_validation$Validate$empty, reasonablePrice: _kirchner$form_validation$Validate$empty, subscribing: false, confirmClicked: false}) : _elm_lang$core$Native_Utils.update(
+						validated,
+						{confirmClicked: true}),
+					_1: function () {
+						var _p8 = validatedFormData;
+						if (_p8.ctor === 'Just') {
+							return _user$project$Ports$sendData(
+								_user$project$Main$formDatafication(_p8._0));
+						} else {
+							return _elm_lang$core$Platform_Cmd$none;
+						}
+					}()
+				};
+			case 'ChangeEmail':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							email: _kirchner$form_validation$Validate$unchecked(_p7._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ChangePrice':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							reasonablePrice: _kirchner$form_validation$Validate$unchecked(_p7._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Response':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'EmailDeFocused':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							email: _user$project$Main$validateModel(model).email
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'PriceDeFocused':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							reasonablePrice: _user$project$Main$validateModel(model).reasonablePrice
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _user$project$Main$validateModel(model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
 var _user$project$Main$Response = function (a) {
@@ -18092,86 +18855,186 @@ var _user$project$Main$sendData = function (data) {
 		});
 	return A2(_elm_lang$http$Http$send, _user$project$Main$Response, req);
 };
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		var _p4 = msg;
-		switch (_p4.ctor) {
-			case 'UrlChange':
-				return A2(_user$project$Main$urlUpdate, _p4._0, model);
-			case 'NavMsg':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{navState: _p4._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ChangePage':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{page: _p4._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'RadioPhotosMsg':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{radioPhotosPerMonth: _p4._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'RadioPaymentMsg':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{radioPaymentMethod: _p4._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'SubscribePressed':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{subscribing: true}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ConfirmPressed':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{subscribing: false}),
-					_1: _user$project$Main$sendData(
-						_user$project$Main$formData(model))
-				};
-			case 'ChangeEmail':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{email: _p4._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ChangePrice':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{reasonablePrice: _p4._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-		}
-	});
+var _user$project$Main$ValidateModel = {ctor: 'ValidateModel'};
+var _user$project$Main$PriceDeFocused = {ctor: 'PriceDeFocused'};
+var _user$project$Main$EmailDeFocused = {ctor: 'EmailDeFocused'};
 var _user$project$Main$ChangePrice = function (a) {
 	return {ctor: 'ChangePrice', _0: a};
 };
+var _user$project$Main$priceView = function (model) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		{
+			ctor: '::',
+			_0: A2(
+				_rundis$elm_bootstrap$Bootstrap_Form$label,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$for('price'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('What do you think is a reasonable price?'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$view(
+					A2(
+						_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$predecessors,
+						{
+							ctor: '::',
+							_0: A2(
+								_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$span,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('$'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						},
+						_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$config(
+							_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$number(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									function () {
+										var _p9 = _kirchner$form_validation$Validate$errors(model.reasonablePrice);
+										if (_p9.ctor === 'Just') {
+											return {
+												ctor: '::',
+												_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$danger,
+												_1: {ctor: '[]'}
+											};
+										} else {
+											return {ctor: '[]'};
+										}
+									}(),
+									{
+										ctor: '::',
+										_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$id('price'),
+										_1: {
+											ctor: '::',
+											_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs(
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onBlur(_user$project$Main$PriceDeFocused),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangePrice),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$max('40'),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$min('4'),
+																_1: {ctor: '[]'}
+															}
+														}
+													}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}))))),
+				_1: {ctor: '[]'}
+			}
+		},
+		_user$project$Main$invalidFeedback(model.reasonablePrice));
+};
 var _user$project$Main$ChangeEmail = function (a) {
 	return {ctor: 'ChangeEmail', _0: a};
+};
+var _user$project$Main$emailView = function (model) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		{
+			ctor: '::',
+			_0: A2(
+				_rundis$elm_bootstrap$Bootstrap_Form$label,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$for('email'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Email address'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _rundis$elm_bootstrap$Bootstrap_Form_InputGroup$view(
+					A2(
+						_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$predecessors,
+						{
+							ctor: '::',
+							_0: A2(
+								_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$span,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('@'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						},
+						_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$config(
+							_rundis$elm_bootstrap$Bootstrap_Form_InputGroup$email(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									function () {
+										var _p10 = _kirchner$form_validation$Validate$errors(model.email);
+										if (_p10.ctor === 'Just') {
+											return {
+												ctor: '::',
+												_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$danger,
+												_1: {ctor: '[]'}
+											};
+										} else {
+											return {ctor: '[]'};
+										}
+									}(),
+									{
+										ctor: '::',
+										_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$id('email'),
+										_1: {
+											ctor: '::',
+											_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs(
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$autofocus(true),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangeEmail),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Events$onBlur(_user$project$Main$EmailDeFocused),
+															_1: {ctor: '[]'}
+														}
+													}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}))))),
+				_1: {ctor: '[]'}
+			}
+		},
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_user$project$Main$invalidFeedback(model.email),
+			{
+				ctor: '::',
+				_0: A2(
+					_rundis$elm_bootstrap$Bootstrap_Form$help,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Your email will never be shared with anyone else'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}));
 };
 var _user$project$Main$SubscribePressed = {ctor: 'SubscribePressed'};
 var _user$project$Main$ConfirmPressed = {ctor: 'ConfirmPressed'};
@@ -18181,37 +19044,45 @@ var _user$project$Main$RadioPaymentMsg = function (a) {
 var _user$project$Main$RadioPhotosMsg = function (a) {
 	return {ctor: 'RadioPhotosMsg', _0: a};
 };
-var _user$project$Main$radioPhotosView = F2(
-	function (attrs, model) {
+var _user$project$Main$radioPhotosView = F3(
+	function (attrs, model, invalid) {
 		return A2(
-			_user$project$Bootstrap_ButtonGroup$radioButtonGroup,
+			_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButtonGroup,
 			attrs,
 			A2(
 				_elm_lang$core$List$map,
 				function (n) {
-					return A4(
-						_user$project$Bootstrap_ButtonGroup$myRadio,
+					return A3(
+						_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButton,
 						_elm_lang$core$Native_Utils.eq(
-							model.radioPhotosPerMonth,
+							_kirchner$form_validation$Validate$validValue(model.radioPhotosPerMonth),
 							_elm_lang$core$Maybe$Just(n)),
 						{
 							ctor: '::',
-							_0: _user$project$Bootstrap_Button$primary,
+							_0: _rundis$elm_bootstrap$Bootstrap_Button$primary,
 							_1: {
 								ctor: '::',
-								_0: _user$project$Bootstrap_Button$onClick(
-									_user$project$Main$RadioPhotosMsg(
-										_elm_lang$core$Maybe$Just(n))),
-								_1: {ctor: '[]'}
-							}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$name('photos'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$required(true),
-								_1: {ctor: '[]'}
+								_0: _rundis$elm_bootstrap$Bootstrap_Button$onClick(
+									_user$project$Main$RadioPhotosMsg(n)),
+								_1: {
+									ctor: '::',
+									_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
+										invalid ? {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$style(
+												{
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'background-color', _1: _user$project$Main$alertColor},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'color', _1: _user$project$Main$alertForeGround},
+														_1: {ctor: '[]'}
+													}
+												}),
+											_1: {ctor: '[]'}
+										} : {ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}
 							}
 						},
 						{
@@ -18223,6 +19094,56 @@ var _user$project$Main$radioPhotosView = F2(
 				},
 				_user$project$Main$photosPerMonthEnum));
 	});
+var _user$project$Main$photosView = function (model) {
+	var invalid = model.confirmClicked && _elm_lang$core$Native_Utils.eq(model.radioPhotosPerMonth, _kirchner$form_validation$Validate$empty);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		{
+			ctor: '::',
+			_0: A2(
+				_rundis$elm_bootstrap$Bootstrap_Form$label,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$for('photos'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Preferred number of photos per month'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_user$project$Main$radioPhotosView,
+					{
+						ctor: '::',
+						_0: _rundis$elm_bootstrap$Bootstrap_ButtonGroup$attrs(
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$id('photos'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					},
+					model,
+					invalid),
+				_1: {ctor: '[]'}
+			}
+		},
+		invalid ? {
+			ctor: '::',
+			_0: A2(
+				_rundis$elm_bootstrap$Bootstrap_Form$invalidFeedback,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Please select one of the options'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		} : {ctor: '[]'});
+};
 var _user$project$Main$ChangePage = function (a) {
 	return {ctor: 'ChangePage', _0: a};
 };
@@ -18230,15 +19151,15 @@ var _user$project$Main$NavMsg = function (a) {
 	return {ctor: 'NavMsg', _0: a};
 };
 var _user$project$Main$init = function (location) {
-	var _p5 = _user$project$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
-	var navState = _p5._0;
-	var navCmd = _p5._1;
-	var _p6 = A2(
+	var _p11 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
+	var navState = _p11._0;
+	var navCmd = _p11._1;
+	var _p12 = A2(
 		_user$project$Main$urlUpdate,
 		location,
-		{navState: navState, page: _user$project$Main$Home, radioPhotosPerMonth: _elm_lang$core$Maybe$Nothing, radioPaymentMethod: _elm_lang$core$Maybe$Nothing, email: '', reasonablePrice: '', subscribing: false});
-	var model = _p6._0;
-	var urlCmd = _p6._1;
+		{navState: navState, page: _user$project$Main$Home, radioPhotosPerMonth: _kirchner$form_validation$Validate$empty, radioPaymentMethod: _kirchner$form_validation$Validate$empty, email: _kirchner$form_validation$Validate$empty, reasonablePrice: _kirchner$form_validation$Validate$empty, subscribing: false, confirmClicked: false});
+	var model = _p12._0;
+	var urlCmd = _p12._1;
 	return {
 		ctor: '_Tuple2',
 		_0: model,
@@ -18255,18 +19176,18 @@ var _user$project$Main$init = function (location) {
 	};
 };
 var _user$project$Main$subscriptions = function (model) {
-	return A2(_user$project$Bootstrap_Navbar$subscriptions, model.navState, _user$project$Main$NavMsg);
+	return A2(_rundis$elm_bootstrap$Bootstrap_Navbar$subscriptions, model.navState, _user$project$Main$NavMsg);
 };
 var _user$project$Main$menu = function (model) {
 	return A2(
-		_user$project$Bootstrap_Navbar$view,
+		_rundis$elm_bootstrap$Bootstrap_Navbar$view,
 		model.navState,
 		A2(
-			_user$project$Bootstrap_Navbar$items,
+			_rundis$elm_bootstrap$Bootstrap_Navbar$items,
 			{
 				ctor: '::',
 				_0: A2(
-					_user$project$Bootstrap_Navbar$itemLink,
+					_rundis$elm_bootstrap$Bootstrap_Navbar$itemLink,
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html_Attributes$href('#contact-us'),
@@ -18280,7 +19201,7 @@ var _user$project$Main$menu = function (model) {
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_user$project$Bootstrap_Navbar$itemLink,
+						_rundis$elm_bootstrap$Bootstrap_Navbar$itemLink,
 						{
 							ctor: '::',
 							_0: _elm_lang$html$Html_Attributes$href('#subscribe'),
@@ -18295,7 +19216,7 @@ var _user$project$Main$menu = function (model) {
 				}
 			},
 			A3(
-				_user$project$Bootstrap_Navbar$brand,
+				_rundis$elm_bootstrap$Bootstrap_Navbar$brand,
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$href('#'),
@@ -18306,10 +19227,10 @@ var _user$project$Main$menu = function (model) {
 					_0: _elm_lang$html$Html$text('Eidetic'),
 					_1: {ctor: '[]'}
 				},
-				_user$project$Bootstrap_Navbar$info(
-					_user$project$Bootstrap_Navbar$container(
-						_user$project$Bootstrap_Navbar$withAnimation(
-							_user$project$Bootstrap_Navbar$config(_user$project$Main$NavMsg)))))));
+				_rundis$elm_bootstrap$Bootstrap_Navbar$info(
+					_rundis$elm_bootstrap$Bootstrap_Navbar$container(
+						_rundis$elm_bootstrap$Bootstrap_Navbar$withAnimation(
+							_rundis$elm_bootstrap$Bootstrap_Navbar$config(_user$project$Main$NavMsg)))))));
 };
 var _user$project$Main$UrlChange = function (a) {
 	return {ctor: 'UrlChange', _0: a};
@@ -18330,37 +19251,45 @@ var _user$project$Main$paymentEnum = {
 		}
 	}
 };
-var _user$project$Main$radioPaymentView = F2(
-	function (attrs, model) {
+var _user$project$Main$radioPaymentView = F3(
+	function (attrs, model, invalid) {
 		return A2(
-			_user$project$Bootstrap_ButtonGroup$radioButtonGroup,
+			_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButtonGroup,
 			attrs,
 			A2(
 				_elm_lang$core$List$map,
 				function (method) {
-					return A4(
-						_user$project$Bootstrap_ButtonGroup$myRadio,
+					return A3(
+						_rundis$elm_bootstrap$Bootstrap_ButtonGroup$radioButton,
 						_elm_lang$core$Native_Utils.eq(
-							model.radioPaymentMethod,
+							_kirchner$form_validation$Validate$validValue(model.radioPaymentMethod),
 							_elm_lang$core$Maybe$Just(method)),
 						{
 							ctor: '::',
-							_0: _user$project$Bootstrap_Button$primary,
+							_0: _rundis$elm_bootstrap$Bootstrap_Button$primary,
 							_1: {
 								ctor: '::',
-								_0: _user$project$Bootstrap_Button$onClick(
-									_user$project$Main$RadioPaymentMsg(
-										_elm_lang$core$Maybe$Just(method))),
-								_1: {ctor: '[]'}
-							}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$name('payment'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$required(true),
-								_1: {ctor: '[]'}
+								_0: _rundis$elm_bootstrap$Bootstrap_Button$onClick(
+									_user$project$Main$RadioPaymentMsg(method)),
+								_1: {
+									ctor: '::',
+									_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
+										invalid ? {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$style(
+												{
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'background-color', _1: _user$project$Main$alertColor},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'color', _1: _user$project$Main$alertForeGround},
+														_1: {ctor: '[]'}
+													}
+												}),
+											_1: {ctor: '[]'}
+										} : {ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}
 							}
 						},
 						{
@@ -18372,6 +19301,56 @@ var _user$project$Main$radioPaymentView = F2(
 				},
 				_user$project$Main$paymentEnum));
 	});
+var _user$project$Main$paymentView = function (model) {
+	var invalid = model.confirmClicked && _elm_lang$core$Native_Utils.eq(model.radioPaymentMethod, _kirchner$form_validation$Validate$empty);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		{
+			ctor: '::',
+			_0: A2(
+				_rundis$elm_bootstrap$Bootstrap_Form$label,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$for('payment'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Preferred payment method'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_user$project$Main$radioPaymentView,
+					{
+						ctor: '::',
+						_0: _rundis$elm_bootstrap$Bootstrap_ButtonGroup$attrs(
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$id('payment'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					},
+					model,
+					invalid),
+				_1: {ctor: '[]'}
+			}
+		},
+		invalid ? {
+			ctor: '::',
+			_0: A2(
+				_rundis$elm_bootstrap$Bootstrap_Form$invalidFeedback,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Please select one of the options'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		} : {ctor: '[]'});
+};
 var _user$project$Main$pageSubscribe = function (model) {
 	return A2(
 		_elm_lang$html$Html$main_,
@@ -18411,318 +19390,101 @@ var _user$project$Main$pageSubscribe = function (model) {
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_user$project$Bootstrap_Form$form,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$name('submit-to-google-sheet'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_user$project$Bootstrap_Form$group,
-							{ctor: '[]'},
+					_rundis$elm_bootstrap$Bootstrap_Form$form,
+					{ctor: '[]'},
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						A2(
+							_elm_lang$core$List$map,
+							_rundis$elm_bootstrap$Bootstrap_Form$group(
+								{ctor: '[]'}),
 							{
 								ctor: '::',
-								_0: A2(
-									_user$project$Bootstrap_Form$label,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$for('email'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('Email address'),
-										_1: {ctor: '[]'}
-									}),
+								_0: _user$project$Main$emailView(model),
 								_1: {
 									ctor: '::',
-									_0: _user$project$Bootstrap_Form_InputGroup$view(
-										A2(
-											_user$project$Bootstrap_Form_InputGroup$predecessors,
-											{
-												ctor: '::',
-												_0: A2(
-													_user$project$Bootstrap_Form_InputGroup$span,
-													{ctor: '[]'},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('@'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {ctor: '[]'}
-											},
-											_user$project$Bootstrap_Form_InputGroup$config(
-												_user$project$Bootstrap_Form_InputGroup$email(
-													{
-														ctor: '::',
-														_0: _user$project$Bootstrap_Form_Input$danger,
-														_1: {
-															ctor: '::',
-															_0: _user$project$Bootstrap_Form_Input$id('email'),
-															_1: {
-																ctor: '::',
-																_0: _user$project$Bootstrap_Form_Input$attrs(
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$name('email'),
-																		_1: {
-																			ctor: '::',
-																			_0: _elm_lang$html$Html_Attributes$autofocus(true),
-																			_1: {
-																				ctor: '::',
-																				_0: _elm_lang$html$Html_Attributes$required(true),
-																				_1: {
-																					ctor: '::',
-																					_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangeEmail),
-																					_1: {ctor: '[]'}
-																				}
-																			}
-																		}
-																	}),
-																_1: {ctor: '[]'}
-															}
-														}
-													})))),
+									_0: _user$project$Main$photosView(model),
 									_1: {
 										ctor: '::',
-										_0: A2(
-											_user$project$Bootstrap_Form$invalidFeedback,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('Something not quite right.'),
-												_1: {ctor: '[]'}
-											}),
+										_0: _user$project$Main$priceView(model),
 										_1: {
 											ctor: '::',
-											_0: A2(
-												_user$project$Bootstrap_Form$help,
-												{ctor: '[]'},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('Your email will never be shared with anyone else'),
-													_1: {ctor: '[]'}
-												}),
+											_0: _user$project$Main$paymentView(model),
 											_1: {ctor: '[]'}
 										}
 									}
 								}
 							}),
-						_1: {
+						{
 							ctor: '::',
 							_0: A2(
-								_user$project$Bootstrap_Form$group,
+								_rundis$elm_bootstrap$Bootstrap_Form$label,
 								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: A2(
-										_user$project$Bootstrap_Form$label,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$for('photos'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Preferred number of photos per month'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_user$project$Main$radioPhotosView,
-											{
-												ctor: '::',
-												_0: _user$project$Bootstrap_ButtonGroup$attrs(
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$id('photos'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {ctor: '[]'}
-											},
-											model),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_user$project$Bootstrap_Form$invalidFeedback,
-												{ctor: '[]'},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('Something not quite right.'),
-													_1: {ctor: '[]'}
-												}),
-											_1: {ctor: '[]'}
-										}
-									}
+									_0: _elm_lang$html$Html$text('* By subscribing before launch, we will send you a free month package with eidetic and service updates.'),
+									_1: {ctor: '[]'}
 								}),
 							_1: {
 								ctor: '::',
 								_0: A2(
-									_user$project$Bootstrap_Form$group,
-									{ctor: '[]'},
+									_rundis$elm_bootstrap$Bootstrap_Button$button,
 									{
 										ctor: '::',
-										_0: A2(
-											_user$project$Bootstrap_Form$label,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$for('price'),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('What do you think is a reasonable price?'),
-												_1: {ctor: '[]'}
-											}),
+										_0: _rundis$elm_bootstrap$Bootstrap_Button$success,
 										_1: {
 											ctor: '::',
-											_0: _user$project$Bootstrap_Form_InputGroup$view(
-												A2(
-													_user$project$Bootstrap_Form_InputGroup$predecessors,
-													{
-														ctor: '::',
-														_0: A2(
-															_user$project$Bootstrap_Form_InputGroup$span,
-															{ctor: '[]'},
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html$text('$'),
-																_1: {ctor: '[]'}
-															}),
-														_1: {ctor: '[]'}
-													},
-													_user$project$Bootstrap_Form_InputGroup$config(
-														_user$project$Bootstrap_Form_InputGroup$number(
-															{
-																ctor: '::',
-																_0: _user$project$Bootstrap_Form_Input$id('price'),
-																_1: {
-																	ctor: '::',
-																	_0: _user$project$Bootstrap_Form_Input$attrs(
-																		{
-																			ctor: '::',
-																			_0: _elm_lang$html$Html_Attributes$name('price'),
-																			_1: {
-																				ctor: '::',
-																				_0: _elm_lang$html$Html_Attributes$required(true),
-																				_1: {
-																					ctor: '::',
-																					_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangePrice),
-																					_1: {
-																						ctor: '::',
-																						_0: _elm_lang$html$Html_Attributes$max('20'),
-																						_1: {
-																							ctor: '::',
-																							_0: _elm_lang$html$Html_Attributes$min('3'),
-																							_1: {ctor: '[]'}
-																						}
-																					}
-																				}
-																			}
-																		}),
-																	_1: {ctor: '[]'}
-																}
-															})))),
-											_1: {ctor: '[]'}
-										}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_user$project$Bootstrap_Form$group,
-										{ctor: '[]'},
-										{
-											ctor: '::',
-											_0: A2(
-												_user$project$Bootstrap_Form$label,
+											_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$for('payment'),
-													_1: {ctor: '[]'}
-												},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('Preferred payment method'),
-													_1: {ctor: '[]'}
-												}),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_user$project$Main$radioPaymentView,
-													{
-														ctor: '::',
-														_0: _user$project$Bootstrap_ButtonGroup$attrs(
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$id('payment'),
-																_1: {ctor: '[]'}
-															}),
-														_1: {ctor: '[]'}
-													},
-													model),
-												_1: {ctor: '[]'}
-											}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_user$project$Bootstrap_Form$label,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('* By subscribing before launch, we will send you a free month package with eidetic and service updates.'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_user$project$Bootstrap_Button$button,
-												{
-													ctor: '::',
-													_0: _user$project$Bootstrap_Button$success,
+													_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ConfirmPressed),
 													_1: {
 														ctor: '::',
-														_0: _user$project$Bootstrap_Button$attrs(
-															{
+														_0: _elm_lang$html$Html_Attributes$id('confirm'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$type_('button'),
+															_1: {
 																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$type_('button'),
-																_1: {
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ConfirmPressed),
-																	_1: {
-																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$id('confirm'),
-																		_1: {
+																_0: _elm_lang$html$Html_Attributes$style(
+																	A2(
+																		_elm_lang$core$Basics_ops['++'],
+																		{
 																			ctor: '::',
-																			_0: _elm_lang$html$Html_Attributes$style(
-																				{
-																					ctor: '::',
-																					_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '1rem'},
-																					_1: {ctor: '[]'}
-																				}),
+																			_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '1rem'},
 																			_1: {ctor: '[]'}
-																		}
-																	}
-																}
-															}),
-														_1: {ctor: '[]'}
+																		},
+																		_user$project$Convenience$isNothing(
+																			_user$project$Main$formData(
+																				_user$project$Main$validateModel(model))) ? {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 'background-color', _1: _user$project$Main$alertColor},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: 'border-color', _1: 'rgba(237, 74, 60, 0.74)'},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: 'color', _1: _user$project$Main$alertForeGround},
+																					_1: {ctor: '[]'}
+																				}
+																			}
+																		} : {ctor: '[]'})),
+																_1: {ctor: '[]'}
+															}
+														}
 													}
-												},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('CONFIRM'),
-													_1: {ctor: '[]'}
 												}),
 											_1: {ctor: '[]'}
 										}
-									}
-								}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('CONFIRM'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
 							}
-						}
-					}),
+						})),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -18828,16 +19590,16 @@ var _user$project$Main$pageHome = function (model) {
 						_1: {
 							ctor: '::',
 							_0: model.subscribing ? _user$project$Main$pageSubscribe(model) : A2(
-								_user$project$Bootstrap_Button$button,
+								_rundis$elm_bootstrap$Bootstrap_Button$button,
 								{
 									ctor: '::',
-									_0: _user$project$Bootstrap_Button$outlinePrimary,
+									_0: _rundis$elm_bootstrap$Bootstrap_Button$outlinePrimary,
 									_1: {
 										ctor: '::',
-										_0: _user$project$Bootstrap_Button$small,
+										_0: _rundis$elm_bootstrap$Bootstrap_Button$small,
 										_1: {
 											ctor: '::',
-											_0: _user$project$Bootstrap_Button$attrs(
+											_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
 												{
 													ctor: '::',
 													_0: _elm_lang$html$Html_Attributes$id('subscribe'),
@@ -18971,11 +19733,11 @@ var _user$project$Main$pageHome = function (model) {
 };
 var _user$project$Main$mainContent = function (model) {
 	return A2(
-		_user$project$Bootstrap_Grid$container,
+		_rundis$elm_bootstrap$Bootstrap_Grid$container,
 		{ctor: '[]'},
 		function () {
-			var _p7 = model.page;
-			switch (_p7.ctor) {
+			var _p13 = model.page;
+			switch (_p13.ctor) {
 				case 'Home':
 					return _user$project$Main$pageHome(model);
 				case 'ContactUs':
