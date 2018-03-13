@@ -47,8 +47,8 @@ type alias Model =
     , navState : Navbar.State
     , radioPhotosPerMonth : Validatable RadioPhotosPerMonth String
     , radioPaymentMethod : Validatable RadioPaymentMethod String
-    , email : Validatable String String
-    , reasonablePrice : Validatable String String
+    , email : Validatable String ( Int, String )
+    , reasonablePrice : Validatable String ( Int, String )
     , subscribing : Bool
     , subscribed : Bool
     , confirmClicked : Bool
@@ -57,11 +57,11 @@ type alias Model =
 
 formData : Model -> Maybe (List ( String, String ))
 formData model =
-    traverse validValue
-        [ model.email
-        , model.radioPhotosPerMonth |> Validate.map toString
-        , model.radioPaymentMethod |> Validate.map caption
-        , model.reasonablePrice
+    traverse identity
+        [ model.email |> validValue
+        , model.radioPhotosPerMonth |> Validate.map toString |> validValue
+        , model.radioPaymentMethod |> Validate.map caption |> validValue
+        , model.reasonablePrice |> validValue
         ]
         |> Maybe.map
             (List.map2 (,) [ "email", "photos", "payment", "price" ])
@@ -72,7 +72,10 @@ validateModel model =
     { model
         | reasonablePrice =
             model.reasonablePrice
-                |> isNotEmpty "Price must not be empty"
+                |> satisfies
+                    (\_ -> validValue model.radioPhotosPerMonth /= Nothing)
+                    ( 0, "You must select the number of photos first" )
+                |> isNotEmpty ( 1, "Price must not be empty" )
                 |> satisfies
                     (\s ->
                         case String.toInt s of
@@ -82,7 +85,7 @@ validateModel model =
                             Err _ ->
                                 False
                     )
-                    "This is not a valid price"
+                    ( 2, "This is not a valid price" )
                 |> satisfies
                     (\n ->
                         case String.toInt n of
@@ -92,11 +95,11 @@ validateModel model =
                             Err _ ->
                                 False
                     )
-                    "Price must be between 3 and 40"
+                    ( 3, "Price must be between 3 and 40" )
         , email =
             model.email
-                |> isNotEmpty "Email must not be empty"
-                |> isEmail "This is not a valid email address"
+                |> isNotEmpty ( 1, "Email must not be empty" )
+                |> isEmail ( 2, "This is not a valid email address" )
     }
 
 
@@ -238,7 +241,14 @@ update msg model =
             )
 
         Defocused Price ->
-            ( { model | reasonablePrice = (validateModel model).reasonablePrice }
+            ( { model
+                | reasonablePrice = (validateModel model).reasonablePrice
+                , radioPhotosPerMonth =
+                    if model.radioPhotosPerMonth == empty then
+                        addErrors (Set.singleton "bad") (unchecked -1000)
+                    else
+                        model.radioPhotosPerMonth
+              }
             , Cmd.none
             )
 
@@ -419,7 +429,7 @@ invalidFeedback field =
     Maybe.withDefault emptyFeedback
         (Maybe.map
             (\invalidBecause ->
-                [ Form.invalidFeedback [ entrance ] [ text (Set.toList invalidBecause |> List.head |> Maybe.withDefault "") ] ]
+                [ Form.invalidFeedback [ entrance ] [ text (Set.toList invalidBecause |> List.head |> Maybe.map Tuple.second |> Maybe.withDefault "") ] ]
             )
             (Validate.errors field)
         )
@@ -463,13 +473,13 @@ photosView : Model -> List (Html Msg)
 photosView model =
     let
         invalid =
-            model.confirmClicked && model.radioPhotosPerMonth == empty
+            model.confirmClicked && model.radioPhotosPerMonth == empty || errors model.radioPhotosPerMonth /= Nothing
     in
         [ Form.label [ for "photos" ] [ text "Preferred number of photos per month" ]
         , radioPhotosView [ ButtonGroup.attrs [ id "photos" ] ] model invalid
         ]
             ++ (if invalid then
-                    [ Form.invalidFeedback [ entrance ] [ text "Please select one of the options" ] ]
+                    [ Form.invalidFeedback [ entrance ] [ text "Please select one of the options above" ] ]
                 else
                     emptyFeedback
                )

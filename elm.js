@@ -18683,8 +18683,11 @@ var _user$project$Main$invalidFeedback = function (field) {
 								A2(
 									_elm_lang$core$Maybe$withDefault,
 									'',
-									_elm_lang$core$List$head(
-										_elm_lang$core$Set$toList(invalidBecause)))),
+									A2(
+										_elm_lang$core$Maybe$map,
+										_elm_lang$core$Tuple$second,
+										_elm_lang$core$List$head(
+											_elm_lang$core$Set$toList(invalidBecause))))),
 							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}
@@ -18746,7 +18749,7 @@ var _user$project$Main$validateModel = function (model) {
 						return false;
 					}
 				},
-				'Price must be between 3 and 40',
+				{ctor: '_Tuple2', _0: 3, _1: 'Price must be between 3 and 40'},
 				A3(
 					_kirchner$form_validation$Validate$satisfies,
 					function (s) {
@@ -18757,12 +18760,26 @@ var _user$project$Main$validateModel = function (model) {
 							return false;
 						}
 					},
-					'This is not a valid price',
-					A2(_kirchner$form_validation$Validate$isNotEmpty, 'Price must not be empty', model.reasonablePrice))),
+					{ctor: '_Tuple2', _0: 2, _1: 'This is not a valid price'},
+					A2(
+						_kirchner$form_validation$Validate$isNotEmpty,
+						{ctor: '_Tuple2', _0: 1, _1: 'Price must not be empty'},
+						A3(
+							_kirchner$form_validation$Validate$satisfies,
+							function (_p6) {
+								return !_elm_lang$core$Native_Utils.eq(
+									_kirchner$form_validation$Validate$validValue(model.radioPhotosPerMonth),
+									_elm_lang$core$Maybe$Nothing);
+							},
+							{ctor: '_Tuple2', _0: 0, _1: 'You must select the number of photos first'},
+							model.reasonablePrice)))),
 			email: A2(
 				_kirchner$form_validation$Validate$isEmail,
-				'This is not a valid email address',
-				A2(_kirchner$form_validation$Validate$isNotEmpty, 'Email must not be empty', model.email))
+				{ctor: '_Tuple2', _0: 2, _1: 'This is not a valid email address'},
+				A2(
+					_kirchner$form_validation$Validate$isNotEmpty,
+					{ctor: '_Tuple2', _0: 1, _1: 'Email must not be empty'},
+					model.email))
 		});
 };
 var _user$project$Main$formData = function (model) {
@@ -18793,19 +18810,21 @@ var _user$project$Main$formData = function (model) {
 			}),
 		A2(
 			_user$project$Convenience$traverse,
-			_kirchner$form_validation$Validate$validValue,
+			_elm_lang$core$Basics$identity,
 			{
 				ctor: '::',
-				_0: model.email,
+				_0: _kirchner$form_validation$Validate$validValue(model.email),
 				_1: {
 					ctor: '::',
-					_0: A2(_kirchner$form_validation$Validate$map, _elm_lang$core$Basics$toString, model.radioPhotosPerMonth),
+					_0: _kirchner$form_validation$Validate$validValue(
+						A2(_kirchner$form_validation$Validate$map, _elm_lang$core$Basics$toString, model.radioPhotosPerMonth)),
 					_1: {
 						ctor: '::',
-						_0: A2(_kirchner$form_validation$Validate$map, _user$project$Main$caption, model.radioPaymentMethod),
+						_0: _kirchner$form_validation$Validate$validValue(
+							A2(_kirchner$form_validation$Validate$map, _user$project$Main$caption, model.radioPaymentMethod)),
 						_1: {
 							ctor: '::',
-							_0: model.reasonablePrice,
+							_0: _kirchner$form_validation$Validate$validValue(model.reasonablePrice),
 							_1: {ctor: '[]'}
 						}
 					}
@@ -18837,8 +18856,8 @@ var _user$project$Main$decode = function (location) {
 };
 var _user$project$Main$urlUpdate = F2(
 	function (location, model) {
-		var _p6 = _user$project$Main$decode(location);
-		if (_p6.ctor === 'Nothing') {
+		var _p7 = _user$project$Main$decode(location);
+		if (_p7.ctor === 'Nothing') {
 			return {
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
@@ -18851,7 +18870,7 @@ var _user$project$Main$urlUpdate = F2(
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
 					model,
-					{page: _p6._0}),
+					{page: _p7._0}),
 				_1: _elm_lang$core$Platform_Cmd$none
 			};
 		}
@@ -18884,16 +18903,16 @@ var _user$project$Main$Defocused = function (a) {
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p7 = msg;
-		switch (_p7.ctor) {
+		var _p8 = msg;
+		switch (_p8.ctor) {
 			case 'UrlChange':
-				return A2(_user$project$Main$urlUpdate, _p7._0, model);
+				return A2(_user$project$Main$urlUpdate, _p8._0, model);
 			case 'NavMsg':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{navState: _p7._0}),
+						{navState: _p8._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ChangePage':
@@ -18901,7 +18920,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{page: _p7._0}),
+						{page: _p8._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'RadioPhotosMsg':
@@ -18910,7 +18929,7 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							radioPhotosPerMonth: _kirchner$form_validation$Validate$valid(_p7._0)
+							radioPhotosPerMonth: _kirchner$form_validation$Validate$valid(_p8._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -18920,7 +18939,7 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							radioPaymentMethod: _kirchner$form_validation$Validate$valid(_p7._0)
+							radioPaymentMethod: _kirchner$form_validation$Validate$valid(_p8._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -18952,10 +18971,10 @@ var _user$project$Main$update = F2(
 						validated,
 						{confirmClicked: true}),
 					_1: function () {
-						var _p8 = validatedFormData;
-						if (_p8.ctor === 'Just') {
+						var _p9 = validatedFormData;
+						if (_p9.ctor === 'Just') {
 							return _user$project$Ports$sendData(
-								_user$project$Main$formDatafication(_p8._0));
+								_user$project$Main$formDatafication(_p9._0));
 						} else {
 							return _elm_lang$core$Platform_Cmd$none;
 						}
@@ -18967,7 +18986,7 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							email: _kirchner$form_validation$Validate$unchecked(_p7._0)
+							email: _kirchner$form_validation$Validate$unchecked(_p8._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -18977,7 +18996,7 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							reasonablePrice: _kirchner$form_validation$Validate$unchecked(_p7._0)
+							reasonablePrice: _kirchner$form_validation$Validate$unchecked(_p8._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -18993,11 +19012,11 @@ var _user$project$Main$update = F2(
 							_andrewMacmurray$elm_delay$Delay$after,
 							200,
 							_elm_lang$core$Time$millisecond,
-							_user$project$Main$Defocused(_p7._0)),
+							_user$project$Main$Defocused(_p8._0)),
 						_1: {ctor: '[]'}
 					});
 			case 'Defocused':
-				if (_p7._0.ctor === 'Email') {
+				if (_p8._0.ctor === 'Email') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -19013,7 +19032,11 @@ var _user$project$Main$update = F2(
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{
-								reasonablePrice: _user$project$Main$validateModel(model).reasonablePrice
+								reasonablePrice: _user$project$Main$validateModel(model).reasonablePrice,
+								radioPhotosPerMonth: _elm_lang$core$Native_Utils.eq(model.radioPhotosPerMonth, _kirchner$form_validation$Validate$empty) ? A2(
+									_kirchner$form_validation$Validate$addErrors,
+									_elm_lang$core$Set$singleton('bad'),
+									_kirchner$form_validation$Validate$unchecked(-1000)) : model.radioPhotosPerMonth
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
@@ -19068,8 +19091,8 @@ var _user$project$Main$priceView = function (model) {
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									function () {
-										var _p9 = _kirchner$form_validation$Validate$errors(model.reasonablePrice);
-										if (_p9.ctor === 'Just') {
+										var _p10 = _kirchner$form_validation$Validate$errors(model.reasonablePrice);
+										if (_p10.ctor === 'Just') {
 											return {
 												ctor: '::',
 												_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$danger,
@@ -19153,8 +19176,8 @@ var _user$project$Main$emailView = function (model) {
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									function () {
-										var _p10 = _kirchner$form_validation$Validate$errors(model.email);
-										if (_p10.ctor === 'Just') {
+										var _p11 = _kirchner$form_validation$Validate$errors(model.email);
+										if (_p11.ctor === 'Just') {
 											return {
 												ctor: '::',
 												_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$danger,
@@ -19198,8 +19221,8 @@ var _user$project$Main$emailView = function (model) {
 				_0: A2(
 					_rundis$elm_bootstrap$Bootstrap_Form$help,
 					function () {
-						var _p11 = _kirchner$form_validation$Validate$errors(model.email);
-						if (_p11.ctor === 'Just') {
+						var _p12 = _kirchner$form_validation$Validate$errors(model.email);
+						if (_p12.ctor === 'Just') {
 							return {
 								ctor: '::',
 								_0: _elm_lang$html$Html_Attributes$class('isDown'),
@@ -19280,7 +19303,9 @@ var _user$project$Main$radioPhotosView = F3(
 				_user$project$Main$photosPerMonthEnum));
 	});
 var _user$project$Main$photosView = function (model) {
-	var invalid = model.confirmClicked && _elm_lang$core$Native_Utils.eq(model.radioPhotosPerMonth, _kirchner$form_validation$Validate$empty);
+	var invalid = (model.confirmClicked && _elm_lang$core$Native_Utils.eq(model.radioPhotosPerMonth, _kirchner$form_validation$Validate$empty)) || (!_elm_lang$core$Native_Utils.eq(
+		_kirchner$form_validation$Validate$errors(model.radioPhotosPerMonth),
+		_elm_lang$core$Maybe$Nothing));
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		{
@@ -19327,7 +19352,7 @@ var _user$project$Main$photosView = function (model) {
 				},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text('Please select one of the options'),
+					_0: _elm_lang$html$Html$text('Please select one of the options above'),
 					_1: {ctor: '[]'}
 				}),
 			_1: {ctor: '[]'}
@@ -19340,10 +19365,10 @@ var _user$project$Main$NavMsg = function (a) {
 	return {ctor: 'NavMsg', _0: a};
 };
 var _user$project$Main$init = function (location) {
-	var _p12 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
-	var navState = _p12._0;
-	var navCmd = _p12._1;
-	var _p13 = A2(
+	var _p13 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
+	var navState = _p13._0;
+	var navCmd = _p13._1;
+	var _p14 = A2(
 		_user$project$Main$urlUpdate,
 		location,
 		{
@@ -19357,8 +19382,8 @@ var _user$project$Main$init = function (location) {
 			subscribed: false,
 			confirmClicked: false
 		});
-	var model = _p13._0;
-	var urlCmd = _p13._1;
+	var model = _p14._0;
+	var urlCmd = _p14._1;
 	return {
 		ctor: '_Tuple2',
 		_0: model,
@@ -19982,8 +20007,8 @@ var _user$project$Main$mainContent = function (model) {
 		_rundis$elm_bootstrap$Bootstrap_Grid$container,
 		{ctor: '[]'},
 		function () {
-			var _p14 = model.page;
-			switch (_p14.ctor) {
+			var _p15 = model.page;
+			switch (_p15.ctor) {
 				case 'Home':
 					return _user$project$Main$pageHome(model);
 				case 'ContactUs':
