@@ -19723,7 +19723,16 @@ var _user$project$Main$pageHome = function (model) {
 					_1: {
 						ctor: '::',
 						_0: _user$project$Main$animation,
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$style(
+								{
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'animation-delay', _1: '400ms'},
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			},
@@ -19829,11 +19838,20 @@ var _user$project$Main$pageHome = function (model) {
 													_0: _elm_lang$html$Html_Attributes$class('animated wobble'),
 													_1: {
 														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$id('subscribe'),
+														_0: _elm_lang$html$Html_Attributes$style(
+															{
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: 'animation-delay', _1: '1s'},
+																_1: {ctor: '[]'}
+															}),
 														_1: {
 															ctor: '::',
-															_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SubscribePressed),
-															_1: {ctor: '[]'}
+															_0: _elm_lang$html$Html_Attributes$id('subscribe'),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SubscribePressed),
+																_1: {ctor: '[]'}
+															}
 														}
 													}
 												}),

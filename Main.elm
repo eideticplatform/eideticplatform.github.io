@@ -343,7 +343,7 @@ animation =
 pageHome : Model -> List (Html Msg)
 pageHome model =
     [ main_
-        [ class "bd-masthead", id "content", animation ]
+        [ class "bd-masthead", id "content", animation, style [ ( "animation-delay", "400ms" ) ] ]
         [ div
             [ style [ ( "margin", "0 auto 2rem" ) ] ]
             [ img
@@ -371,7 +371,7 @@ pageHome model =
             Button.button
                 [ Button.outlinePrimary
                 , Button.small
-                , Button.attrs [ class "animated wobble", id "subscribe", onClick <| SubscribePressed ]
+                , Button.attrs [ class "animated wobble", style [ ( "animation-delay", "1s" ) ], id "subscribe", onClick <| SubscribePressed ]
                 ]
                 [ text "SUBSCRIBE" ]
         , div
