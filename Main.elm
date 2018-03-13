@@ -28,7 +28,8 @@ import Validate exposing (..)
 import Ports
 import Convenience exposing (..)
 import Set
-import Regex
+import Time exposing (millisecond, Time)
+import Delay
 
 
 main : Program Never Model Msg
@@ -127,6 +128,11 @@ init location =
         ( model, Cmd.batch [ urlCmd, navCmd ] )
 
 
+type DefocusedField
+    = Email
+    | Price
+
+
 type Msg
     = UrlChange Location
     | NavMsg Navbar.State
@@ -137,21 +143,15 @@ type Msg
     | SubscribePressed
     | ChangeEmail String
     | ChangePrice String
-    | EmailDeFocused
-    | PriceDeFocused
+    | Defocused DefocusedField
     | ValidateModel
+    | DelayedDeFocused DefocusedField
     | Response (Result Http.Error String)
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Navbar.subscriptions model.navState NavMsg
-
-
-
---subscriptions model =
---    Sub.batch
---        [ Modal.subscriptions model.modalVisibility AnimateModal ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -200,6 +200,11 @@ update msg model =
                     { validated
                         | subscribing = False
                         , subscribed = True
+                        , radioPhotosPerMonth = empty
+                        , radioPaymentMethod = empty
+                        , email = Validate.unchecked ""
+                        , reasonablePrice = Validate.unchecked ""
+                        , confirmClicked = False
                     }
                   else
                     { validated | confirmClicked = True }
@@ -224,12 +229,15 @@ update msg model =
         Response _ ->
             ( model, Cmd.none )
 
-        EmailDeFocused ->
+        DelayedDeFocused field ->
+            model ! [ Delay.after 200 millisecond (Defocused field) ]
+
+        Defocused Email ->
             ( { model | email = (validateModel model).email }
             , Cmd.none
             )
 
-        PriceDeFocused ->
+        Defocused Price ->
             ( { model | reasonablePrice = (validateModel model).reasonablePrice }
             , Cmd.none
             )
@@ -328,10 +336,14 @@ mainContent model =
                 pageHome model
 
 
+animation =
+    class "animated fadeIn"
+
+
 pageHome : Model -> List (Html Msg)
 pageHome model =
     [ main_
-        [ class "bd-masthead", id "content" ]
+        [ class "bd-masthead", id "content", animation ]
         [ div
             [ style [ ( "margin", "0 auto 2rem" ) ] ]
             [ img
@@ -359,7 +371,7 @@ pageHome model =
             Button.button
                 [ Button.outlinePrimary
                 , Button.small
-                , Button.attrs [ id "subscribe", onClick <| SubscribePressed ]
+                , Button.attrs [ class "animated wobble", id "subscribe", onClick <| SubscribePressed ]
                 ]
                 [ text "SUBSCRIBE" ]
         , div
@@ -399,11 +411,15 @@ pageContactUs model =
     ]
 
 
+emptyFeedback =
+    [ Form.invalidFeedback [ style [ ( "color", "rgba(0,0,0,0)" ) ] ] [ text "hidden" ] ]
+
+
 invalidFeedback field =
-    Maybe.withDefault []
+    Maybe.withDefault emptyFeedback
         (Maybe.map
             (\invalidBecause ->
-                [ Form.invalidFeedback [] [ text (Set.toList invalidBecause |> List.head |> Maybe.withDefault "") ] ]
+                [ Form.invalidFeedback [ entrance ] [ text (Set.toList invalidBecause |> List.head |> Maybe.withDefault "") ] ]
             )
             (Validate.errors field)
         )
@@ -422,7 +438,7 @@ emailView model =
                     []
              )
                 ++ [ Input.id "email"
-                   , Input.attrs [ autofocus True, onInput ChangeEmail, onBlur EmailDeFocused ]
+                   , Input.attrs [ autofocus True, onInput ChangeEmail, onBlur (DelayedDeFocused Email) ]
                    ]
             )
         )
@@ -430,7 +446,17 @@ emailView model =
         |> InputGroup.view
     ]
         ++ invalidFeedback model.email
-        ++ [ Form.help [] [ text "Your email will never be shared with anyone else" ] ]
+        ++ [ Form.help
+                ((case Validate.errors model.email of
+                    Just _ ->
+                        [ class "isDown" ]
+
+                    Nothing ->
+                        [ class "isUp" ]
+                 )
+                )
+                [ text "Your email will never be shared with anyone else" ]
+           ]
 
 
 photosView : Model -> List (Html Msg)
@@ -443,9 +469,9 @@ photosView model =
         , radioPhotosView [ ButtonGroup.attrs [ id "photos" ] ] model invalid
         ]
             ++ (if invalid then
-                    [ Form.invalidFeedback [] [ text "Please select one of the options" ] ]
+                    [ Form.invalidFeedback [ entrance ] [ text "Please select one of the options" ] ]
                 else
-                    []
+                    emptyFeedback
                )
 
 
@@ -461,7 +487,7 @@ priceView model =
                 Nothing ->
                     []
              )
-                ++ [ Input.id "price", Input.attrs [ onBlur PriceDeFocused, onInput ChangePrice, Html.Attributes.max "40", Html.Attributes.min "4" ] ]
+                ++ [ Input.id "price", Input.attrs [ onBlur (DelayedDeFocused Price), onInput ChangePrice, Html.Attributes.max "40", Html.Attributes.min "4" ] ]
             )
         )
         |> InputGroup.predecessors [ InputGroup.span [] [ text "$" ] ]
@@ -480,17 +506,21 @@ paymentView model =
         , radioPaymentView [ ButtonGroup.attrs [ id "payment" ] ] model invalid
         ]
             ++ (if invalid then
-                    [ Form.invalidFeedback [] [ text "Please select one of the options" ] ]
+                    [ Form.invalidFeedback [ entrance ] [ text "Please select one of the options" ] ]
                 else
-                    []
+                    emptyFeedback
                )
+
+
+entrance =
+    class "fadeInDown animated"
 
 
 pageSubscribe : Model -> Html Msg
 pageSubscribe model =
     main_
-        [ id "subscribe_content", style [ ( "padding", "1.2rem" ) ] ]
-        [ h2 [ style [ ( "text-align", "center" ) ] ] [ text "SUBSCRIBE" ]
+        [ id "subscribe_content", style [ ( "padding", "1.2rem" ) ], class "zoomIn animated" ]
+        [ h2 [ entrance, style [ ( "text-align", "center" ) ] ] [ text "SUBSCRIBE" ]
         , Form.form [] <|
             List.map (Form.group [])
                 [ emailView model, photosView model, priceView model, paymentView model ]
