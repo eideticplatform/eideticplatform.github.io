@@ -50,8 +50,8 @@ type alias Model =
     , radioPaymentMethod : Validatable RadioPaymentMethod String
     , email : Validatable String ( Int, String )
     , reasonablePrice : Validatable String ( Int, String )
-    , subscribing : Bool
-    , subscribed : Bool
+    , signingUp : Bool
+    , signedUp : Bool
     , confirmClicked : Bool
     }
 
@@ -132,8 +132,8 @@ init location =
                 , radioPaymentMethod = empty
                 , email = Validate.unchecked ""
                 , reasonablePrice = Validate.unchecked ""
-                , subscribing = False
-                , subscribed = False
+                , signingUp = False
+                , signedUp = False
                 , confirmClicked = False
                 }
     in
@@ -152,7 +152,7 @@ type Msg
     | RadioPhotosMsg RadioPhotosPerMonth
     | RadioPaymentMsg RadioPaymentMethod
     | ConfirmPressed
-    | SubscribePressed
+    | SignupPressed
     | ChangeEmail String
     | ChangePrice String
     | Defocused DefocusedField
@@ -204,8 +204,8 @@ update msg model =
             , Cmd.none
             )
 
-        SubscribePressed ->
-            ( { model | subscribing = True }
+        SignupPressed ->
+            ( { model | signingUp = True }
             , Cmd.none
             )
 
@@ -222,8 +222,8 @@ update msg model =
             in
                 ( if valid then
                     { validated
-                        | subscribing = False
-                        , subscribed = True
+                        | signingUp = False
+                        , signedUp = True
                         , radioPhotosPerMonth = empty
                         , radioPaymentMethod = empty
                         , email = Validate.unchecked ""
@@ -368,7 +368,7 @@ menu model =
         |> Navbar.brand [ href "#" ] [ text "Eidetic" ]
         |> Navbar.items
             [ Navbar.itemLink [ href "#contact-us" ] [ text "Contact us" ]
-            , Navbar.itemLink [ href "#subscribe" ] [ text "Subscribe" ]
+            , Navbar.itemLink [ href "#sign-up" ] [ text "Sign up" ]
             ]
         |> Navbar.view model.navState
 
@@ -414,17 +414,17 @@ pageHome model =
         , p [ class "version", style [ ( "margin-bottom", "2rem" ) ] ]
             [ text "Your Favorite Memories At Your Doorstep"
             ]
-        , if model.subscribing then
-            pageSubscribe model
-          else if model.subscribed then
+        , if model.signingUp then
+            pageSignup model
+          else if model.signedUp then
             pageThanks model
           else
             Button.button
                 [ Button.outlinePrimary
                 , Button.small
-                , Button.attrs [ class "animated wobble", style [ ( "animation-delay", "1s" ) ], id "subscribe", onClick <| SubscribePressed ]
+                , Button.attrs [ class "animated wobble", style [ ( "animation-delay", "1s" ) ], id "signup", onClick <| SignupPressed ]
                 ]
-                [ text "SUBSCRIBE" ]
+                [ text "SIGN UP" ]
         , div
             [ style [ ( "margin", "2rem 0 2rem auto" ) ] ]
             [ img
@@ -538,7 +538,20 @@ priceView model =
                 Nothing ->
                     []
              )
-                ++ [ Input.id "price", Input.attrs [ onBlur (Defocused Price), onInput ChangePrice, Html.Attributes.max "40", Html.Attributes.min "4" ] ]
+                ++ [ Input.id "price"
+                   , Input.attrs
+                        ([ onBlur (Defocused Price), onInput ChangePrice ]
+                            ++ (Dict.get
+                                    (model.radioPhotosPerMonth
+                                        |> validValue
+                                        |> Maybe.withDefault (-1)
+                                    )
+                                    photosPriceRanges
+                                    |> Maybe.map (\( mi, ma ) -> [ Html.Attributes.min (toString mi), Html.Attributes.max (toString ma) ])
+                                    |> Maybe.withDefault []
+                               )
+                        )
+                   ]
             )
         )
         |> InputGroup.predecessors [ InputGroup.span [] [ text "$" ] ]
@@ -567,17 +580,20 @@ entrance =
     class "fadeInDown animated"
 
 
-pageSubscribe : Model -> Html Msg
-pageSubscribe model =
+pageSignup : Model -> Html Msg
+pageSignup model =
     main_
-        [ id "subscribe_content", style [ ( "padding", "1.2rem" ) ], class "zoomIn animated" ]
-        [ h2 [ entrance, style [ ( "text-align", "center" ) ] ] [ text "SUBSCRIBE" ]
+        [ id "signup_content", style [ ( "padding", "1.2rem" ) ], class "zoomIn animated" ]
+        [ h2 [ entrance, style [ ( "text-align", "center" ) ] ] [ text "SIGN UP" ]
         , Form.form [] <|
             List.map (Form.group [])
                 [ emailView model, photosView model, priceView model, paymentView model ]
-                ++ [ Form.label [] [ text "* By subscribing before launch, we will send you a free month package with eidetic and service updates." ]
+                ++ [ Form.label [] [ text "* By signing up before launch, we will send you a free month package with eidetic and service updates." ]
                    , Button.button
-                        [ Button.success
+                        [ if validateModel model |> formData |> isNothing then
+                            Button.danger
+                          else
+                            Button.success
                         , Button.attrs
                             ([ onClick ConfirmPressed
                              , id "confirm"
@@ -593,10 +609,6 @@ pageSubscribe model =
                                         []
                                 )
                              ]
-                                ++ if validateModel model |> formData |> isNothing then
-                                    [ class "btn-danger" ]
-                                   else
-                                    []
                             )
                         ]
                         [ text "CONFIRM" ]
@@ -607,9 +619,9 @@ pageSubscribe model =
 pageThanks : Model -> Html Msg
 pageThanks model =
     main_
-        [ id "subscribe_content", style [ ( "padding", "1.2rem" ) ] ]
+        [ id "signup_content", style [ ( "padding", "1.2rem" ) ] ]
         [ h2 [ style [ ( "text-align", "center" ) ] ] [ text "Thanks!" ]
-        , h4 [] [ text "Thank you for filling the survey and subscribing to eidetic! We will send you an email confirming your free month at launch." ]
+        , h4 [] [ text "Thank you for filling the survey and signing up to eidetic! We will send you an email confirming your free month at launch." ]
         ]
 
 

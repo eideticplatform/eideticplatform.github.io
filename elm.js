@@ -17850,7 +17850,7 @@ var _user$project$Main$pageThanks = function (model) {
 		_elm_lang$html$Html$main_,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$id('subscribe_content'),
+			_0: _elm_lang$html$Html_Attributes$id('signup_content'),
 			_1: {
 				ctor: '::',
 				_0: _elm_lang$html$Html_Attributes$style(
@@ -17888,7 +17888,7 @@ var _user$project$Main$pageThanks = function (model) {
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Thank you for filling the survey and subscribing to eidetic! We will send you an email confirming your free month at launch.'),
+						_0: _elm_lang$html$Html$text('Thank you for filling the survey and signing up to eidetic! We will send you an email confirming your free month at launch.'),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
@@ -18129,7 +18129,7 @@ var _user$project$Main$formData = function (model) {
 };
 var _user$project$Main$Model = F9(
 	function (a, b, c, d, e, f, g, h, i) {
-		return {page: a, navState: b, radioPhotosPerMonth: c, radioPaymentMethod: d, email: e, reasonablePrice: f, subscribing: g, subscribed: h, confirmClicked: i};
+		return {page: a, navState: b, radioPhotosPerMonth: c, radioPaymentMethod: d, email: e, reasonablePrice: f, signingUp: g, signedUp: h, confirmClicked: i};
 	});
 var _user$project$Main$NotFound = {ctor: 'NotFound'};
 var _user$project$Main$ContactUs = {ctor: 'ContactUs'};
@@ -18234,12 +18234,12 @@ var _user$project$Main$update = F2(
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			case 'SubscribePressed':
+			case 'SignupPressed':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{subscribing: true}),
+						{signingUp: true}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ConfirmPressed':
@@ -18251,8 +18251,8 @@ var _user$project$Main$update = F2(
 					_0: valid ? _elm_lang$core$Native_Utils.update(
 						validated,
 						{
-							subscribing: false,
-							subscribed: true,
+							signingUp: false,
+							signedUp: true,
 							radioPhotosPerMonth: _kirchner$form_validation$Validate$empty,
 							radioPaymentMethod: _kirchner$form_validation$Validate$empty,
 							email: _kirchner$form_validation$Validate$unchecked(''),
@@ -18437,24 +18437,44 @@ var _user$project$Main$priceView = function (model) {
 										_1: {
 											ctor: '::',
 											_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$attrs(
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Events$onBlur(
-														_user$project$Main$Defocused(_user$project$Main$Price)),
-													_1: {
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													{
 														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangePrice),
+														_0: _elm_lang$html$Html_Events$onBlur(
+															_user$project$Main$Defocused(_user$project$Main$Price)),
 														_1: {
 															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$max('40'),
-															_1: {
-																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$min('4'),
-																_1: {ctor: '[]'}
-															}
+															_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangePrice),
+															_1: {ctor: '[]'}
 														}
-													}
-												}),
+													},
+													A2(
+														_elm_lang$core$Maybe$withDefault,
+														{ctor: '[]'},
+														A2(
+															_elm_lang$core$Maybe$map,
+															function (_p14) {
+																var _p15 = _p14;
+																return {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$min(
+																		_elm_lang$core$Basics$toString(_p15._0)),
+																	_1: {
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$max(
+																			_elm_lang$core$Basics$toString(_p15._1)),
+																		_1: {ctor: '[]'}
+																	}
+																};
+															},
+															A2(
+																_elm_lang$core$Dict$get,
+																A2(
+																	_elm_lang$core$Maybe$withDefault,
+																	-1,
+																	_kirchner$form_validation$Validate$validValue(model.radioPhotosPerMonth)),
+																_user$project$Main$photosPriceRanges))))),
 											_1: {ctor: '[]'}
 										}
 									}))))),
@@ -18505,8 +18525,8 @@ var _user$project$Main$emailView = function (model) {
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									function () {
-										var _p14 = _kirchner$form_validation$Validate$errors(model.email);
-										if (_p14.ctor === 'Just') {
+										var _p16 = _kirchner$form_validation$Validate$errors(model.email);
+										if (_p16.ctor === 'Just') {
 											return {
 												ctor: '::',
 												_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$danger,
@@ -18550,8 +18570,8 @@ var _user$project$Main$emailView = function (model) {
 				_0: A2(
 					_rundis$elm_bootstrap$Bootstrap_Form$help,
 					function () {
-						var _p15 = _kirchner$form_validation$Validate$errors(model.email);
-						if (_p15.ctor === 'Just') {
+						var _p17 = _kirchner$form_validation$Validate$errors(model.email);
+						if (_p17.ctor === 'Just') {
 							return {
 								ctor: '::',
 								_0: _elm_lang$html$Html_Attributes$class('isDown'),
@@ -18573,7 +18593,7 @@ var _user$project$Main$emailView = function (model) {
 				_1: {ctor: '[]'}
 			}));
 };
-var _user$project$Main$SubscribePressed = {ctor: 'SubscribePressed'};
+var _user$project$Main$SignupPressed = {ctor: 'SignupPressed'};
 var _user$project$Main$ConfirmPressed = {ctor: 'ConfirmPressed'};
 var _user$project$Main$RadioPaymentMsg = function (a) {
 	return {ctor: 'RadioPaymentMsg', _0: a};
@@ -18694,10 +18714,10 @@ var _user$project$Main$NavMsg = function (a) {
 	return {ctor: 'NavMsg', _0: a};
 };
 var _user$project$Main$init = function (location) {
-	var _p16 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
-	var navState = _p16._0;
-	var navCmd = _p16._1;
-	var _p17 = A2(
+	var _p18 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
+	var navState = _p18._0;
+	var navCmd = _p18._1;
+	var _p19 = A2(
 		_user$project$Main$urlUpdate,
 		location,
 		{
@@ -18707,12 +18727,12 @@ var _user$project$Main$init = function (location) {
 			radioPaymentMethod: _kirchner$form_validation$Validate$empty,
 			email: _kirchner$form_validation$Validate$unchecked(''),
 			reasonablePrice: _kirchner$form_validation$Validate$unchecked(''),
-			subscribing: false,
-			subscribed: false,
+			signingUp: false,
+			signedUp: false,
 			confirmClicked: false
 		});
-	var model = _p17._0;
-	var urlCmd = _p17._1;
+	var model = _p19._0;
+	var urlCmd = _p19._1;
 	return {
 		ctor: '_Tuple2',
 		_0: model,
@@ -18757,12 +18777,12 @@ var _user$project$Main$menu = function (model) {
 						_rundis$elm_bootstrap$Bootstrap_Navbar$itemLink,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$href('#subscribe'),
+							_0: _elm_lang$html$Html_Attributes$href('#sign-up'),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('Subscribe'),
+							_0: _elm_lang$html$Html$text('Sign up'),
 							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}
@@ -18908,12 +18928,12 @@ var _user$project$Main$paymentView = function (model) {
 			_1: {ctor: '[]'}
 		} : _user$project$Main$emptyFeedback);
 };
-var _user$project$Main$pageSubscribe = function (model) {
+var _user$project$Main$pageSignup = function (model) {
 	return A2(
 		_elm_lang$html$Html$main_,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$id('subscribe_content'),
+			_0: _elm_lang$html$Html_Attributes$id('signup_content'),
 			_1: {
 				ctor: '::',
 				_0: _elm_lang$html$Html_Attributes$style(
@@ -18949,7 +18969,7 @@ var _user$project$Main$pageSubscribe = function (model) {
 				},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text('SUBSCRIBE'),
+					_0: _elm_lang$html$Html$text('SIGN UP'),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
@@ -18987,7 +19007,7 @@ var _user$project$Main$pageSubscribe = function (model) {
 								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('* By subscribing before launch, we will send you a free month package with eidetic and service updates.'),
+									_0: _elm_lang$html$Html$text('* By signing up before launch, we will send you a free month package with eidetic and service updates.'),
 									_1: {ctor: '[]'}
 								}),
 							_1: {
@@ -18996,58 +19016,51 @@ var _user$project$Main$pageSubscribe = function (model) {
 									_rundis$elm_bootstrap$Bootstrap_Button$button,
 									{
 										ctor: '::',
-										_0: _rundis$elm_bootstrap$Bootstrap_Button$success,
+										_0: _user$project$Convenience$isNothing(
+											_user$project$Main$formData(
+												_user$project$Main$validateModel(model))) ? _rundis$elm_bootstrap$Bootstrap_Button$danger : _rundis$elm_bootstrap$Bootstrap_Button$success,
 										_1: {
 											ctor: '::',
 											_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
-												A2(
-													_elm_lang$core$Basics_ops['++'],
-													{
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ConfirmPressed),
+													_1: {
 														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ConfirmPressed),
+														_0: _elm_lang$html$Html_Attributes$id('confirm'),
 														_1: {
 															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$id('confirm'),
+															_0: _elm_lang$html$Html_Attributes$type_('button'),
 															_1: {
 																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$type_('button'),
-																_1: {
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Attributes$style(
-																		A2(
-																			_elm_lang$core$Basics_ops['++'],
-																			{
+																_0: _elm_lang$html$Html_Attributes$style(
+																	A2(
+																		_elm_lang$core$Basics_ops['++'],
+																		{
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '1rem'},
+																			_1: {ctor: '[]'}
+																		},
+																		_user$project$Convenience$isNothing(
+																			_user$project$Main$formData(
+																				_user$project$Main$validateModel(model))) ? {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 'background-color', _1: _user$project$Main$alertColor},
+																			_1: {
 																				ctor: '::',
-																				_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '1rem'},
-																				_1: {ctor: '[]'}
-																			},
-																			_user$project$Convenience$isNothing(
-																				_user$project$Main$formData(
-																					_user$project$Main$validateModel(model))) ? {
-																				ctor: '::',
-																				_0: {ctor: '_Tuple2', _0: 'background-color', _1: _user$project$Main$alertColor},
+																				_0: {ctor: '_Tuple2', _0: 'border-color', _1: 'rgba(237, 74, 60, 0.74)'},
 																				_1: {
 																					ctor: '::',
-																					_0: {ctor: '_Tuple2', _0: 'border-color', _1: 'rgba(237, 74, 60, 0.74)'},
-																					_1: {
-																						ctor: '::',
-																						_0: {ctor: '_Tuple2', _0: 'color', _1: _user$project$Main$alertForeGround},
-																						_1: {ctor: '[]'}
-																					}
+																					_0: {ctor: '_Tuple2', _0: 'color', _1: _user$project$Main$alertForeGround},
+																					_1: {ctor: '[]'}
 																				}
-																			} : {ctor: '[]'})),
-																	_1: {ctor: '[]'}
-																}
+																			}
+																		} : {ctor: '[]'})),
+																_1: {ctor: '[]'}
 															}
 														}
-													},
-													_user$project$Convenience$isNothing(
-														_user$project$Main$formData(
-															_user$project$Main$validateModel(model))) ? {
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('btn-danger'),
-														_1: {ctor: '[]'}
-													} : {ctor: '[]'})),
+													}
+												}),
 											_1: {ctor: '[]'}
 										}
 									},
@@ -19176,7 +19189,7 @@ var _user$project$Main$pageHome = function (model) {
 							}),
 						_1: {
 							ctor: '::',
-							_0: model.subscribing ? _user$project$Main$pageSubscribe(model) : (model.subscribed ? _user$project$Main$pageThanks(model) : A2(
+							_0: model.signingUp ? _user$project$Main$pageSignup(model) : (model.signedUp ? _user$project$Main$pageThanks(model) : A2(
 								_rundis$elm_bootstrap$Bootstrap_Button$button,
 								{
 									ctor: '::',
@@ -19200,10 +19213,10 @@ var _user$project$Main$pageHome = function (model) {
 															}),
 														_1: {
 															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$id('subscribe'),
+															_0: _elm_lang$html$Html_Attributes$id('signup'),
 															_1: {
 																ctor: '::',
-																_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SubscribePressed),
+																_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SignupPressed),
 																_1: {ctor: '[]'}
 															}
 														}
@@ -19215,7 +19228,7 @@ var _user$project$Main$pageHome = function (model) {
 								},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('SUBSCRIBE'),
+									_0: _elm_lang$html$Html$text('SIGN UP'),
 									_1: {ctor: '[]'}
 								})),
 							_1: {
@@ -19336,8 +19349,8 @@ var _user$project$Main$mainContent = function (model) {
 		_rundis$elm_bootstrap$Bootstrap_Grid$container,
 		{ctor: '[]'},
 		function () {
-			var _p18 = model.page;
-			switch (_p18.ctor) {
+			var _p20 = model.page;
+			switch (_p20.ctor) {
 				case 'Home':
 					return _user$project$Main$pageHome(model);
 				case 'ContactUs':
