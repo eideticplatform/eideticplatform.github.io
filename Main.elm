@@ -8,10 +8,8 @@ import UrlParser exposing ((</>))
 import Bootstrap.Navbar as Navbar
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
-import Bootstrap.Card as Card
 import Bootstrap.Button as Button
 import Bootstrap.ListGroup as Listgroup
-import Bootstrap.CDN as CDN
 import Bootstrap.Alert as Alert
 import Bootstrap.Form as Form
 import Bootstrap.Form.Input as Input
@@ -30,6 +28,9 @@ import Convenience exposing (..)
 import Set
 import Time exposing (millisecond, Time)
 import Delay
+import Dom.Scroll
+import Task
+import Dict
 
 
 main : Program Never Model Msg
@@ -72,10 +73,7 @@ validateModel model =
     { model
         | reasonablePrice =
             model.reasonablePrice
-                |> satisfies
-                    (\_ -> validValue model.radioPhotosPerMonth /= Nothing)
-                    ( 0, "You must select the number of photos first" )
-                |> isNotEmpty ( 1, "Price must not be empty" )
+                |> isNotEmpty ( 0, "Price must not be empty" )
                 |> satisfies
                     (\s ->
                         case String.toInt s of
@@ -85,17 +83,28 @@ validateModel model =
                             Err _ ->
                                 False
                     )
-                    ( 2, "This is not a valid price" )
+                    ( 1, "This is not a valid price" )
                 |> satisfies
-                    (\n ->
-                        case String.toInt n of
-                            Ok n ->
-                                n > 3 && n < 40
+                    (\_ -> validValue model.radioPhotosPerMonth /= Nothing)
+                    ( 2, "You must select the number of photos first" )
+                |> (let
+                        ( mini, maxi ) =
+                            model.radioPhotosPerMonth
+                                |> validValue
+                                |> Maybe.andThen (\k -> Dict.get k photosPriceRanges)
+                                |> Maybe.withDefault ( 0, 0 )
+                    in
+                        satisfies
+                            (\n ->
+                                case String.toInt n of
+                                    Ok n ->
+                                        n >= mini && n <= maxi
 
-                            Err _ ->
-                                False
-                    )
-                    ( 3, "Price must be between 3 and 40" )
+                                    Err _ ->
+                                        False
+                            )
+                            ( 3, "Price must be between " ++ toString mini ++ " and " ++ toString maxi )
+                   )
         , email =
             model.email
                 |> isNotEmpty ( 1, "Email must not be empty" )
@@ -148,8 +157,10 @@ type Msg
     | ChangePrice String
     | Defocused DefocusedField
     | ValidateModel
-    | DelayedDeFocused DefocusedField
     | Response (Result Http.Error String)
+    | ScrollTo String
+    | EmptyMsg
+    | Delay ( Float, Msg )
 
 
 subscriptions : Model -> Sub Msg
@@ -174,7 +185,17 @@ update msg model =
             )
 
         RadioPhotosMsg state ->
-            ( { model | radioPhotosPerMonth = Validate.valid state }
+            ( let
+                newModel =
+                    { model
+                        | radioPhotosPerMonth = Validate.valid state
+                        , reasonablePrice = uncheck model.reasonablePrice
+                    }
+              in
+                if errorIndexOfReasonablePrice model >= 2 then
+                    { newModel | reasonablePrice = (validateModel newModel).reasonablePrice }
+                else
+                    { model | radioPhotosPerMonth = Validate.valid state }
             , Cmd.none
             )
 
@@ -232,8 +253,8 @@ update msg model =
         Response _ ->
             ( model, Cmd.none )
 
-        DelayedDeFocused field ->
-            model ! [ Delay.after 200 millisecond (Defocused field) ]
+        Delay ( wait, msg ) ->
+            model ! [ Delay.after wait millisecond msg ]
 
         Defocused Email ->
             ( { model | email = (validateModel model).email }
@@ -241,19 +262,39 @@ update msg model =
             )
 
         Defocused Price ->
-            ( { model
-                | reasonablePrice = (validateModel model).reasonablePrice
-                , radioPhotosPerMonth =
-                    if model.radioPhotosPerMonth == empty then
-                        addErrors (Set.singleton "bad") (unchecked -1000)
-                    else
-                        model.radioPhotosPerMonth
-              }
+            ( let
+                validated =
+                    validateModel model
+              in
+                { model
+                    | reasonablePrice = validated.reasonablePrice
+                    , radioPhotosPerMonth =
+                        if errorIndexOfReasonablePrice validated == 2 then
+                            addErrors (Set.singleton "bad") (unchecked -1000)
+                        else
+                            model.radioPhotosPerMonth
+                }
             , Cmd.none
             )
 
         ValidateModel ->
             ( validateModel model, Cmd.none )
+
+        ScrollTo s ->
+            ( model, Task.attempt (\_ -> EmptyMsg) (Dom.Scroll.toTop s) )
+
+        EmptyMsg ->
+            ( model, Cmd.none )
+
+
+errorIndexOfReasonablePrice model =
+    model.reasonablePrice
+        |> errors
+        |> Maybe.withDefault Set.empty
+        |> Set.toList
+        |> List.head
+        |> Maybe.map Tuple.first
+        |> Maybe.withDefault (-1)
 
 
 formDatafication : List ( String, String ) -> String
@@ -448,7 +489,7 @@ emailView model =
                     []
              )
                 ++ [ Input.id "email"
-                   , Input.attrs [ autofocus True, onInput ChangeEmail, onBlur (DelayedDeFocused Email) ]
+                   , Input.attrs [ autofocus True, onInput ChangeEmail, onBlur (Defocused Email) ]
                    ]
             )
         )
@@ -497,7 +538,7 @@ priceView model =
                 Nothing ->
                     []
              )
-                ++ [ Input.id "price", Input.attrs [ onBlur (DelayedDeFocused Price), onInput ChangePrice, Html.Attributes.max "40", Html.Attributes.min "4" ] ]
+                ++ [ Input.id "price", Input.attrs [ onBlur (Defocused Price), onInput ChangePrice, Html.Attributes.max "40", Html.Attributes.min "4" ] ]
             )
         )
         |> InputGroup.predecessors [ InputGroup.span [] [ text "$" ] ]
@@ -576,8 +617,12 @@ type alias RadioPhotosPerMonth =
     Int
 
 
+photosPriceRanges =
+    Dict.fromList [ ( 10, ( 3, 20 ) ), ( 20, ( 5, 30 ) ), ( 40, ( 7, 40 ) ), ( 60, ( 10, 60 ) ) ]
+
+
 photosPerMonthEnum =
-    [ 10, 20, 40, 60 ]
+    photosPriceRanges |> Dict.toList |> List.map Tuple.first
 
 
 type RadioPaymentMethod

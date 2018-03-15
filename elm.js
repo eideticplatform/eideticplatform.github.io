@@ -7146,8 +7146,34 @@ return {
 
 }();
 
+var _elm_lang$dom$Dom$blur = _elm_lang$dom$Native_Dom.blur;
+var _elm_lang$dom$Dom$focus = _elm_lang$dom$Native_Dom.focus;
+var _elm_lang$dom$Dom$NotFound = function (a) {
+	return {ctor: 'NotFound', _0: a};
+};
+
 var _elm_lang$dom$Dom_LowLevel$onWindow = _elm_lang$dom$Native_Dom.onWindow;
 var _elm_lang$dom$Dom_LowLevel$onDocument = _elm_lang$dom$Native_Dom.onDocument;
+
+var _elm_lang$dom$Dom_Size$width = _elm_lang$dom$Native_Dom.width;
+var _elm_lang$dom$Dom_Size$height = _elm_lang$dom$Native_Dom.height;
+var _elm_lang$dom$Dom_Size$VisibleContentWithBordersAndMargins = {ctor: 'VisibleContentWithBordersAndMargins'};
+var _elm_lang$dom$Dom_Size$VisibleContentWithBorders = {ctor: 'VisibleContentWithBorders'};
+var _elm_lang$dom$Dom_Size$VisibleContent = {ctor: 'VisibleContent'};
+var _elm_lang$dom$Dom_Size$Content = {ctor: 'Content'};
+
+var _elm_lang$dom$Dom_Scroll$toX = _elm_lang$dom$Native_Dom.setScrollLeft;
+var _elm_lang$dom$Dom_Scroll$x = _elm_lang$dom$Native_Dom.getScrollLeft;
+var _elm_lang$dom$Dom_Scroll$toRight = _elm_lang$dom$Native_Dom.toRight;
+var _elm_lang$dom$Dom_Scroll$toLeft = function (id) {
+	return A2(_elm_lang$dom$Dom_Scroll$toX, id, 0);
+};
+var _elm_lang$dom$Dom_Scroll$toY = _elm_lang$dom$Native_Dom.setScrollTop;
+var _elm_lang$dom$Dom_Scroll$y = _elm_lang$dom$Native_Dom.getScrollTop;
+var _elm_lang$dom$Dom_Scroll$toBottom = _elm_lang$dom$Native_Dom.toBottom;
+var _elm_lang$dom$Dom_Scroll$toTop = function (id) {
+	return A2(_elm_lang$dom$Dom_Scroll$toY, id, 0);
+};
 
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrap;
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags;
@@ -12394,99 +12420,6 @@ var _rundis$elm_bootstrap$Bootstrap_Internal_Role$Success = {ctor: 'Success'};
 var _rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary = {ctor: 'Secondary'};
 var _rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary = {ctor: 'Primary'};
 
-var _rundis$elm_bootstrap$Bootstrap_Internal_Text$textColorClass = function (color) {
-	var _p0 = color;
-	if (_p0.ctor === 'White') {
-		return _elm_lang$html$Html_Attributes$class('text-white');
-	} else {
-		return A2(_rundis$elm_bootstrap$Bootstrap_Internal_Role$toClass, 'text', _p0._0);
-	}
-};
-var _rundis$elm_bootstrap$Bootstrap_Internal_Text$textAlignDirOption = function (dir) {
-	var _p1 = dir;
-	switch (_p1.ctor) {
-		case 'Center':
-			return 'center';
-		case 'Left':
-			return 'left';
-		default:
-			return 'right';
-	}
-};
-var _rundis$elm_bootstrap$Bootstrap_Internal_Text$textAlignClass = function (_p2) {
-	var _p3 = _p2;
-	return _elm_lang$html$Html_Attributes$class(
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			'text',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				A2(
-					_elm_lang$core$Maybe$withDefault,
-					'-',
-					A2(
-						_elm_lang$core$Maybe$map,
-						function (s) {
-							return A2(
-								_elm_lang$core$Basics_ops['++'],
-								'-',
-								A2(_elm_lang$core$Basics_ops['++'], s, '-'));
-						},
-						_rundis$elm_bootstrap$Bootstrap_Grid_Internal$screenSizeOption(_p3.size))),
-				_rundis$elm_bootstrap$Bootstrap_Internal_Text$textAlignDirOption(_p3.dir))));
-};
-var _rundis$elm_bootstrap$Bootstrap_Internal_Text$HAlign = F2(
-	function (a, b) {
-		return {dir: a, size: b};
-	});
-var _rundis$elm_bootstrap$Bootstrap_Internal_Text$Right = {ctor: 'Right'};
-var _rundis$elm_bootstrap$Bootstrap_Internal_Text$Center = {ctor: 'Center'};
-var _rundis$elm_bootstrap$Bootstrap_Internal_Text$Left = {ctor: 'Left'};
-var _rundis$elm_bootstrap$Bootstrap_Internal_Text$White = {ctor: 'White'};
-var _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role = function (a) {
-	return {ctor: 'Role', _0: a};
-};
-
-var _rundis$elm_bootstrap$Bootstrap_Text$dark = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark);
-var _rundis$elm_bootstrap$Bootstrap_Text$light = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Light);
-var _rundis$elm_bootstrap$Bootstrap_Text$danger = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger);
-var _rundis$elm_bootstrap$Bootstrap_Text$warning = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning);
-var _rundis$elm_bootstrap$Bootstrap_Text$info = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Info);
-var _rundis$elm_bootstrap$Bootstrap_Text$success = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Success);
-var _rundis$elm_bootstrap$Bootstrap_Text$secondary = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary);
-var _rundis$elm_bootstrap$Bootstrap_Text$primary = _rundis$elm_bootstrap$Bootstrap_Internal_Text$Role(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary);
-var _rundis$elm_bootstrap$Bootstrap_Text$white = _rundis$elm_bootstrap$Bootstrap_Internal_Text$White;
-var _rundis$elm_bootstrap$Bootstrap_Text$alignXl = function (dir) {
-	return {dir: dir, size: _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XL};
-};
-var _rundis$elm_bootstrap$Bootstrap_Text$alignXlRight = _rundis$elm_bootstrap$Bootstrap_Text$alignXl(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Right);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignXlCenter = _rundis$elm_bootstrap$Bootstrap_Text$alignXl(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Center);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignXlLeft = _rundis$elm_bootstrap$Bootstrap_Text$alignXl(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Left);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignLg = function (dir) {
-	return {dir: dir, size: _rundis$elm_bootstrap$Bootstrap_Grid_Internal$LG};
-};
-var _rundis$elm_bootstrap$Bootstrap_Text$alignLgRight = _rundis$elm_bootstrap$Bootstrap_Text$alignLg(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Right);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignLgCenter = _rundis$elm_bootstrap$Bootstrap_Text$alignLg(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Center);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignLgLeft = _rundis$elm_bootstrap$Bootstrap_Text$alignLg(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Left);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignMd = function (dir) {
-	return {dir: dir, size: _rundis$elm_bootstrap$Bootstrap_Grid_Internal$MD};
-};
-var _rundis$elm_bootstrap$Bootstrap_Text$alignMdRight = _rundis$elm_bootstrap$Bootstrap_Text$alignMd(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Right);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignMdCenter = _rundis$elm_bootstrap$Bootstrap_Text$alignMd(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Center);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignMdLeft = _rundis$elm_bootstrap$Bootstrap_Text$alignMd(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Left);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignSm = function (dir) {
-	return {dir: dir, size: _rundis$elm_bootstrap$Bootstrap_Grid_Internal$SM};
-};
-var _rundis$elm_bootstrap$Bootstrap_Text$alignSmRight = _rundis$elm_bootstrap$Bootstrap_Text$alignSm(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Right);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignSmCenter = _rundis$elm_bootstrap$Bootstrap_Text$alignSm(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Center);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignSmLeft = _rundis$elm_bootstrap$Bootstrap_Text$alignSm(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Left);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignXs = function (dir) {
-	return {dir: dir, size: _rundis$elm_bootstrap$Bootstrap_Grid_Internal$XS};
-};
-var _rundis$elm_bootstrap$Bootstrap_Text$alignXsRight = _rundis$elm_bootstrap$Bootstrap_Text$alignXs(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Right);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignXsCenter = _rundis$elm_bootstrap$Bootstrap_Text$alignXs(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Center);
-var _rundis$elm_bootstrap$Bootstrap_Text$alignXsLeft = _rundis$elm_bootstrap$Bootstrap_Text$alignXs(_rundis$elm_bootstrap$Bootstrap_Internal_Text$Left);
-
 var _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$itemAttributes = function (options) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
@@ -12742,677 +12675,6 @@ var _rundis$elm_bootstrap$Bootstrap_ListGroup$ul = function (items) {
 		},
 		A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$renderItem, items));
 };
-
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$applyModifier = F2(
-	function (option, options) {
-		var _p0 = option;
-		switch (_p0.ctor) {
-			case 'Aligned':
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						aligned: _elm_lang$core$Maybe$Just(_p0._0)
-					});
-			case 'Coloring':
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						coloring: _elm_lang$core$Maybe$Just(_p0._0)
-					});
-			case 'TextColoring':
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						textColoring: _elm_lang$core$Maybe$Just(_p0._0)
-					});
-			default:
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						attributes: A2(_elm_lang$core$Basics_ops['++'], options.attributes, _p0._0)
-					});
-		}
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$defaultOptions = {
-	aligned: _elm_lang$core$Maybe$Nothing,
-	coloring: _elm_lang$core$Maybe$Nothing,
-	textColoring: _elm_lang$core$Maybe$Nothing,
-	attributes: {ctor: '[]'}
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$cardAttributes = function (modifiers) {
-	var options = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Card_Internal$applyModifier, _rundis$elm_bootstrap$Bootstrap_Card_Internal$defaultOptions, modifiers);
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('card'),
-			_1: {ctor: '[]'}
-		},
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			function () {
-				var _p1 = options.coloring;
-				if (_p1.ctor === 'Just') {
-					if (_p1._0.ctor === 'Roled') {
-						return {
-							ctor: '::',
-							_0: A2(_rundis$elm_bootstrap$Bootstrap_Internal_Role$toClass, 'bg', _p1._0._0),
-							_1: {ctor: '[]'}
-						};
-					} else {
-						return {
-							ctor: '::',
-							_0: A2(_rundis$elm_bootstrap$Bootstrap_Internal_Role$toClass, 'border', _p1._0._0),
-							_1: {ctor: '[]'}
-						};
-					}
-				} else {
-					return {ctor: '[]'};
-				}
-			}(),
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				function () {
-					var _p2 = options.textColoring;
-					if (_p2.ctor === 'Just') {
-						return {
-							ctor: '::',
-							_0: _rundis$elm_bootstrap$Bootstrap_Internal_Text$textColorClass(_p2._0),
-							_1: {ctor: '[]'}
-						};
-					} else {
-						return {ctor: '[]'};
-					}
-				}(),
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					function () {
-						var _p3 = options.aligned;
-						if (_p3.ctor === 'Just') {
-							return {
-								ctor: '::',
-								_0: _rundis$elm_bootstrap$Bootstrap_Internal_Text$textAlignClass(_p3._0),
-								_1: {ctor: '[]'}
-							};
-						} else {
-							return {ctor: '[]'};
-						}
-					}(),
-					options.attributes))));
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$applyBlockModifier = F2(
-	function (option, options) {
-		var _p4 = option;
-		switch (_p4.ctor) {
-			case 'AlignedBlock':
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						aligned: _elm_lang$core$Maybe$Just(_p4._0)
-					});
-			case 'BlockColoring':
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						coloring: _elm_lang$core$Maybe$Just(_p4._0)
-					});
-			case 'BlockTextColoring':
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						textColoring: _elm_lang$core$Maybe$Just(_p4._0)
-					});
-			default:
-				return _elm_lang$core$Native_Utils.update(
-					options,
-					{
-						attributes: A2(_elm_lang$core$Basics_ops['++'], options.attributes, _p4._0)
-					});
-		}
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$defaultBlockOptions = {
-	aligned: _elm_lang$core$Maybe$Nothing,
-	coloring: _elm_lang$core$Maybe$Nothing,
-	textColoring: _elm_lang$core$Maybe$Nothing,
-	attributes: {ctor: '[]'}
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$blockAttributes = function (modifiers) {
-	var options = A3(_elm_lang$core$List$foldl, _rundis$elm_bootstrap$Bootstrap_Card_Internal$applyBlockModifier, _rundis$elm_bootstrap$Bootstrap_Card_Internal$defaultBlockOptions, modifiers);
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('card-body'),
-			_1: {ctor: '[]'}
-		},
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			function () {
-				var _p5 = options.aligned;
-				if (_p5.ctor === 'Just') {
-					return {
-						ctor: '::',
-						_0: _rundis$elm_bootstrap$Bootstrap_Internal_Text$textAlignClass(_p5._0),
-						_1: {ctor: '[]'}
-					};
-				} else {
-					return {ctor: '[]'};
-				}
-			}(),
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				function () {
-					var _p6 = options.coloring;
-					if (_p6.ctor === 'Just') {
-						return {
-							ctor: '::',
-							_0: A2(_rundis$elm_bootstrap$Bootstrap_Internal_Role$toClass, 'bg', _p6._0),
-							_1: {ctor: '[]'}
-						};
-					} else {
-						return {ctor: '[]'};
-					}
-				}(),
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					function () {
-						var _p7 = options.textColoring;
-						if (_p7.ctor === 'Just') {
-							return {
-								ctor: '::',
-								_0: _rundis$elm_bootstrap$Bootstrap_Internal_Text$textColorClass(_p7._0),
-								_1: {ctor: '[]'}
-							};
-						} else {
-							return {ctor: '[]'};
-						}
-					}(),
-					options.attributes))));
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$renderBlock = function (block) {
-	var _p8 = block;
-	if (_p8.ctor === 'CardBlock') {
-		return _p8._0;
-	} else {
-		return _p8._0;
-	}
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$renderBlocks = function (blocks) {
-	return A2(
-		_elm_lang$core$List$map,
-		function (block) {
-			var _p9 = block;
-			if (_p9.ctor === 'CardBlock') {
-				return _p9._0;
-			} else {
-				return _p9._0;
-			}
-		},
-		blocks);
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$CardOptions = F4(
-	function (a, b, c, d) {
-		return {aligned: a, coloring: b, textColoring: c, attributes: d};
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockOptions = F4(
-	function (a, b, c, d) {
-		return {aligned: a, coloring: b, textColoring: c, attributes: d};
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$Attrs = function (a) {
-	return {ctor: 'Attrs', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$TextColoring = function (a) {
-	return {ctor: 'TextColoring', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring = function (a) {
-	return {ctor: 'Coloring', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$Aligned = function (a) {
-	return {ctor: 'Aligned', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined = function (a) {
-	return {ctor: 'Outlined', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled = function (a) {
-	return {ctor: 'Roled', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockAttrs = function (a) {
-	return {ctor: 'BlockAttrs', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockTextColoring = function (a) {
-	return {ctor: 'BlockTextColoring', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring = function (a) {
-	return {ctor: 'BlockColoring', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$AlignedBlock = function (a) {
-	return {ctor: 'AlignedBlock', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$ListGroup = function (a) {
-	return {ctor: 'ListGroup', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$listGroup = function (items) {
-	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$ListGroup(
-		A2(
-			_elm_lang$html$Html$ul,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('list-group list-group-flush'),
-				_1: {ctor: '[]'}
-			},
-			A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Internal_ListGroup$renderItem, items)));
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$CardBlock = function (a) {
-	return {ctor: 'CardBlock', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$block = F2(
-	function (options, items) {
-		return _rundis$elm_bootstrap$Bootstrap_Card_Internal$CardBlock(
-			A2(
-				_elm_lang$html$Html$div,
-				_rundis$elm_bootstrap$Bootstrap_Card_Internal$blockAttributes(options),
-				A2(
-					_elm_lang$core$List$map,
-					function (_p10) {
-						var _p11 = _p10;
-						return _p11._0;
-					},
-					items)));
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockItem = function (a) {
-	return {ctor: 'BlockItem', _0: a};
-};
-
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$attrs = function (attrs) {
-	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockAttrs(attrs);
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$textColor = function (color) {
-	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockTextColoring(color);
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$dark = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$light = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Light);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$danger = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$warning = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$info = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Info);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$success = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Success);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$secondary = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$primary = _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockColoring(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$align = function (align) {
-	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$AlignedBlock(align);
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$title = F3(
-	function (elemFn, attributes, children) {
-		return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockItem(
-			A2(
-				elemFn,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('card-title'),
-					_1: attributes
-				},
-				children));
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$titleH6 = _rundis$elm_bootstrap$Bootstrap_Card_Block$title(_elm_lang$html$Html$h6);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$titleH5 = _rundis$elm_bootstrap$Bootstrap_Card_Block$title(_elm_lang$html$Html$h5);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$titleH4 = _rundis$elm_bootstrap$Bootstrap_Card_Block$title(_elm_lang$html$Html$h4);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$titleH3 = _rundis$elm_bootstrap$Bootstrap_Card_Block$title(_elm_lang$html$Html$h3);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$titleH2 = _rundis$elm_bootstrap$Bootstrap_Card_Block$title(_elm_lang$html$Html$h2);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$titleH1 = _rundis$elm_bootstrap$Bootstrap_Card_Block$title(_elm_lang$html$Html$h1);
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$quote = F2(
-	function (attributes, children) {
-		return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockItem(
-			A2(
-				_elm_lang$html$Html$blockquote,
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('card-blockquote'),
-						_1: {ctor: '[]'}
-					},
-					attributes),
-				children));
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$custom = function (element) {
-	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockItem(element);
-};
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$text = F2(
-	function (attributes, children) {
-		return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockItem(
-			A2(
-				_elm_lang$html$Html$p,
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('card-text'),
-						_1: {ctor: '[]'}
-					},
-					attributes),
-				children));
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card_Block$link = F2(
-	function (attributes, children) {
-		return _rundis$elm_bootstrap$Bootstrap_Card_Internal$BlockItem(
-			A2(
-				_elm_lang$html$Html$a,
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('card-link'),
-						_1: {ctor: '[]'}
-					},
-					attributes),
-				children));
-	});
-
-var _rundis$elm_bootstrap$Bootstrap_Card$view = function (_p0) {
-	var _p1 = _p0;
-	return A2(
-		_elm_lang$html$Html$div,
-		_rundis$elm_bootstrap$Bootstrap_Card_Internal$cardAttributes(_p1._0.options),
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			A2(
-				_elm_lang$core$List$filterMap,
-				_elm_lang$core$Basics$identity,
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$core$Maybe$map,
-						function (_p2) {
-							var _p3 = _p2;
-							return _p3._0;
-						},
-						_p1._0.header),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$core$Maybe$map,
-							function (_p4) {
-								var _p5 = _p4;
-								return _p5._0;
-							},
-							_p1._0.imgTop),
-						_1: {ctor: '[]'}
-					}
-				}),
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_rundis$elm_bootstrap$Bootstrap_Card_Internal$renderBlocks(_p1._0.blocks),
-				A2(
-					_elm_lang$core$List$filterMap,
-					_elm_lang$core$Basics$identity,
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$core$Maybe$map,
-							function (_p6) {
-								var _p7 = _p6;
-								return _p7._0;
-							},
-							_p1._0.footer),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$core$Maybe$map,
-								function (_p8) {
-									var _p9 = _p8;
-									return _p9._0;
-								},
-								_p1._0.imgBottom),
-							_1: {ctor: '[]'}
-						}
-					}))));
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$group = function (cards) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('card-group'),
-			_1: {ctor: '[]'}
-		},
-		A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Card$view, cards));
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$deck = function (cards) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('card-deck'),
-			_1: {ctor: '[]'}
-		},
-		A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Card$view, cards));
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$columns = function (cards) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('card-columns'),
-			_1: {ctor: '[]'}
-		},
-		A2(_elm_lang$core$List$map, _rundis$elm_bootstrap$Bootstrap_Card$view, cards));
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$keyedMulti = F2(
-	function (clazz, keyedCards) {
-		return A3(
-			_elm_lang$html$Html_Keyed$node,
-			'div',
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class(clazz),
-				_1: {ctor: '[]'}
-			},
-			A2(
-				_elm_lang$core$List$map,
-				function (_p10) {
-					var _p11 = _p10;
-					return {
-						ctor: '_Tuple2',
-						_0: _p11._0,
-						_1: _rundis$elm_bootstrap$Bootstrap_Card$view(_p11._1)
-					};
-				},
-				keyedCards));
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card$keyedGroup = _rundis$elm_bootstrap$Bootstrap_Card$keyedMulti('card-group');
-var _rundis$elm_bootstrap$Bootstrap_Card$keyedDeck = _rundis$elm_bootstrap$Bootstrap_Card$keyedMulti('card-deck');
-var _rundis$elm_bootstrap$Bootstrap_Card$keyedColumns = _rundis$elm_bootstrap$Bootstrap_Card$keyedMulti('card-columns');
-var _rundis$elm_bootstrap$Bootstrap_Card$attrs = function (attrs) {
-	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$Attrs(attrs);
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$textColor = function (color) {
-	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$TextColoring(color);
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$outlineDark = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark));
-var _rundis$elm_bootstrap$Bootstrap_Card$outlineLight = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Light));
-var _rundis$elm_bootstrap$Bootstrap_Card$outlineDanger = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger));
-var _rundis$elm_bootstrap$Bootstrap_Card$outlineWarning = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning));
-var _rundis$elm_bootstrap$Bootstrap_Card$outlineInfo = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Info));
-var _rundis$elm_bootstrap$Bootstrap_Card$outlineSuccess = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Success));
-var _rundis$elm_bootstrap$Bootstrap_Card$outlineSecondary = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary));
-var _rundis$elm_bootstrap$Bootstrap_Card$outlinePrimary = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Outlined(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary));
-var _rundis$elm_bootstrap$Bootstrap_Card$dark = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Dark));
-var _rundis$elm_bootstrap$Bootstrap_Card$light = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Light));
-var _rundis$elm_bootstrap$Bootstrap_Card$danger = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Danger));
-var _rundis$elm_bootstrap$Bootstrap_Card$warning = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Warning));
-var _rundis$elm_bootstrap$Bootstrap_Card$info = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Info));
-var _rundis$elm_bootstrap$Bootstrap_Card$success = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Success));
-var _rundis$elm_bootstrap$Bootstrap_Card$secondary = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Secondary));
-var _rundis$elm_bootstrap$Bootstrap_Card$primary = _rundis$elm_bootstrap$Bootstrap_Card_Internal$Coloring(
-	_rundis$elm_bootstrap$Bootstrap_Card_Internal$Roled(_rundis$elm_bootstrap$Bootstrap_Internal_Role$Primary));
-var _rundis$elm_bootstrap$Bootstrap_Card$align = function (align) {
-	return _rundis$elm_bootstrap$Bootstrap_Card_Internal$Aligned(align);
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$Config = function (a) {
-	return {ctor: 'Config', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$config = function (options) {
-	return _rundis$elm_bootstrap$Bootstrap_Card$Config(
-		{
-			options: options,
-			header: _elm_lang$core$Maybe$Nothing,
-			footer: _elm_lang$core$Maybe$Nothing,
-			imgTop: _elm_lang$core$Maybe$Nothing,
-			imgBottom: _elm_lang$core$Maybe$Nothing,
-			blocks: {ctor: '[]'}
-		});
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$listGroup = F2(
-	function (items, _p12) {
-		var _p13 = _p12;
-		var _p14 = _p13._0;
-		return _rundis$elm_bootstrap$Bootstrap_Card$Config(
-			_elm_lang$core$Native_Utils.update(
-				_p14,
-				{
-					blocks: A2(
-						_elm_lang$core$Basics_ops['++'],
-						_p14.blocks,
-						{
-							ctor: '::',
-							_0: _rundis$elm_bootstrap$Bootstrap_Card_Internal$listGroup(items),
-							_1: {ctor: '[]'}
-						})
-				}));
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card$block = F3(
-	function (options, items, _p15) {
-		var _p16 = _p15;
-		var _p17 = _p16._0;
-		return _rundis$elm_bootstrap$Bootstrap_Card$Config(
-			_elm_lang$core$Native_Utils.update(
-				_p17,
-				{
-					blocks: A2(
-						_elm_lang$core$Basics_ops['++'],
-						_p17.blocks,
-						{
-							ctor: '::',
-							_0: A2(_rundis$elm_bootstrap$Bootstrap_Card_Internal$block, options, items),
-							_1: {ctor: '[]'}
-						})
-				}));
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card$Header = function (a) {
-	return {ctor: 'Header', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate = F4(
-	function (elemFn, attributes, children, _p18) {
-		var _p19 = _p18;
-		return _rundis$elm_bootstrap$Bootstrap_Card$Config(
-			_elm_lang$core$Native_Utils.update(
-				_p19._0,
-				{
-					header: _elm_lang$core$Maybe$Just(
-						_rundis$elm_bootstrap$Bootstrap_Card$Header(
-							A2(
-								elemFn,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('card-header'),
-									_1: attributes
-								},
-								children)))
-				}));
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card$header = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$div);
-var _rundis$elm_bootstrap$Bootstrap_Card$headerH1 = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h1);
-var _rundis$elm_bootstrap$Bootstrap_Card$headerH2 = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h2);
-var _rundis$elm_bootstrap$Bootstrap_Card$headerH3 = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h3);
-var _rundis$elm_bootstrap$Bootstrap_Card$headerH4 = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h4);
-var _rundis$elm_bootstrap$Bootstrap_Card$headerH5 = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h5);
-var _rundis$elm_bootstrap$Bootstrap_Card$headerH6 = _rundis$elm_bootstrap$Bootstrap_Card$headerPrivate(_elm_lang$html$Html$h6);
-var _rundis$elm_bootstrap$Bootstrap_Card$Footer = function (a) {
-	return {ctor: 'Footer', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$footer = F3(
-	function (attributes, children, _p20) {
-		var _p21 = _p20;
-		return _rundis$elm_bootstrap$Bootstrap_Card$Config(
-			_elm_lang$core$Native_Utils.update(
-				_p21._0,
-				{
-					footer: _elm_lang$core$Maybe$Just(
-						_rundis$elm_bootstrap$Bootstrap_Card$Footer(
-							A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('card-footer'),
-									_1: attributes
-								},
-								children)))
-				}));
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card$ImageTop = function (a) {
-	return {ctor: 'ImageTop', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$imgTop = F3(
-	function (attributes, children, _p22) {
-		var _p23 = _p22;
-		return _rundis$elm_bootstrap$Bootstrap_Card$Config(
-			_elm_lang$core$Native_Utils.update(
-				_p23._0,
-				{
-					imgTop: _elm_lang$core$Maybe$Just(
-						_rundis$elm_bootstrap$Bootstrap_Card$ImageTop(
-							A2(
-								_elm_lang$html$Html$img,
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('card-img-top'),
-										_1: {ctor: '[]'}
-									},
-									attributes),
-								children)))
-				}));
-	});
-var _rundis$elm_bootstrap$Bootstrap_Card$ImageBottom = function (a) {
-	return {ctor: 'ImageBottom', _0: a};
-};
-var _rundis$elm_bootstrap$Bootstrap_Card$imgBottom = F3(
-	function (attributes, children, _p24) {
-		var _p25 = _p24;
-		return _rundis$elm_bootstrap$Bootstrap_Card$Config(
-			_elm_lang$core$Native_Utils.update(
-				_p25._0,
-				{
-					imgBottom: _elm_lang$core$Maybe$Just(
-						_rundis$elm_bootstrap$Bootstrap_Card$ImageBottom(
-							A2(
-								_elm_lang$html$Html$img,
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('card-img-bottom'),
-										_1: {ctor: '[]'}
-									},
-									attributes),
-								children)))
-				}));
-	});
 
 var _rundis$elm_bootstrap$Bootstrap_Alert$headingPrivate = F3(
 	function (elemFn, attributes, children) {
@@ -14298,33 +13560,6 @@ var _rundis$elm_bootstrap$Bootstrap_ButtonGroup$checkboxButton = F3(
 		return _rundis$elm_bootstrap$Bootstrap_ButtonGroup$CheckboxButtonItem(
 			A3(_rundis$elm_bootstrap$Bootstrap_Button$checkboxButton, checked, options, children));
 	});
-
-var _rundis$elm_bootstrap$Bootstrap_CDN$fontAwesome = A3(
-	_elm_lang$html$Html$node,
-	'link',
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
-		_1: {
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$href('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'),
-			_1: {ctor: '[]'}
-		}
-	},
-	{ctor: '[]'});
-var _rundis$elm_bootstrap$Bootstrap_CDN$stylesheet = A3(
-	_elm_lang$html$Html$node,
-	'link',
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
-		_1: {
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$href('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'),
-			_1: {ctor: '[]'}
-		}
-	},
-	{ctor: '[]'});
 
 var _rundis$elm_bootstrap$Bootstrap_Dropdown$sizeDecoder = A3(
 	_elm_lang$core$Json_Decode$map2,
@@ -18572,23 +17807,44 @@ var _user$project$Main$caption = function (method) {
 			return 'App Store';
 	}
 };
-var _user$project$Main$photosPerMonthEnum = {
-	ctor: '::',
-	_0: 10,
-	_1: {
+var _user$project$Main$photosPriceRanges = _elm_lang$core$Dict$fromList(
+	{
 		ctor: '::',
-		_0: 20,
+		_0: {
+			ctor: '_Tuple2',
+			_0: 10,
+			_1: {ctor: '_Tuple2', _0: 3, _1: 20}
+		},
 		_1: {
 			ctor: '::',
-			_0: 40,
+			_0: {
+				ctor: '_Tuple2',
+				_0: 20,
+				_1: {ctor: '_Tuple2', _0: 5, _1: 30}
+			},
 			_1: {
 				ctor: '::',
-				_0: 60,
-				_1: {ctor: '[]'}
+				_0: {
+					ctor: '_Tuple2',
+					_0: 40,
+					_1: {ctor: '_Tuple2', _0: 7, _1: 40}
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 60,
+						_1: {ctor: '_Tuple2', _0: 10, _1: 60}
+					},
+					_1: {ctor: '[]'}
+				}
 			}
 		}
-	}
-};
+	});
+var _user$project$Main$photosPerMonthEnum = A2(
+	_elm_lang$core$List$map,
+	_elm_lang$core$Tuple$first,
+	_elm_lang$core$Dict$toList(_user$project$Main$photosPriceRanges));
 var _user$project$Main$pageThanks = function (model) {
 	return A2(
 		_elm_lang$html$Html$main_,
@@ -18734,44 +17990,84 @@ var _user$project$Main$formDataBody = function (formData) {
 		'Content-Type\', \'application/x-www-form-urlencoded',
 		_user$project$Main$formDatafication(formData));
 };
+var _user$project$Main$errorIndexOfReasonablePrice = function (model) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		-1,
+		A2(
+			_elm_lang$core$Maybe$map,
+			_elm_lang$core$Tuple$first,
+			_elm_lang$core$List$head(
+				_elm_lang$core$Set$toList(
+					A2(
+						_elm_lang$core$Maybe$withDefault,
+						_elm_lang$core$Set$empty,
+						_kirchner$form_validation$Validate$errors(model.reasonablePrice))))));
+};
 var _user$project$Main$validateModel = function (model) {
 	return _elm_lang$core$Native_Utils.update(
 		model,
 		{
-			reasonablePrice: A3(
-				_kirchner$form_validation$Validate$satisfies,
-				function (n) {
-					var _p3 = _elm_lang$core$String$toInt(n);
-					if (_p3.ctor === 'Ok') {
-						var _p4 = _p3._0;
-						return (_elm_lang$core$Native_Utils.cmp(_p4, 3) > 0) && (_elm_lang$core$Native_Utils.cmp(_p4, 40) < 0);
-					} else {
-						return false;
-					}
-				},
-				{ctor: '_Tuple2', _0: 3, _1: 'Price must be between 3 and 40'},
-				A3(
+			reasonablePrice: function () {
+				var _p3 = A2(
+					_elm_lang$core$Maybe$withDefault,
+					{ctor: '_Tuple2', _0: 0, _1: 0},
+					A2(
+						_elm_lang$core$Maybe$andThen,
+						function (k) {
+							return A2(_elm_lang$core$Dict$get, k, _user$project$Main$photosPriceRanges);
+						},
+						_kirchner$form_validation$Validate$validValue(model.radioPhotosPerMonth)));
+				var mini = _p3._0;
+				var maxi = _p3._1;
+				return A2(
 					_kirchner$form_validation$Validate$satisfies,
-					function (s) {
-						var _p5 = _elm_lang$core$String$toInt(s);
-						if (_p5.ctor === 'Ok') {
-							return true;
+					function (n) {
+						var _p4 = _elm_lang$core$String$toInt(n);
+						if (_p4.ctor === 'Ok') {
+							var _p5 = _p4._0;
+							return (_elm_lang$core$Native_Utils.cmp(_p5, mini) > -1) && (_elm_lang$core$Native_Utils.cmp(_p5, maxi) < 1);
 						} else {
 							return false;
 						}
 					},
-					{ctor: '_Tuple2', _0: 2, _1: 'This is not a valid price'},
-					A2(
-						_kirchner$form_validation$Validate$isNotEmpty,
-						{ctor: '_Tuple2', _0: 1, _1: 'Price must not be empty'},
-						A3(
-							_kirchner$form_validation$Validate$satisfies,
-							function (_p6) {
-								return !_elm_lang$core$Native_Utils.eq(
-									_kirchner$form_validation$Validate$validValue(model.radioPhotosPerMonth),
-									_elm_lang$core$Maybe$Nothing);
-							},
-							{ctor: '_Tuple2', _0: 0, _1: 'You must select the number of photos first'},
+					{
+						ctor: '_Tuple2',
+						_0: 3,
+						_1: A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Price must be between ',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_elm_lang$core$Basics$toString(mini),
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									' and ',
+									_elm_lang$core$Basics$toString(maxi))))
+					});
+			}()(
+				A3(
+					_kirchner$form_validation$Validate$satisfies,
+					function (_p6) {
+						return !_elm_lang$core$Native_Utils.eq(
+							_kirchner$form_validation$Validate$validValue(model.radioPhotosPerMonth),
+							_elm_lang$core$Maybe$Nothing);
+					},
+					{ctor: '_Tuple2', _0: 2, _1: 'You must select the number of photos first'},
+					A3(
+						_kirchner$form_validation$Validate$satisfies,
+						function (s) {
+							var _p7 = _elm_lang$core$String$toInt(s);
+							if (_p7.ctor === 'Ok') {
+								return true;
+							} else {
+								return false;
+							}
+						},
+						{ctor: '_Tuple2', _0: 1, _1: 'This is not a valid price'},
+						A2(
+							_kirchner$form_validation$Validate$isNotEmpty,
+							{ctor: '_Tuple2', _0: 0, _1: 'Price must not be empty'},
 							model.reasonablePrice)))),
 			email: A2(
 				_kirchner$form_validation$Validate$isEmail,
@@ -18856,8 +18152,8 @@ var _user$project$Main$decode = function (location) {
 };
 var _user$project$Main$urlUpdate = F2(
 	function (location, model) {
-		var _p7 = _user$project$Main$decode(location);
-		if (_p7.ctor === 'Nothing') {
+		var _p8 = _user$project$Main$decode(location);
+		if (_p8.ctor === 'Nothing') {
 			return {
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
@@ -18870,49 +18166,29 @@ var _user$project$Main$urlUpdate = F2(
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
 					model,
-					{page: _p7._0}),
+					{page: _p8._0}),
 				_1: _elm_lang$core$Platform_Cmd$none
 			};
 		}
 	});
 var _user$project$Main$Price = {ctor: 'Price'};
 var _user$project$Main$Email = {ctor: 'Email'};
-var _user$project$Main$Response = function (a) {
-	return {ctor: 'Response', _0: a};
+var _user$project$Main$Delay = function (a) {
+	return {ctor: 'Delay', _0: a};
 };
-var _user$project$Main$sendData = function (data) {
-	var scriptUrl = 'https://script.google.com/macros/s/AKfycbxQQN9hZcsWQiHQdfmIIGuWDcrqFiFwK8PAxoEv8I5WO4O7ESCV/exec';
-	var req = _elm_lang$http$Http$request(
-		{
-			method: 'POST',
-			headers: {ctor: '[]'},
-			url: scriptUrl,
-			body: _user$project$Main$formDataBody(data),
-			expect: _elm_lang$http$Http$expectJson(_elm_lang$core$Json_Decode$string),
-			timeout: _elm_lang$core$Maybe$Nothing,
-			withCredentials: false
-		});
-	return A2(_elm_lang$http$Http$send, _user$project$Main$Response, req);
-};
-var _user$project$Main$DelayedDeFocused = function (a) {
-	return {ctor: 'DelayedDeFocused', _0: a};
-};
-var _user$project$Main$ValidateModel = {ctor: 'ValidateModel'};
-var _user$project$Main$Defocused = function (a) {
-	return {ctor: 'Defocused', _0: a};
-};
+var _user$project$Main$EmptyMsg = {ctor: 'EmptyMsg'};
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p8 = msg;
-		switch (_p8.ctor) {
+		var _p9 = msg;
+		switch (_p9.ctor) {
 			case 'UrlChange':
-				return A2(_user$project$Main$urlUpdate, _p8._0, model);
+				return A2(_user$project$Main$urlUpdate, _p9._0, model);
 			case 'NavMsg':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{navState: _p8._0}),
+						{navState: _p9._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ChangePage':
@@ -18920,17 +18196,32 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{page: _p8._0}),
+						{page: _p9._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'RadioPhotosMsg':
+				var _p10 = _p9._0;
 				return {
 					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							radioPhotosPerMonth: _kirchner$form_validation$Validate$valid(_p8._0)
-						}),
+					_0: function () {
+						var newModel = _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								radioPhotosPerMonth: _kirchner$form_validation$Validate$valid(_p10),
+								reasonablePrice: _kirchner$form_validation$Validate$uncheck(model.reasonablePrice)
+							});
+						return (_elm_lang$core$Native_Utils.cmp(
+							_user$project$Main$errorIndexOfReasonablePrice(model),
+							2) > -1) ? _elm_lang$core$Native_Utils.update(
+							newModel,
+							{
+								reasonablePrice: _user$project$Main$validateModel(newModel).reasonablePrice
+							}) : _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								radioPhotosPerMonth: _kirchner$form_validation$Validate$valid(_p10)
+							});
+					}(),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'RadioPaymentMsg':
@@ -18939,7 +18230,7 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							radioPaymentMethod: _kirchner$form_validation$Validate$valid(_p8._0)
+							radioPaymentMethod: _kirchner$form_validation$Validate$valid(_p9._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -18971,10 +18262,10 @@ var _user$project$Main$update = F2(
 						validated,
 						{confirmClicked: true}),
 					_1: function () {
-						var _p9 = validatedFormData;
-						if (_p9.ctor === 'Just') {
+						var _p11 = validatedFormData;
+						if (_p11.ctor === 'Just') {
 							return _user$project$Ports$sendData(
-								_user$project$Main$formDatafication(_p9._0));
+								_user$project$Main$formDatafication(_p11._0));
 						} else {
 							return _elm_lang$core$Platform_Cmd$none;
 						}
@@ -18986,7 +18277,7 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							email: _kirchner$form_validation$Validate$unchecked(_p8._0)
+							email: _kirchner$form_validation$Validate$unchecked(_p9._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -18996,27 +18287,23 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							reasonablePrice: _kirchner$form_validation$Validate$unchecked(_p8._0)
+							reasonablePrice: _kirchner$form_validation$Validate$unchecked(_p9._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'Response':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			case 'DelayedDeFocused':
+			case 'Delay':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					model,
 					{
 						ctor: '::',
-						_0: A3(
-							_andrewMacmurray$elm_delay$Delay$after,
-							200,
-							_elm_lang$core$Time$millisecond,
-							_user$project$Main$Defocused(_p8._0)),
+						_0: A3(_andrewMacmurray$elm_delay$Delay$after, _p9._0._0, _elm_lang$core$Time$millisecond, _p9._0._1),
 						_1: {ctor: '[]'}
 					});
 			case 'Defocused':
-				if (_p8._0.ctor === 'Email') {
+				if (_p9._0.ctor === 'Email') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -19029,26 +18316,68 @@ var _user$project$Main$update = F2(
 				} else {
 					return {
 						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								reasonablePrice: _user$project$Main$validateModel(model).reasonablePrice,
-								radioPhotosPerMonth: _elm_lang$core$Native_Utils.eq(model.radioPhotosPerMonth, _kirchner$form_validation$Validate$empty) ? A2(
-									_kirchner$form_validation$Validate$addErrors,
-									_elm_lang$core$Set$singleton('bad'),
-									_kirchner$form_validation$Validate$unchecked(-1000)) : model.radioPhotosPerMonth
-							}),
+						_0: function () {
+							var validated = _user$project$Main$validateModel(model);
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									reasonablePrice: validated.reasonablePrice,
+									radioPhotosPerMonth: _elm_lang$core$Native_Utils.eq(
+										_user$project$Main$errorIndexOfReasonablePrice(validated),
+										2) ? A2(
+										_kirchner$form_validation$Validate$addErrors,
+										_elm_lang$core$Set$singleton('bad'),
+										_kirchner$form_validation$Validate$unchecked(-1000)) : model.radioPhotosPerMonth
+								});
+						}(),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
-			default:
+			case 'ValidateModel':
 				return {
 					ctor: '_Tuple2',
 					_0: _user$project$Main$validateModel(model),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			case 'ScrollTo':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: A2(
+						_elm_lang$core$Task$attempt,
+						function (_p12) {
+							return _user$project$Main$EmptyMsg;
+						},
+						_elm_lang$dom$Dom_Scroll$toTop(_p9._0))
+				};
+			default:
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
+var _user$project$Main$ScrollTo = function (a) {
+	return {ctor: 'ScrollTo', _0: a};
+};
+var _user$project$Main$Response = function (a) {
+	return {ctor: 'Response', _0: a};
+};
+var _user$project$Main$sendData = function (data) {
+	var scriptUrl = 'https://script.google.com/macros/s/AKfycbxQQN9hZcsWQiHQdfmIIGuWDcrqFiFwK8PAxoEv8I5WO4O7ESCV/exec';
+	var req = _elm_lang$http$Http$request(
+		{
+			method: 'POST',
+			headers: {ctor: '[]'},
+			url: scriptUrl,
+			body: _user$project$Main$formDataBody(data),
+			expect: _elm_lang$http$Http$expectJson(_elm_lang$core$Json_Decode$string),
+			timeout: _elm_lang$core$Maybe$Nothing,
+			withCredentials: false
+		});
+	return A2(_elm_lang$http$Http$send, _user$project$Main$Response, req);
+};
+var _user$project$Main$ValidateModel = {ctor: 'ValidateModel'};
+var _user$project$Main$Defocused = function (a) {
+	return {ctor: 'Defocused', _0: a};
+};
 var _user$project$Main$ChangePrice = function (a) {
 	return {ctor: 'ChangePrice', _0: a};
 };
@@ -19091,8 +18420,8 @@ var _user$project$Main$priceView = function (model) {
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									function () {
-										var _p10 = _kirchner$form_validation$Validate$errors(model.reasonablePrice);
-										if (_p10.ctor === 'Just') {
+										var _p13 = _kirchner$form_validation$Validate$errors(model.reasonablePrice);
+										if (_p13.ctor === 'Just') {
 											return {
 												ctor: '::',
 												_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$danger,
@@ -19111,7 +18440,7 @@ var _user$project$Main$priceView = function (model) {
 												{
 													ctor: '::',
 													_0: _elm_lang$html$Html_Events$onBlur(
-														_user$project$Main$DelayedDeFocused(_user$project$Main$Price)),
+														_user$project$Main$Defocused(_user$project$Main$Price)),
 													_1: {
 														ctor: '::',
 														_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$ChangePrice),
@@ -19176,8 +18505,8 @@ var _user$project$Main$emailView = function (model) {
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									function () {
-										var _p11 = _kirchner$form_validation$Validate$errors(model.email);
-										if (_p11.ctor === 'Just') {
+										var _p14 = _kirchner$form_validation$Validate$errors(model.email);
+										if (_p14.ctor === 'Just') {
 											return {
 												ctor: '::',
 												_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$danger,
@@ -19202,7 +18531,7 @@ var _user$project$Main$emailView = function (model) {
 														_1: {
 															ctor: '::',
 															_0: _elm_lang$html$Html_Events$onBlur(
-																_user$project$Main$DelayedDeFocused(_user$project$Main$Email)),
+																_user$project$Main$Defocused(_user$project$Main$Email)),
 															_1: {ctor: '[]'}
 														}
 													}
@@ -19221,8 +18550,8 @@ var _user$project$Main$emailView = function (model) {
 				_0: A2(
 					_rundis$elm_bootstrap$Bootstrap_Form$help,
 					function () {
-						var _p12 = _kirchner$form_validation$Validate$errors(model.email);
-						if (_p12.ctor === 'Just') {
+						var _p15 = _kirchner$form_validation$Validate$errors(model.email);
+						if (_p15.ctor === 'Just') {
 							return {
 								ctor: '::',
 								_0: _elm_lang$html$Html_Attributes$class('isDown'),
@@ -19365,10 +18694,10 @@ var _user$project$Main$NavMsg = function (a) {
 	return {ctor: 'NavMsg', _0: a};
 };
 var _user$project$Main$init = function (location) {
-	var _p13 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
-	var navState = _p13._0;
-	var navCmd = _p13._1;
-	var _p14 = A2(
+	var _p16 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
+	var navState = _p16._0;
+	var navCmd = _p16._1;
+	var _p17 = A2(
 		_user$project$Main$urlUpdate,
 		location,
 		{
@@ -19382,8 +18711,8 @@ var _user$project$Main$init = function (location) {
 			subscribed: false,
 			confirmClicked: false
 		});
-	var model = _p14._0;
-	var urlCmd = _p14._1;
+	var model = _p17._0;
+	var urlCmd = _p17._1;
 	return {
 		ctor: '_Tuple2',
 		_0: model,
@@ -20007,8 +19336,8 @@ var _user$project$Main$mainContent = function (model) {
 		_rundis$elm_bootstrap$Bootstrap_Grid$container,
 		{ctor: '[]'},
 		function () {
-			var _p15 = model.page;
-			switch (_p15.ctor) {
+			var _p18 = model.page;
+			switch (_p18.ctor) {
 				case 'Home':
 					return _user$project$Main$pageHome(model);
 				case 'ContactUs':
