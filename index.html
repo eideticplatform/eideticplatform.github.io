@@ -50,6 +50,10 @@
 
         sendData(d)
       });
+
+      app.ports.scrollTo.subscribe(s => {
+        document.getElementById(s).scrollIntoView();
+      })
     </script>
   </body>
 </html>

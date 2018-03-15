@@ -31,6 +31,7 @@ import Delay
 import Dom.Scroll
 import Task
 import Dict
+import Dom
 
 
 main : Program Never Model Msg
@@ -159,13 +160,17 @@ type Msg
     | ValidateModel
     | Response (Result Http.Error String)
     | ScrollTo String
-    | EmptyMsg
+    | EmptyMsg (Result Dom.Error ())
     | Delay ( Float, Msg )
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Navbar.subscriptions model.navState NavMsg
+
+
+message x =
+    Task.perform identity (Task.succeed x)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -234,10 +239,13 @@ update msg model =
                     { validated | confirmClicked = True }
                 , case validatedFormData of
                     Just d ->
-                        Ports.sendData (formDatafication d)
+                        Cmd.batch
+                            [ Ports.sendData (formDatafication d)
+                            , message (Delay ( 200, ScrollTo "signup_content" ))
+                            ]
 
                     Nothing ->
-                        Cmd.none
+                        message (Delay ( 200, ScrollTo "signup_content" ))
                 )
 
         ChangeEmail state ->
@@ -281,9 +289,9 @@ update msg model =
             ( validateModel model, Cmd.none )
 
         ScrollTo s ->
-            ( model, Task.attempt (\_ -> EmptyMsg) (Dom.Scroll.toTop s) )
+            ( model, Ports.scrollTo s )
 
-        EmptyMsg ->
+        EmptyMsg x ->
             ( model, Cmd.none )
 
 
@@ -583,7 +591,10 @@ entrance =
 pageSignup : Model -> Html Msg
 pageSignup model =
     main_
-        [ id "signup_content", style [ ( "padding", "1.2rem" ) ], class "zoomIn animated" ]
+        [ id "signup_content"
+        , style [ ( "padding", "1.2rem" ) ]
+        , class "zoomIn animated"
+        ]
         [ h2 [ entrance, style [ ( "text-align", "center" ) ] ] [ text "SIGN UP" ]
         , Form.form [] <|
             List.map (Form.group [])

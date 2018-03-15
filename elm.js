@@ -17793,6 +17793,11 @@ var _user$project$Ports$sendData = _elm_lang$core$Native_Platform.outgoingPort(
 	function (v) {
 		return v;
 	});
+var _user$project$Ports$scrollTo = _elm_lang$core$Native_Platform.outgoingPort(
+	'scrollTo',
+	function (v) {
+		return v;
+	});
 
 var _user$project$Main$alertForeGround = 'rgba(255, 255, 255, 0.63)';
 var _user$project$Main$alertColor = 'rgba(230, 70, 64, 0.54)';
@@ -17850,7 +17855,7 @@ var _user$project$Main$pageThanks = function (model) {
 		_elm_lang$html$Html$main_,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$id('signup_content'),
+			_0: _elm_lang$html$Html_Attributes$id('thank_content'),
 			_1: {
 				ctor: '::',
 				_0: _elm_lang$html$Html_Attributes$style(
@@ -18003,6 +18008,12 @@ var _user$project$Main$errorIndexOfReasonablePrice = function (model) {
 						_elm_lang$core$Maybe$withDefault,
 						_elm_lang$core$Set$empty,
 						_kirchner$form_validation$Validate$errors(model.reasonablePrice))))));
+};
+var _user$project$Main$message = function (x) {
+	return A2(
+		_elm_lang$core$Task$perform,
+		_elm_lang$core$Basics$identity,
+		_elm_lang$core$Task$succeed(x));
 };
 var _user$project$Main$validateModel = function (model) {
 	return _elm_lang$core$Native_Utils.update(
@@ -18176,7 +18187,12 @@ var _user$project$Main$Email = {ctor: 'Email'};
 var _user$project$Main$Delay = function (a) {
 	return {ctor: 'Delay', _0: a};
 };
-var _user$project$Main$EmptyMsg = {ctor: 'EmptyMsg'};
+var _user$project$Main$EmptyMsg = function (a) {
+	return {ctor: 'EmptyMsg', _0: a};
+};
+var _user$project$Main$ScrollTo = function (a) {
+	return {ctor: 'ScrollTo', _0: a};
+};
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p9 = msg;
@@ -18264,10 +18280,31 @@ var _user$project$Main$update = F2(
 					_1: function () {
 						var _p11 = validatedFormData;
 						if (_p11.ctor === 'Just') {
-							return _user$project$Ports$sendData(
-								_user$project$Main$formDatafication(_p11._0));
+							return _elm_lang$core$Platform_Cmd$batch(
+								{
+									ctor: '::',
+									_0: _user$project$Ports$sendData(
+										_user$project$Main$formDatafication(_p11._0)),
+									_1: {
+										ctor: '::',
+										_0: _user$project$Main$message(
+											_user$project$Main$Delay(
+												{
+													ctor: '_Tuple2',
+													_0: 200,
+													_1: _user$project$Main$ScrollTo('signup_content')
+												})),
+										_1: {ctor: '[]'}
+									}
+								});
 						} else {
-							return _elm_lang$core$Platform_Cmd$none;
+							return _user$project$Main$message(
+								_user$project$Main$Delay(
+									{
+										ctor: '_Tuple2',
+										_0: 200,
+										_1: _user$project$Main$ScrollTo('signup_content')
+									}));
 						}
 					}()
 				};
@@ -18343,20 +18380,12 @@ var _user$project$Main$update = F2(
 				return {
 					ctor: '_Tuple2',
 					_0: model,
-					_1: A2(
-						_elm_lang$core$Task$attempt,
-						function (_p12) {
-							return _user$project$Main$EmptyMsg;
-						},
-						_elm_lang$dom$Dom_Scroll$toTop(_p9._0))
+					_1: _user$project$Ports$scrollTo(_p9._0)
 				};
 			default:
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
-var _user$project$Main$ScrollTo = function (a) {
-	return {ctor: 'ScrollTo', _0: a};
-};
 var _user$project$Main$Response = function (a) {
 	return {ctor: 'Response', _0: a};
 };
@@ -18420,8 +18449,8 @@ var _user$project$Main$priceView = function (model) {
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									function () {
-										var _p13 = _kirchner$form_validation$Validate$errors(model.reasonablePrice);
-										if (_p13.ctor === 'Just') {
+										var _p12 = _kirchner$form_validation$Validate$errors(model.reasonablePrice);
+										if (_p12.ctor === 'Just') {
 											return {
 												ctor: '::',
 												_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$danger,
@@ -18454,16 +18483,16 @@ var _user$project$Main$priceView = function (model) {
 														{ctor: '[]'},
 														A2(
 															_elm_lang$core$Maybe$map,
-															function (_p14) {
-																var _p15 = _p14;
+															function (_p13) {
+																var _p14 = _p13;
 																return {
 																	ctor: '::',
 																	_0: _elm_lang$html$Html_Attributes$min(
-																		_elm_lang$core$Basics$toString(_p15._0)),
+																		_elm_lang$core$Basics$toString(_p14._0)),
 																	_1: {
 																		ctor: '::',
 																		_0: _elm_lang$html$Html_Attributes$max(
-																			_elm_lang$core$Basics$toString(_p15._1)),
+																			_elm_lang$core$Basics$toString(_p14._1)),
 																		_1: {ctor: '[]'}
 																	}
 																};
@@ -18525,8 +18554,8 @@ var _user$project$Main$emailView = function (model) {
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									function () {
-										var _p16 = _kirchner$form_validation$Validate$errors(model.email);
-										if (_p16.ctor === 'Just') {
+										var _p15 = _kirchner$form_validation$Validate$errors(model.email);
+										if (_p15.ctor === 'Just') {
 											return {
 												ctor: '::',
 												_0: _rundis$elm_bootstrap$Bootstrap_Form_Input$danger,
@@ -18570,8 +18599,8 @@ var _user$project$Main$emailView = function (model) {
 				_0: A2(
 					_rundis$elm_bootstrap$Bootstrap_Form$help,
 					function () {
-						var _p17 = _kirchner$form_validation$Validate$errors(model.email);
-						if (_p17.ctor === 'Just') {
+						var _p16 = _kirchner$form_validation$Validate$errors(model.email);
+						if (_p16.ctor === 'Just') {
 							return {
 								ctor: '::',
 								_0: _elm_lang$html$Html_Attributes$class('isDown'),
@@ -18714,10 +18743,10 @@ var _user$project$Main$NavMsg = function (a) {
 	return {ctor: 'NavMsg', _0: a};
 };
 var _user$project$Main$init = function (location) {
-	var _p18 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
-	var navState = _p18._0;
-	var navCmd = _p18._1;
-	var _p19 = A2(
+	var _p17 = _rundis$elm_bootstrap$Bootstrap_Navbar$initialState(_user$project$Main$NavMsg);
+	var navState = _p17._0;
+	var navCmd = _p17._1;
+	var _p18 = A2(
 		_user$project$Main$urlUpdate,
 		location,
 		{
@@ -18731,8 +18760,8 @@ var _user$project$Main$init = function (location) {
 			signedUp: false,
 			confirmClicked: false
 		});
-	var model = _p19._0;
-	var urlCmd = _p19._1;
+	var model = _p18._0;
+	var urlCmd = _p18._1;
 	return {
 		ctor: '_Tuple2',
 		_0: model,
@@ -19349,8 +19378,8 @@ var _user$project$Main$mainContent = function (model) {
 		_rundis$elm_bootstrap$Bootstrap_Grid$container,
 		{ctor: '[]'},
 		function () {
-			var _p20 = model.page;
-			switch (_p20.ctor) {
+			var _p19 = model.page;
+			switch (_p19.ctor) {
 				case 'Home':
 					return _user$project$Main$pageHome(model);
 				case 'ContactUs':
