@@ -18256,7 +18256,8 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{signingUp: true}),
-					_1: _elm_lang$core$Platform_Cmd$none
+					_1: _user$project$Main$message(
+						_user$project$Main$ScrollTo('motto'))
 				};
 			case 'ConfirmPressed':
 				var validated = _user$project$Main$validateModel(model);
@@ -18288,23 +18289,13 @@ var _user$project$Main$update = F2(
 									_1: {
 										ctor: '::',
 										_0: _user$project$Main$message(
-											_user$project$Main$Delay(
-												{
-													ctor: '_Tuple2',
-													_0: 200,
-													_1: _user$project$Main$ScrollTo('signup_content')
-												})),
+											_user$project$Main$ScrollTo('motto')),
 										_1: {ctor: '[]'}
 									}
 								});
 						} else {
 							return _user$project$Main$message(
-								_user$project$Main$Delay(
-									{
-										ctor: '_Tuple2',
-										_0: 200,
-										_1: _user$project$Main$ScrollTo('signup_content')
-									}));
+								_user$project$Main$ScrollTo('motto'));
 						}
 					}()
 				};
@@ -19199,16 +19190,20 @@ var _user$project$Main$pageHome = function (model) {
 							_elm_lang$html$Html$p,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('version'),
+								_0: _elm_lang$html$Html_Attributes$id('motto'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$style(
-										{
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '2rem'},
-											_1: {ctor: '[]'}
-										}),
-									_1: {ctor: '[]'}
+									_0: _elm_lang$html$Html_Attributes$class('version'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$style(
+											{
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '2rem'},
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
 								}
 							},
 							{

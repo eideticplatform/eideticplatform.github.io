@@ -211,7 +211,7 @@ update msg model =
 
         SignupPressed ->
             ( { model | signingUp = True }
-            , Cmd.none
+            , message <| ScrollTo "motto"
             )
 
         ConfirmPressed ->
@@ -241,11 +241,11 @@ update msg model =
                     Just d ->
                         Cmd.batch
                             [ Ports.sendData (formDatafication d)
-                            , message (Delay ( 200, ScrollTo "signup_content" ))
+                            , message <| ScrollTo "motto"
                             ]
 
                     Nothing ->
-                        message (Delay ( 200, ScrollTo "signup_content" ))
+                        message <| ScrollTo "motto"
                 )
 
         ChangeEmail state ->
@@ -419,7 +419,7 @@ pageHome model =
             ]
         , p [ class "lead" ]
             [ text "EIDETIC" ]
-        , p [ class "version", style [ ( "margin-bottom", "2rem" ) ] ]
+        , p [ id "motto", class "version", style [ ( "margin-bottom", "2rem" ) ] ]
             [ text "Your Favorite Memories At Your Doorstep"
             ]
         , if model.signingUp then
