@@ -17855,7 +17855,7 @@ var _user$project$Main$pageThanks = function (model) {
 		_elm_lang$html$Html$main_,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$id('thank_content'),
+			_0: _elm_lang$html$Html_Attributes$id('signup_content'),
 			_1: {
 				ctor: '::',
 				_0: _elm_lang$html$Html_Attributes$style(
