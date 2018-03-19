@@ -471,7 +471,7 @@ pageContactUs model =
 
 
 emptyFeedback =
-    [ Form.invalidFeedback [ style [ ( "color", "rgba(0,0,0,0)" ) ] ] [ text "hidden" ] ]
+    [ Form.invalidFeedback [] [ text " " ] ]
 
 
 invalidFeedback field =

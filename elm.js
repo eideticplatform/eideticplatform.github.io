@@ -17905,19 +17905,10 @@ var _user$project$Main$emptyFeedback = {
 	ctor: '::',
 	_0: A2(
 		_rundis$elm_bootstrap$Bootstrap_Form$invalidFeedback,
+		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'color', _1: 'rgba(0,0,0,0)'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('hidden'),
+			_0: _elm_lang$html$Html$text(' '),
 			_1: {ctor: '[]'}
 		}),
 	_1: {ctor: '[]'}
