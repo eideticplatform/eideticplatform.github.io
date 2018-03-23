@@ -17839,7 +17839,7 @@ var _user$project$Main$photosPriceRanges = _elm_lang$core$Dict$fromList(
 					_0: {
 						ctor: '_Tuple2',
 						_0: 60,
-						_1: {ctor: '_Tuple2', _0: 10, _1: 60}
+						_1: {ctor: '_Tuple2', _0: 9, _1: 50}
 					},
 					_1: {ctor: '[]'}
 				}
@@ -17893,7 +17893,7 @@ var _user$project$Main$pageThanks = function (model) {
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Thank you for filling the survey and signing up to eidetic! We will send you an email confirming your free month at launch.'),
+						_0: _elm_lang$html$Html$text('Thank you for filling the survey and signing up to Eidetic! We will send you a confirmation email at launch reguarding your first free album.'),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
@@ -19018,7 +19018,7 @@ var _user$project$Main$pageSignup = function (model) {
 								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('* By signing up before launch, we will send you a free month package with eidetic and service updates.'),
+									_0: _elm_lang$html$Html$text('* By signing up before launch, we will send you a free first package and service updates.'),
 									_1: {ctor: '[]'}
 								}),
 							_1: {

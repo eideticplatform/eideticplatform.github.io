@@ -599,7 +599,7 @@ pageSignup model =
         , Form.form [] <|
             List.map (Form.group [])
                 [ emailView model, photosView model, priceView model, paymentView model ]
-                ++ [ Form.label [] [ text "* By signing up before launch, we will send you a free month package with eidetic and service updates." ]
+                ++ [ Form.label [] [ text "* By signing up before launch, we will send you a free first package and service updates." ]
                    , Button.button
                         [ if validateModel model |> formData |> isNothing then
                             Button.danger
@@ -632,7 +632,7 @@ pageThanks model =
     main_
         [ id "signup_content", style [ ( "padding", "1.2rem" ) ] ]
         [ h2 [ style [ ( "text-align", "center" ) ] ] [ text "Thanks!" ]
-        , h4 [] [ text "Thank you for filling the survey and signing up to eidetic! We will send you an email confirming your free month at launch." ]
+        , h4 [] [ text "Thank you for filling the survey and signing up to Eidetic! We will send you a confirmation email at launch reguarding your first free album." ]
         ]
 
 
@@ -641,7 +641,7 @@ type alias RadioPhotosPerMonth =
 
 
 photosPriceRanges =
-    Dict.fromList [ ( 10, ( 3, 20 ) ), ( 20, ( 5, 30 ) ), ( 40, ( 7, 40 ) ), ( 60, ( 10, 60 ) ) ]
+    Dict.fromList [ ( 10, ( 3, 20 ) ), ( 20, ( 5, 30 ) ), ( 40, ( 7, 40 ) ), ( 60, ( 9, 50 ) ) ]
 
 
 photosPerMonthEnum =
